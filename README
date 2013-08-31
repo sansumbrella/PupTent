@@ -1,1 +1,10 @@
 PupTent
+
+A set of useful entities built on top of Cinder and entityx.
+
+Requires:
+Cinder 0.8.5
+entityx
+
+Released under the Modified BSD License
+http://opensource.org/licenses/BSD-2-Clause
