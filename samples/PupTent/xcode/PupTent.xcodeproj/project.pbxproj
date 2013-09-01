@@ -20,6 +20,8 @@
 		15D4415B17D298C600A926F0 /* Manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413A17D298C600A926F0 /* Manager.cc */; };
 		15D4416817D298C600A926F0 /* System.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4414C17D298C600A926F0 /* System.cc */; };
 		15D4416A17D298C600A926F0 /* TagsComponent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4415017D298C600A926F0 /* TagsComponent.cc */; };
+		15D4417B17D409B400A926F0 /* Rendering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15D4417917D409B400A926F0 /* Rendering.cpp */; };
+		15D4417E17D40A3C00A926F0 /* PupTent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15D4417C17D40A3C00A926F0 /* PupTent.cpp */; };
 		2BC14B3DF87C4EADAA2A53A6 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6709E3B5093C40E4ABC6414C /* Sprite.cpp */; };
 		2CC77AAE2CEC44BB970D6A3F /* ImagePacker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 51EECC52FF46449CB328CBEE /* ImagePacker.cpp */; };
 		309C6F5D770445D8A51544BF /* ExpandedPath3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BC0544D8BE948CAAB3849D9 /* ExpandedPath3d.cpp */; };
@@ -62,6 +64,10 @@
 		15D4415017D298C600A926F0 /* TagsComponent.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TagsComponent.cc; sourceTree = "<group>"; };
 		15D4415117D298C600A926F0 /* TagsComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsComponent.h; sourceTree = "<group>"; };
 		15D4416C17D29AEB00A926F0 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		15D4417917D409B400A926F0 /* Rendering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rendering.cpp; sourceTree = "<group>"; };
+		15D4417A17D409B400A926F0 /* Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rendering.h; sourceTree = "<group>"; };
+		15D4417C17D40A3C00A926F0 /* PupTent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PupTent.cpp; sourceTree = "<group>"; };
+		15D4417D17D40A3C00A926F0 /* PupTent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PupTent.h; sourceTree = "<group>"; };
 		1C488A17000B4EB4A41BC68E /* FileUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = FileUtils.cpp; path = ../../../../Pockets/src/pockets/FileUtils.cpp; sourceTree = "<group>"; };
 		224F0289FB2F4527AED10CF7 /* Renderer2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Renderer2d.h; path = ../../../../Pockets/src/pockets/Renderer2d.h; sourceTree = "<group>"; };
 		2419D0C65EC14A169CACCD70 /* Renderer2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Renderer2d.cpp; path = ../../../../Pockets/src/pockets/Renderer2d.cpp; sourceTree = "<group>"; };
@@ -213,6 +219,10 @@
 		15D4415317D298C600A926F0 /* puptent */ = {
 			isa = PBXGroup;
 			children = (
+				15D4417917D409B400A926F0 /* Rendering.cpp */,
+				15D4417A17D409B400A926F0 /* Rendering.h */,
+				15D4417C17D40A3C00A926F0 /* PupTent.cpp */,
+				15D4417D17D40A3C00A926F0 /* PupTent.h */,
 			);
 			path = puptent;
 			sourceTree = "<group>";
@@ -392,6 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15D4417B17D409B400A926F0 /* Rendering.cpp in Sources */,
 				33B077D9B21C4A6A973C0DA6 /* PupTentApp.cpp in Sources */,
 				CC4A488ACD9648628B387DFB /* AnimationUtils.cpp in Sources */,
 				FA1936E3153D43439E5E059B /* ColorPalette.cpp in Sources */,
@@ -407,6 +418,7 @@
 				DA08E5A15B5A464D8007C132 /* Renderer2d.cpp in Sources */,
 				5E26925408D64F3FAEF05682 /* SimpleRenderer.cpp in Sources */,
 				15D4415717D298C600A926F0 /* Entity.cc in Sources */,
+				15D4417E17D40A3C00A926F0 /* PupTent.cpp in Sources */,
 				2BC14B3DF87C4EADAA2A53A6 /* Sprite.cpp in Sources */,
 				15D4415917D298C600A926F0 /* Event.cc in Sources */,
 				79D663C296144B1FACB3CD93 /* SpriteAnimation.cpp in Sources */,
