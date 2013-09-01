@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cinder>
+<block
+	name="Pup Tent"
+	id="com.sansumbrella.puptent"
+	author="David Wicks"
+	summary="ECS built on Cinder and entityx"
+	>
+	<sourcePattern>src/puptent/*.cpp</sourcePattern>
+	<headerPattern>src/puptent/*.h</headerPattern>
+	<header>src/puptent/PupTent.h</header>
+	<includePath system="false">src</includePath>
+</block>
+</cinder>
