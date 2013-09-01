@@ -66,19 +66,39 @@ struct MovementSystem : public System<MovementSystem>
 {
   void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
   {
-    for( auto entity : es->entities_with_components<Locus>() )
+    if( mElements.empty() )
     {
-      auto loc = entity.component<Locus>();
+      for( auto entity : es->entities_with_components<Locus>() )
+      {
+        mElements.push_back( entity.component<Locus>() );
+      }
+    }
+    for( auto& loc : mElements )
+    {
       loc->rotation = fmodf( loc->rotation + M_PI * 0.01f, M_PI * 2 );
     }
   }
+
+  vector<shared_ptr<Locus>> mElements;
 };
 
-struct RenderSystem : public System<RenderSystem>
+/**
+ Basic layer-sorted rendering system
+*/
+struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
 {
   typedef pair<shared_ptr<Locus>, shared_ptr<Mesh>> MeshPair;
+
+  void configure( EventManager &event_manager )
+  {
+    event_manager.subscribe<EntityDestroyedEvent>( *this );
+    event_manager.subscribe<ComponentAddedEvent<Mesh>>( *this );
+  }
+
   void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
   {
+    // build our sorted geometry list from query if the layers/components have changed
+    // need to rebuild if any meshes are removed or added
     if( mGeometry.empty() )
     {
       for( auto entity : es->entities_with_components<Locus, Mesh>() )
@@ -107,6 +127,20 @@ struct RenderSystem : public System<RenderSystem>
         mVertices.emplace_back( Vertex2d{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
       }
     }
+  }
+
+  void receive( const EntityDestroyedEvent &event )
+  {
+    auto entity = event.entity;
+    if( entity.component<Mesh>() )
+    { // if a mesh was destroyed, we will update our render list this frame
+      mGeometry.clear();
+    }
+  }
+
+  void receive( const ComponentAddedEvent<Mesh> &event )
+  { // empty our geometry
+    mGeometry.clear();
   }
 
   void draw()
@@ -156,7 +190,7 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
-  for( int i = 0; i < 2000; ++i )
+  for( int i = 0; i < 50000; ++i )
   {
     Entity entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -175,18 +209,20 @@ void PupTentApp::setup()
 }
 
 void PupTentApp::mouseDown( MouseEvent event )
-{
-}
+{}
 
 void PupTentApp::update()
 {
   double now = getElapsedSeconds();
   double dt = now - mLastUpdate;
   mLastUpdate = now;
-//  double start = getElapsedSeconds();
+  double start = getElapsedSeconds();
   mSystemManager->update<MovementSystem>( dt );
-//  double end = getElapsedSeconds();
-//  cout << "Update: " << (end - start) * 1000 << endl;
+  double end = getElapsedSeconds();
+  if( getElapsedFrames() % 120 == 0 )
+  {
+    cout << "Update: " << (end - start) * 1000 << endl;
+  }
 }
 
 void PupTentApp::draw()
