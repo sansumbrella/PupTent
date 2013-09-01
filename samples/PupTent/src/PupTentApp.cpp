@@ -41,7 +41,8 @@ struct Locus : Component<Locus>
 
 struct Mesh : Component<Mesh>
 {
-  Mesh( const ci::Rectf &bounds={ -20.0f, -10.0f, 20.0f, 10.0f } )
+  Mesh( int render_layer=0, const ci::Rectf &bounds={ -20.0f, -10.0f, 20.0f, 10.0f } ):
+  render_layer( render_layer )
   {
     vertices.assign( 4, Vertex2d{} );
     vertices[0].position = bounds.getUpperRight();
@@ -50,6 +51,7 @@ struct Mesh : Component<Mesh>
     vertices[3].position = bounds.getLowerLeft();
   }
   std::vector<Vertex2d> vertices;
+  int                   render_layer = 0;
 };
 
 struct Velocity : Component<Velocity>
@@ -74,14 +76,25 @@ struct MovementSystem : public System<MovementSystem>
 
 struct RenderSystem : public System<RenderSystem>
 {
+  typedef pair<shared_ptr<Locus>, shared_ptr<Mesh>> MeshPair;
   void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
   {
-    mVertices.clear();
-    // assemble all vertices
-    for( auto entity : es->entities_with_components<Locus, Mesh>() )
+    if( mGeometry.empty() )
     {
-      auto loc = entity.component<Locus>();
-      auto mesh = entity.component<Mesh>();
+      for( auto entity : es->entities_with_components<Locus, Mesh>() )
+      {
+        mGeometry.emplace_back( entity.component<Locus>(), entity.component<Mesh>() );
+      }
+      stable_sort( mGeometry.begin(), mGeometry.end(), []( const MeshPair &lhs, const MeshPair &rhs ) -> bool {
+        return lhs.second->render_layer < rhs.second->render_layer;
+      } );
+    }
+    // assemble all vertices
+    mVertices.clear();
+    for( auto pair : mGeometry )
+    {
+      auto loc = pair.first;
+      auto mesh = pair.second;
       auto mat = loc->toMatrix();
       if( !mVertices.empty() )
       { // create degenerate triangle between previous and current shape
@@ -112,11 +125,7 @@ struct RenderSystem : public System<RenderSystem>
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
   }
 private:
-//  struct RenderData{
-//    Locus2dRef  locus;
-//    MeshRef     mesh;
-//    int         layer;
-//  };
+  std::vector<MeshPair> mGeometry;
   std::vector<Vertex2d> mVertices;
 };
 
@@ -146,6 +155,7 @@ void PupTentApp::setup()
   mSystemManager->configure();
 
   Rand r;
+  Vec2f center = getWindowCenter();
   for( int i = 0; i < 2000; ++i )
   {
     Entity entity = mEntities->create();
@@ -158,6 +168,7 @@ void PupTentApp::setup()
     }
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
+    mesh->render_layer = loc->position.distance( center );
     entity.assign<Locus>( loc );
     entity.assign<Mesh>( mesh );
   }
