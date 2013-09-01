@@ -31,7 +31,6 @@
 		5E26925408D64F3FAEF05682 /* SimpleRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAF6D62D3A1242A1AC19D0C8 /* SimpleRenderer.cpp */; };
 		760B05E6C6D24E8EAEC98321 /* ExpandedLine2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E34EDDA169DF47DE99E5592E /* ExpandedLine2d.cpp */; };
 		79D663C296144B1FACB3CD93 /* SpriteAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FCF49F516D4E0E976DE374 /* SpriteAnimation.cpp */; };
-		8223727B11194A84BC2FAF41 /* Locus2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EDB440C678D4513BEB21E0C /* Locus2d.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		9BAA506004CA4B559D751E29 /* Vbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4452A764EFB4FA595FCC3B1 /* Vbo.cpp */; };
 		C1D9AA5DFFE14A7DA28020F1 /* SweptPath3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88F92AF42BC745EBA5EC3488 /* SweptPath3d.cpp */; };
@@ -70,7 +69,6 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		3527BDC39FAD4B0F9D8CDF15 /* ColorPalette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ColorPalette.h; path = ../../../../Pockets/src/pockets/ColorPalette.h; sourceTree = "<group>"; };
-		37763FEFDD1D4B749C766617 /* Locus2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Locus2d.h; path = ../../../../Pockets/src/pockets/Locus2d.h; sourceTree = "<group>"; };
 		407622109A32482E87A74BE8 /* LineUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = LineUtils.cpp; path = ../../../../Pockets/src/pockets/LineUtils.cpp; sourceTree = "<group>"; };
 		48F06CEE1D4A4E33B144C502 /* SimpleRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimpleRenderer.h; path = ../../../../Pockets/src/pockets/SimpleRenderer.h; sourceTree = "<group>"; };
 		4A9BD5C9EBED485B9C7B84C7 /* ExpandedLine2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExpandedLine2d.h; path = ../../../../Pockets/src/pockets/ExpandedLine2d.h; sourceTree = "<group>"; };
@@ -91,7 +89,6 @@
 		8934A54DB8BA4BCAA04C3D68 /* Sprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Sprite.h; path = ../../../../Pockets/src/pockets/Sprite.h; sourceTree = "<group>"; };
 		8BC0544D8BE948CAAB3849D9 /* ExpandedPath3d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ExpandedPath3d.cpp; path = ../../../../Pockets/src/pockets/ExpandedPath3d.cpp; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* PupTent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PupTent.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EDB440C678D4513BEB21E0C /* Locus2d.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = Locus2d.cpp; path = ../../../../Pockets/src/pockets/Locus2d.cpp; sourceTree = "<group>"; };
 		B27BC93C281B42239CC063F4 /* Pockets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pockets.h; path = ../../../../Pockets/src/pockets/Pockets.h; sourceTree = "<group>"; };
 		B8EB1BC704694BA591BD7076 /* LineUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LineUtils.h; path = ../../../../Pockets/src/pockets/LineUtils.h; sourceTree = "<group>"; };
 		B9337707381A4B84AC18C002 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
@@ -295,7 +292,6 @@
 				1C488A17000B4EB4A41BC68E /* FileUtils.cpp */,
 				51EECC52FF46449CB328CBEE /* ImagePacker.cpp */,
 				407622109A32482E87A74BE8 /* LineUtils.cpp */,
-				9EDB440C678D4513BEB21E0C /* Locus2d.cpp */,
 				2419D0C65EC14A169CACCD70 /* Renderer2d.cpp */,
 				EAF6D62D3A1242A1AC19D0C8 /* SimpleRenderer.cpp */,
 				6709E3B5093C40E4ABC6414C /* Sprite.cpp */,
@@ -310,7 +306,6 @@
 				E24707F2D09149F4B2FC7E6C /* FileUtils.h */,
 				6550E6F2C9764F56A30D8C0F /* ImagePacker.h */,
 				B8EB1BC704694BA591BD7076 /* LineUtils.h */,
-				37763FEFDD1D4B749C766617 /* Locus2d.h */,
 				B27BC93C281B42239CC063F4 /* Pockets.h */,
 				224F0289FB2F4527AED10CF7 /* Renderer2d.h */,
 				48F06CEE1D4A4E33B144C502 /* SimpleRenderer.h */,
@@ -409,7 +404,6 @@
 				2CC77AAE2CEC44BB970D6A3F /* ImagePacker.cpp in Sources */,
 				54664495FDB64345AD206626 /* LineUtils.cpp in Sources */,
 				15D4415B17D298C600A926F0 /* Manager.cc in Sources */,
-				8223727B11194A84BC2FAF41 /* Locus2d.cpp in Sources */,
 				DA08E5A15B5A464D8007C132 /* Renderer2d.cpp in Sources */,
 				5E26925408D64F3FAEF05682 /* SimpleRenderer.cpp in Sources */,
 				15D4415717D298C600A926F0 /* Entity.cc in Sources */,
