@@ -48,12 +48,6 @@ struct Mesh : Component<Mesh>
     vertices[1].position = bounds.getUpperLeft();
     vertices[2].position = bounds.getLowerRight();
     vertices[3].position = bounds.getLowerLeft();
-
-    ColorA color{ CM_HSV, Rand::randFloat(), 0.9f, 0.9f, 1.0f };
-    for( auto &v : vertices )
-    {
-      v.color = color;
-    }
   }
   std::vector<Vertex2d> vertices;
 };
@@ -152,15 +146,20 @@ void PupTentApp::setup()
   mSystemManager->configure();
 
   Rand r;
-  for( int i = 0; i < 1000; ++i )
+  for( int i = 0; i < 2000; ++i )
   {
     Entity entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
+    auto mesh = shared_ptr<Mesh>{ new Mesh };
+    ColorA color{ CM_HSV, r.nextFloat( 1.0f ), 0.9f, 0.9f, 1.0f };
+    for( auto &v : mesh->vertices )
+    {
+      v.color = color;
+    }
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
-    loc->rotation = Rand::randFloat( M_PI * 2 );
+    loc->rotation = r.nextFloat( M_PI * 2 );
     entity.assign<Locus>( loc );
-    entity.assign<Mesh>();
-//    entity.assign<Velocity>( r.nextFloat( -5.0f, 5.0f ), r.nextFloat( -5.0f, 5.0f ) );
+    entity.assign<Mesh>( mesh );
   }
 }
 
