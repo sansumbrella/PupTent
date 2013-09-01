@@ -41,6 +41,11 @@ struct Locus : Component<Locus>
 
 struct Mesh : Component<Mesh>
 {
+  Mesh( int vertex_count, int render_layer=0 ):
+  render_layer( render_layer )
+  {
+    vertices.assign( vertex_count, Vertex2d{} );
+  }
   Mesh( int render_layer=0, const ci::Rectf &bounds={ -20.0f, -10.0f, 20.0f, 10.0f } ):
   render_layer( render_layer )
   {
@@ -52,6 +57,89 @@ struct Mesh : Component<Mesh>
   }
   std::vector<Vertex2d> vertices;
   int                   render_layer = 0;
+};
+
+struct SpriteData
+{
+  ci::Vec2f registration_point = ci::Vec2f::zero();
+  ci::Vec2i size = ci::Vec2i( 48, 48 );
+  const ci::Rectf texture_bounds = ci::Rectf(0,0,1,1);
+};
+
+struct Sprite : Component<Sprite>
+{
+  struct Drawing{
+    SpriteData  sprite;
+    float       hold; // frames to hold
+  };
+
+  Sprite()
+  {
+    applyDataToMesh();
+  }
+
+  void applyDataToMesh()
+  { // set mesh data from current frame
+    const auto drawing = currentFrame().sprite;
+    Rectf tex_coord_rect = drawing.texture_bounds;
+    Rectf position_rect( Vec2f::zero(), drawing.size );
+    position_rect -= drawing.registration_point;
+
+    mesh->vertices[0].position = { position_rect.getX2(), position_rect.getY1() };
+    mesh->vertices[1].position = { position_rect.getX1(), position_rect.getY1() };
+    mesh->vertices[2].position = { position_rect.getX2(), position_rect.getY2() };
+    mesh->vertices[3].position = { position_rect.getX1(), position_rect.getY2() };
+
+    mesh->vertices[0].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY1() };
+    mesh->vertices[1].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY1() };
+    mesh->vertices[2].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY2() };
+    mesh->vertices[3].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY2() };
+  }
+
+  const Drawing &currentFrame() const { return frames.at( current_index ); }
+  std::vector<Drawing>  frames;
+  int                   current_index = 0; // this limits us to 32k frames per animation...
+  float                 hold = 0.0f;      // time spent on this frame
+  float                 frame_duration = 1.0f / 24.0f;
+  bool                  looping = true;
+  // feels like we should create the mesh here and then add that mesh component to stuff
+  shared_ptr<Mesh>      mesh = shared_ptr<Mesh>{ new Mesh{ 4, 0 } }; // the mesh we will be updating
+};
+
+struct SpriteSystem : public System<SpriteSystem>
+{
+  void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
+  {
+    for( auto entity : es->entities_with_components<Sprite>() )
+    {
+      auto sprite = entity.component<Sprite>();
+      sprite->hold += dt;
+      int next_index = sprite->current_index;
+      if( sprite->hold > sprite->frame_duration * sprite->currentFrame().hold )
+      { // move to next frame
+        next_index += 1;
+        sprite->hold = 0.0f;
+      }
+      else if ( sprite->hold < 0.0f )
+      { // step back a frame
+        next_index -= 1;
+        sprite->hold = sprite->frame_duration * sprite->currentFrame().hold;
+      }
+      if( next_index >= static_cast<int>( sprite->frames.size() ) )
+      { // handle wraparound at end
+        next_index = sprite->looping ? 0 : sprite->frames.size() - 1;
+      }
+      else if( next_index < 0 )
+      { // handle wraparound at beginning
+        next_index = sprite->looping ? sprite->frames.size() - 1 : 0;
+      }
+      if( next_index != sprite->current_index )
+      { // the frame index has changed, update display
+        sprite->current_index = next_index;
+        sprite->applyDataToMesh();
+      }
+    }
+  }
 };
 
 struct Velocity : Component<Velocity>
