@@ -166,8 +166,8 @@ private:
 class PupTentApp : public AppNative
 {
 public:
+  void prepareSettings( Settings *settings );
 	void setup();
-	void mouseDown( MouseEvent event );	
 	void update();
 	void draw();
 private:
@@ -179,8 +179,14 @@ private:
   double            mAverageRenderTime = 0;
 };
 
+void PupTentApp::prepareSettings( Settings *settings )
+{
+  settings->disableFrameRate();
+}
+
 void PupTentApp::setup()
 {
+  gl::enableVerticalSync();
   mEvents = EventManager::make();
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
@@ -190,7 +196,7 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
-  for( int i = 0; i < 50000; ++i )
+  for( int i = 0; i < 1000; ++i )
   {
     Entity entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -207,9 +213,6 @@ void PupTentApp::setup()
     entity.assign<Mesh>( mesh );
   }
 }
-
-void PupTentApp::mouseDown( MouseEvent event )
-{}
 
 void PupTentApp::update()
 {
@@ -241,5 +244,5 @@ void PupTentApp::draw()
   }
 }
 
-CINDER_APP_NATIVE( PupTentApp, RendererGl )
+CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_4 ) )
 
