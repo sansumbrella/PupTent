@@ -7,6 +7,7 @@
 #include "entityx/System.h"
 
 #include "pockets/Types.h"
+#include "pockets/CollectionUtilities.hpp"
 
 #include "puptent/Rendering.h"
 
@@ -61,15 +62,36 @@ struct Sprite : Component<Sprite>
   float                 hold = 0.0f;      // time spent on this frame
   float                 frame_duration = 1.0f / 24.0f;
   bool                  looping = true;
-  // feels like we should create the mesh here and then add that mesh component to stuff
+  // we create the mesh here and then add that mesh to entities
+  // that way, we know we are using the expected mesh in the entity
   shared_ptr<RenderMesh2d>  mesh = shared_ptr<RenderMesh2d>{ new RenderMesh2d{ 4, 0 } }; // the mesh we will be updating
 };
 
-struct SpriteSystem : public System<SpriteSystem>
+struct SpriteSystem : public System<SpriteSystem>, Receiver<SpriteSystem>
 {
+  void configure( shared_ptr<EventManager> events ) override
+  {
+    events->subscribe<EntityDestroyedEvent>( *this );
+    events->subscribe<ComponentAddedEvent<Sprite>>( *this );
+  }
+
+  void receive( const EntityDestroyedEvent &event )
+  { // stop tracking the entity
+    auto entity = event.entity;
+    if( entity.component<Sprite>() )
+    {
+      vector_remove( &mEntities, entity );
+    }
+  }
+
+  void receive( const ComponentAddedEvent<Sprite> &event )
+  { // track the sprite
+    mEntities.push_back( event.entity );
+  }
+
   void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
   {
-    for( auto entity : es->entities_with_components<Sprite>() )
+    for( auto entity : mEntities )
     {
       auto sprite = entity.component<Sprite>();
       sprite->hold += dt;
@@ -99,6 +121,8 @@ struct SpriteSystem : public System<SpriteSystem>
       }
     }
   }
+private:
+  std::vector<Entity>  mEntities;
 };
 
 struct Velocity : Component<Velocity>
