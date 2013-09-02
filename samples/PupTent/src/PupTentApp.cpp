@@ -119,7 +119,7 @@ void PupTentApp::update()
   double start = getElapsedSeconds();
   mSystemManager->update<MovementSystem>( dt );
   double end = getElapsedSeconds();
-  if( getElapsedFrames() % 120 == 0 )
+  if( getElapsedFrames() % 60 == 0 )
   {
     cout << "Update: " << (end - start) * 1000 << endl;
   }
@@ -135,7 +135,10 @@ void PupTentApp::draw()
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
-  cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
+  if( getElapsedFrames() % 30 == 0 )
+  {
+    cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
+  }
 }
 
 CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_8 ) )
