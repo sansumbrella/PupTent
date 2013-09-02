@@ -11,6 +11,13 @@
 
 #include "puptent/Rendering.h"
 
+/**
+ Sample app used to develop features of PupTent.
+ Learning about component systems and building my own components.
+ While everything is dependent on the underlying component machinery,
+ it is wonderfully decoupled from other systems and components.
+*/
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -235,5 +242,5 @@ void PupTentApp::draw()
   }
 }
 
-CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_4 ) )
+CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_8 ) )
 

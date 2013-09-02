@@ -6,5 +6,31 @@ Requires:
 Cinder 0.8.5
 entityx (included in src/ with it's own license)
 
-Released under the Modified BSD License
+To be released under the Modified BSD License
 http://opensource.org/licenses/BSD-2-Clause
+
+
+Renderer performance
+Stored in Geometry vector:
+Render ms: 0.628613
+Render ms: 0.625753
+Render ms: 0.651454
+Render ms: 0.663725
+Render ms: 0.671469
+Render ms: 0.685221
+
+With lookup every frame:
+Render ms: 1.57936
+Render ms: 1.68094
+Render ms: 1.48158
+Render ms: 1.28504
+Render ms: 1.34472
+Render ms: 1.62948
+
+Old way:
+Batch 2d avg render time: 2.33869ms
+Batch 2d avg render time: 2.31445ms
+Batch 2d avg render time: 2.26326ms
+Batch 2d avg render time: 2.43113ms
+Batch 2d avg render time: 2.39248ms
+Batch 2d avg render time: 2.22816ms
