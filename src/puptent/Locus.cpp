@@ -25,17 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include "Locus.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
+using namespace puptent;
+using namespace cinder;
 
-namespace pockets {}
-namespace puptent
+MatrixAffine2f Locus::toMatrix() const
 {
-  using namespace pockets;
-  using namespace entityx;
+  MatrixAffine2f mat;
+  mat.translate( position + registration_point );
+  mat.rotate( rotation );
+  mat.scale( scale );
+  mat.translate( -registration_point );
+  if( parent ){ mat = parent->toMatrix() * mat; }
+  return mat;
 }
 
-namespace pt = puptent;

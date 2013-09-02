@@ -29,56 +29,11 @@
 
 #include "puptent/PupTent.h"
 #include "cinder/Matrix.h"
-#include "pockets/Types.h"
+#include "Locus.h"
+#include "Mesh.h"
 
 namespace puptent
 {
-  struct Locus : Component<Locus>
-  {
-    Locus() = default;
-    Locus( const ci::Vec2f &pos, const ci::Vec2f &registration, float rot, shared_ptr<Locus> parent=nullptr ):
-    position( pos ),
-    registration_point( registration ),
-    rotation( rot ),
-    parent( parent )
-    {}
-    ci::Vec2f         position = ci::Vec2f::zero();
-    ci::Vec2f         registration_point = ci::Vec2f::zero();
-    float             rotation = 0.0f;
-    float             scale = 1.0f;
-    shared_ptr<Locus> parent = nullptr;
-
-    ci::MatrixAffine2f  toMatrix() const{
-      ci::MatrixAffine2f mat;
-      mat.translate( position + registration_point );
-      mat.rotate( rotation );
-      mat.scale( scale );
-      mat.translate( -registration_point );
-      if( parent ){ mat = parent->toMatrix() * mat; }
-      return mat;
-    }
-  };
-
-  struct RenderMesh2d : Component<RenderMesh2d>
-  {
-    RenderMesh2d( int vertex_count, int render_layer=0 ):
-    render_layer( render_layer )
-    {
-      vertices.assign( vertex_count, Vertex2d{} );
-    }
-    RenderMesh2d( int render_layer=0, const ci::Rectf &bounds={ -20.0f, -10.0f, 20.0f, 10.0f } ):
-    render_layer( render_layer )
-    {
-      vertices.assign( 4, Vertex2d{} );
-      vertices[0].position = bounds.getUpperRight();
-      vertices[1].position = bounds.getUpperLeft();
-      vertices[2].position = bounds.getLowerRight();
-      vertices[3].position = bounds.getLowerLeft();
-    }
-    std::vector<Vertex2d> vertices;
-    int                   render_layer = 0;
-  };
-
   /**
    Simple 2d layer-sorted rendering system
    */
@@ -150,7 +105,7 @@ namespace puptent
     glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex2d ), &mVertices[0].tex_coord.x );
     glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex2d ), &mVertices[0].color.r );
     glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices.size() );
-    
+
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_COLOR_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );

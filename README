@@ -31,3 +31,13 @@ Batch 2d avg render time: 2.26326ms
 Batch 2d avg render time: 2.43113ms
 Batch 2d avg render time: 2.39248ms
 Batch 2d avg render time: 2.22816ms
+
+/*
+ * Copyright (C) 2013 David Wicks <david@sansumbrella.com>
+ * All rights reserved.
+ *
+ * This software is licensed as described in the file LICENSE, which
+ * you should have received as part of this distribution.
+ *
+ * Author: David Wicks <david@sansumbrella.com>
+ */

@@ -14,6 +14,9 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		06D2053C8A0E4EE09D31C099 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C488A17000B4EB4A41BC68E /* FileUtils.cpp */; };
 		1432D287CA264169832FA33A /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0F85005B9B6046EEBB74AB6D /* CinderApp.icns */; };
+		15053BEC17D4EE9500C2FE2D /* Sprites.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BEA17D4EE9500C2FE2D /* Sprites.cpp */; };
+		15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BED17D4EF2900C2FE2D /* Locus.cpp */; };
+		15053BF217D4F42D00C2FE2D /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF017D4F42D00C2FE2D /* Mesh.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
 		15D4415917D298C600A926F0 /* Event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413717D298C600A926F0 /* Event.cc */; };
@@ -51,6 +54,12 @@
 		0495832E96DC40A7B34AB66F /* ColorPalette.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ColorPalette.cpp; path = ../../../../Pockets/src/pockets/ColorPalette.cpp; sourceTree = "<group>"; };
 		0F85005B9B6046EEBB74AB6D /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		15053BEA17D4EE9500C2FE2D /* Sprites.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sprites.cpp; sourceTree = "<group>"; };
+		15053BEB17D4EE9500C2FE2D /* Sprites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprites.h; sourceTree = "<group>"; };
+		15053BED17D4EF2900C2FE2D /* Locus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Locus.cpp; sourceTree = "<group>"; };
+		15053BEE17D4EF2900C2FE2D /* Locus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locus.h; sourceTree = "<group>"; };
+		15053BF017D4F42D00C2FE2D /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
+		15053BF117D4F42D00C2FE2D /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
 		15D4413017D298C600A926F0 /* simplesignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplesignal.h; sourceTree = "<group>"; };
 		15D4413317D298C600A926F0 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
 		15D4413417D298C600A926F0 /* Entity.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cc; sourceTree = "<group>"; };
@@ -223,6 +232,12 @@
 				15D4417A17D409B400A926F0 /* Rendering.h */,
 				15D4417C17D40A3C00A926F0 /* PupTent.cpp */,
 				15D4417D17D40A3C00A926F0 /* PupTent.h */,
+				15053BEA17D4EE9500C2FE2D /* Sprites.cpp */,
+				15053BEB17D4EE9500C2FE2D /* Sprites.h */,
+				15053BED17D4EF2900C2FE2D /* Locus.cpp */,
+				15053BEE17D4EF2900C2FE2D /* Locus.h */,
+				15053BF017D4F42D00C2FE2D /* Mesh.cpp */,
+				15053BF117D4F42D00C2FE2D /* Mesh.h */,
 			);
 			path = puptent;
 			sourceTree = "<group>";
@@ -403,11 +418,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				15D4417B17D409B400A926F0 /* Rendering.cpp in Sources */,
+				15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */,
 				33B077D9B21C4A6A973C0DA6 /* PupTentApp.cpp in Sources */,
 				CC4A488ACD9648628B387DFB /* AnimationUtils.cpp in Sources */,
+				15053BF217D4F42D00C2FE2D /* Mesh.cpp in Sources */,
 				FA1936E3153D43439E5E059B /* ColorPalette.cpp in Sources */,
 				760B05E6C6D24E8EAEC98321 /* ExpandedLine2d.cpp in Sources */,
 				15D4416A17D298C600A926F0 /* TagsComponent.cc in Sources */,
+				15053BEC17D4EE9500C2FE2D /* Sprites.cpp in Sources */,
 				15D4416817D298C600A926F0 /* System.cc in Sources */,
 				5AB6BEE0DB024EA8B3126366 /* ExpandedPath2d.cpp in Sources */,
 				309C6F5D770445D8A51544BF /* ExpandedPath3d.cpp in Sources */,

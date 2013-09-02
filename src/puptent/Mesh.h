@@ -26,16 +26,48 @@
  */
 
 #pragma once
+#include "puptent/PupTent.h"
+#include "pockets/Types.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
-
-namespace pockets {}
 namespace puptent
 {
-  using namespace pockets;
-  using namespace entityx;
-}
+  /**
+   Collection of 2d vertices suitable for rendering as a triangle strip.
+  */
+  typedef std::shared_ptr<class RenderMesh2d> RenderMesh2dRef;
+  struct RenderMesh2d : Component<RenderMesh2d>
+  {
+    RenderMesh2d( int vertex_count=3, int render_layer=0 ):
+    render_layer( render_layer )
+    {
+      vertices.assign( vertex_count, Vertex2d{} );
+    }
 
-namespace pt = puptent;
+    static RenderMesh2dRef createCircle( float radius, size_t segments, int render_layer=0 )
+    {
+      RenderMesh2dRef mesh{ new RenderMesh2d{ segments * 3, render_layer } };
+      for( int i = 0; i < segments; ++i )
+      {
+        
+      }
+      return mesh;
+    }
+
+    static RenderMesh2dRef createBox( const ci::Rectf &bounds, int render_layer=0 )
+    {
+      RenderMesh2dRef mesh{ new RenderMesh2d{ 4, render_layer } };
+      mesh->vertices[0].position = bounds.getUpperRight();
+      mesh->vertices[1].position = bounds.getUpperLeft();
+      mesh->vertices[2].position = bounds.getLowerRight();
+      mesh->vertices[3].position = bounds.getLowerLeft();
+      return mesh;
+    }
+    std::vector<Vertex2d> vertices;
+    int                   render_layer = 0;
+  };
+
+  struct RenderMesh3d : Component<RenderMesh3d>
+  {
+  	std::vector<Vertex3d> vertices;
+  };
+} // puptent::

@@ -26,16 +26,25 @@
  */
 
 #pragma once
+#include "puptent/PupTent.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
-
-namespace pockets {}
 namespace puptent
 {
-  using namespace pockets;
-  using namespace entityx;
-}
+  struct Locus : Component<Locus>
+  {
+    Locus() = default;
+    Locus( const ci::Vec2f &pos, const ci::Vec2f &registration, float rot, shared_ptr<Locus> parent=nullptr ):
+    position( pos ),
+    registration_point( registration ),
+    rotation( rot ),
+    parent( parent )
+    {}
+    ci::Vec2f         position = ci::Vec2f::zero();
+    ci::Vec2f         registration_point = ci::Vec2f::zero();
+    float             rotation = 0.0f;
+    float             scale = 1.0f;
+    shared_ptr<Locus> parent = nullptr;
 
-namespace pt = puptent;
+    ci::MatrixAffine2f  toMatrix() const;
+  };
+}
