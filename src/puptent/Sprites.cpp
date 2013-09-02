@@ -50,58 +50,58 @@ void Sprite::applyDataToMesh()
 
 void SpriteSystem::configure( shared_ptr<EventManager> events )
 {
- events->subscribe<EntityDestroyedEvent>( *this );
- events->subscribe<ComponentAddedEvent<Sprite>>( *this );
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
+  events->subscribe<EntityDestroyedEvent>( *this );
+  events->subscribe<ComponentAddedEvent<Sprite>>( *this );
 }
 
 void SpriteSystem::receive(const entityx::EntityDestroyedEvent &event)
 { // stop tracking the entity
- auto entity = event.entity;
- if( entity.component<Sprite>() )
- {
-   vector_remove( &mEntities, entity );
- }
+  auto entity = event.entity;
+  if( entity.component<Sprite>() )
+  {
+    vector_remove( &mEntities, entity );
+  }
 }
 
 void SpriteSystem::receive(const ComponentAddedEvent<puptent::Sprite> &event)
 { // track the sprite
- mEntities.push_back( event.entity );
+  mEntities.push_back( event.entity );
 }
 
 void SpriteSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
 {
- for( auto entity : mEntities )
- { // what is the performance of this component casting business?
-   // fast enough for most things, no doubt
-   auto sprite = entity.component<Sprite>();
-   sprite->hold += dt;
-   int next_index = sprite->current_index;
-   // check timing
-   if( sprite->hold > sprite->frame_duration * sprite->currentFrame().hold )
-   { // move to next frame
-     next_index += 1;
-     sprite->hold = 0.0f;
-   }
-   else if ( sprite->hold < 0.0f )
-   { // step back a frame
-     next_index -= 1;
-     sprite->hold = sprite->frame_duration * sprite->currentFrame().hold;
-   }
-   // handle wrapping around beginning and end
-   if( next_index >= static_cast<int>( sprite->frames.size() ) )
-   { // handle wraparound at end
-     next_index = sprite->looping ? 0 : sprite->frames.size() - 1;
-   }
-   else if( next_index < 0 )
-   { // handle wraparound at beginning
-     next_index = sprite->looping ? sprite->frames.size() - 1 : 0;
-   }
-   // actually change the drawing
-   if( next_index != sprite->current_index )
-   { // the frame index has changed, update display
-     sprite->current_index = next_index;
-     sprite->applyDataToMesh();
-   }
- }
+  for( auto entity : mEntities )
+  { // what is the performance of this component casting business?
+    // fast enough for most things, no doubt
+    auto sprite = entity.component<Sprite>();
+    sprite->hold += dt;
+    int next_index = sprite->current_index;
+    // check timing
+    if( sprite->hold > sprite->frame_duration * sprite->currentFrame().hold )
+    { // move to next frame
+      next_index += 1;
+      sprite->hold = 0.0f;
+    }
+    else if ( sprite->hold < 0.0f )
+    { // step back a frame
+      next_index -= 1;
+      sprite->hold = sprite->frame_duration * sprite->currentFrame().hold;
+    }
+    // handle wrapping around beginning and end
+    if( next_index >= static_cast<int>( sprite->frames.size() ) )
+    { // handle wraparound at end
+      next_index = sprite->looping ? 0 : sprite->frames.size() - 1;
+    }
+    else if( next_index < 0 )
+    { // handle wraparound at beginning
+      next_index = sprite->looping ? sprite->frames.size() - 1 : 0;
+    }
+    // actually change the drawing
+    if( next_index != sprite->current_index )
+    { // the frame index has changed, update display
+      sprite->current_index = next_index;
+      sprite->applyDataToMesh();
+    }
+  }
 }
-

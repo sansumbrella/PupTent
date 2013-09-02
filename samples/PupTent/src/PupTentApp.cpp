@@ -90,9 +90,10 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
-  for( int i = 0; i < 4000; ++i )
+  Entity entity;
+  for( int i = 0; i < 3; ++i )
   {
-    Entity entity = mEntities->create();
+    entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
     auto mesh = RenderMesh2dRef{ new RenderMesh2d{ 4 } };
     mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
@@ -108,6 +109,17 @@ void PupTentApp::setup()
     entity.assign<Locus>( loc );
     entity.assign<RenderMesh2d>( mesh );
   }
+
+  getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
+  {
+    if( entity.valid() )
+    {
+      cout << "Destroying entity: " << entity << endl;
+      entity.destroy();
+//      entity.assign<RenderMesh2d>();
+//      entity.component<RenderMesh2d>().reset();
+    }
+  });
 
   mTimer.start();
 }

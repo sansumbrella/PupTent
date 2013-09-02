@@ -41,10 +41,11 @@ namespace puptent
   {
     typedef std::pair<shared_ptr<Locus>, shared_ptr<RenderMesh2d>> MeshPair;
 
-    void configure( EventManager &event_manager )
+    void configure( shared_ptr<EventManager> event_manager ) override
     {
-      event_manager.subscribe<EntityDestroyedEvent>( *this );
-      event_manager.subscribe<ComponentAddedEvent<RenderMesh2d>>( *this );
+      std::cout << __PRETTY_FUNCTION__ << std::endl;
+      event_manager->subscribe<EntityDestroyedEvent>( *this );
+      event_manager->subscribe<ComponentAddedEvent<RenderMesh2d>>( *this );
     }
 
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
@@ -83,6 +84,7 @@ namespace puptent
 
   void receive( const EntityDestroyedEvent &event )
   {
+    std::cout << "Entity destroyed" << std::endl;
     auto entity = event.entity;
     if( entity.component<RenderMesh2d>() )
     { // if a mesh was destroyed, we will update our render list this frame
@@ -92,6 +94,7 @@ namespace puptent
 
   void receive( const ComponentAddedEvent<RenderMesh2d> &event )
   { // empty our geometry
+    std::cout << "Render component added: " << event.component << std::endl;
     mGeometry.clear();
   }
 
