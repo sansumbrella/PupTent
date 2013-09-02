@@ -32,7 +32,7 @@ using namespace cinder;
 
 void Sprite::applyDataToMesh()
 { // set mesh data from current frame
-  const auto drawing = currentFrame().sprite;
+  const auto drawing = currentDrawing();
   Rectf tex_coord_rect = drawing.texture_bounds;
   Rectf position_rect( Vec2f::zero(), drawing.size );
   position_rect -= drawing.registration_point;
@@ -78,7 +78,7 @@ void SpriteSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager
     sprite->hold += dt;
     int next_index = sprite->current_index;
     // check timing
-    if( sprite->hold > sprite->frame_duration * sprite->currentFrame().hold )
+    if( sprite->hold > sprite->frame_duration * sprite->currentDrawing().hold )
     { // move to next frame
       next_index += 1;
       sprite->hold = 0.0f;
@@ -86,16 +86,16 @@ void SpriteSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager
     else if ( sprite->hold < 0.0f )
     { // step back a frame
       next_index -= 1;
-      sprite->hold = sprite->frame_duration * sprite->currentFrame().hold;
+      sprite->hold = sprite->frame_duration * sprite->currentDrawing().hold;
     }
     // handle wrapping around beginning and end
-    if( next_index >= static_cast<int>( sprite->frames.size() ) )
+    if( next_index >= static_cast<int>( sprite->drawings.size() ) )
     { // handle wraparound at end
-      next_index = sprite->looping ? 0 : sprite->frames.size() - 1;
+      next_index = sprite->looping ? 0 : sprite->drawings.size() - 1;
     }
     else if( next_index < 0 )
     { // handle wraparound at beginning
-      next_index = sprite->looping ? sprite->frames.size() - 1 : 0;
+      next_index = sprite->looping ? sprite->drawings.size() - 1 : 0;
     }
     // actually change the drawing
     if( next_index != sprite->current_index )

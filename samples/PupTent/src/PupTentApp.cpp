@@ -10,6 +10,7 @@
 #include "pockets/CollectionUtilities.hpp"
 
 #include "puptent/Rendering.h"
+#include "puptent/Sprites.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -25,14 +26,6 @@ using namespace puptent;
 
 using namespace entityx;
 using pockets::Vertex2d;
-
-struct Velocity : Component<Velocity>
-{
-  Velocity( float x = 0.0f, float y = 0.0f ):
-  velocity( x, y )
-  {}
-  ci::Vec2f velocity;
-};
 
 struct MovementSystem : public System<MovementSystem>
 {
@@ -85,7 +78,7 @@ void PupTentApp::setup()
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
   mSystemManager->add<MovementSystem>();
-  mSystemManager->add<RenderSystem>();
+  mSystemManager->add<BatchRenderSystem2d>();
   mSystemManager->configure();
 
   Rand r;
@@ -108,7 +101,6 @@ void PupTentApp::setup()
     mesh->render_layer = loc->position.distance( center );
     entity.assign( loc );
     entity.assign( mesh );
-    entity.assign<Velocity>();
   }
 
   getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
@@ -145,6 +137,7 @@ void PupTentApp::update()
   mTimer.start();
   double start = getElapsedSeconds();
   mSystemManager->update<MovementSystem>( dt );
+  mSystemManager->update<BatchRenderSystem2d>( 0.0 );
   double end = getElapsedSeconds();
   if( getElapsedFrames() % 60 == 0 )
   {
@@ -157,12 +150,11 @@ void PupTentApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
   double start = getElapsedSeconds();
-  mSystemManager->update<RenderSystem>( 0.0 );
-  mSystemManager->system<RenderSystem>()->draw();
+  mSystemManager->system<BatchRenderSystem2d>()->draw();
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
-  if( getElapsedFrames() % 30 == 0 )
+  if( getElapsedFrames() % 60 == 0 )
   {
     cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
   }

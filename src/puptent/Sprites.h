@@ -32,32 +32,30 @@
 
 namespace puptent
 {
-  struct SpriteData
-  {
-    ci::Vec2f registration_point = ci::Vec2f::zero();
-    ci::Vec2i size = ci::Vec2i( 48, 48 );
-    const ci::Rectf texture_bounds = ci::Rectf(0,0,1,1);
-  };
-
   struct Sprite : Component<Sprite>
   {
     struct Drawing
     {
-      SpriteData  sprite;
-      float       hold; // frames to hold
+      ci::Vec2f       registration_point = ci::Vec2f::zero();
+      ci::Vec2i       size = ci::Vec2i( 48, 48 );
+      ci::Rectf       texture_bounds = ci::Rectf(0,0,1,1);
+      float           hold = 1.0f; // frames to hold
     };
 
     Sprite()
     {
+      drawings.assign( 1, Drawing{} );
       applyDataToMesh();
     }
+
     //! commits the current frame position and texture coordinates to mesh
     void applyDataToMesh();
-    const Drawing &currentFrame() const { return frames.at( current_index ); }
-    std::vector<Drawing>  frames;
-    int                   current_index = 0; // this limits us to 32k frames per animation...
+    //! returns the current drawing
+    inline const Drawing &currentDrawing() const { return drawings.at( current_index ); }
+    std::vector<Drawing>  drawings;
+    int                   current_index = 0; // index of current animation frame
     float                 hold = 0.0f;      // time spent on this frame
-    float                 frame_duration = 0.0f;
+    float                 frame_duration = 0.0f;  // default is no animation
     bool                  looping = true;
     // we create the mesh here and then add that mesh to entities
     // that way, we know we are using the expected mesh in the entity

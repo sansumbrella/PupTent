@@ -26,5 +26,92 @@
  */
 
 #include "puptent/Rendering.h"
+#include "cinder/gl/Texture.h"
 
+using namespace cinder;
+using namespace puptent;
 
+void BatchRenderSystem2d::configure( shared_ptr<EventManager> event_manager )
+{
+  event_manager->subscribe<EntityDestroyedEvent>( *this );
+  event_manager->subscribe<ComponentAddedEvent<RenderMesh2d>>( *this );
+  event_manager->subscribe<ComponentRemovedEvent<RenderMesh2d>>( *this );
+}
+
+void BatchRenderSystem2d::receive(const ComponentAddedEvent<puptent::RenderMesh2d> &event)
+{
+  std::cout << "Render component added: " << event.component << std::endl;
+  mGeometry.clear();
+}
+
+void BatchRenderSystem2d::receive(const ComponentRemovedEvent<puptent::RenderMesh2d> &event)
+{
+  std::cout << "Render component removed: " << event.component << std::endl;
+  mGeometry.clear();
+}
+
+void BatchRenderSystem2d::receive(const EntityDestroyedEvent &event)
+{
+  std::cout << "Entity destroyed" << std::endl;
+  auto entity = event.entity;
+  if( entity.component<RenderMesh2d>() )
+  { // if a mesh was destroyed, we will update our render list this frame
+    mGeometry.clear();
+  }
+}
+
+void BatchRenderSystem2d::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+{
+  // build our sorted geometry list from query if the layers/components have changed
+  // will rebuild if any meshes are removed or added
+  if( mGeometry.empty() )
+  {
+    for( auto entity : es->entities_with_components<Locus, RenderMesh2d>() )
+    {
+      mGeometry.emplace_back( entity.component<Locus>(), entity.component<RenderMesh2d>() );
+    }
+    stable_sort( mGeometry.begin(), mGeometry.end(), []( const MeshPair &lhs, const MeshPair &rhs ) -> bool {
+      return lhs.second->render_layer < rhs.second->render_layer;
+    } );
+  }
+  // assemble all vertices
+  mVertices.clear();
+  for( auto pair : mGeometry )
+  {
+    auto loc = pair.first;
+    auto mesh = pair.second;
+    auto mat = loc->toMatrix();
+    if( !mVertices.empty() )
+    { // create degenerate triangle between previous and current shape
+      mVertices.emplace_back( mVertices.back() );
+      auto vert = mesh->vertices.front();
+      mVertices.emplace_back( Vertex2d{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+    }
+    for( auto &vert : mesh->vertices )
+    {
+      mVertices.emplace_back( Vertex2d{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+    }
+  }
+}
+
+void BatchRenderSystem2d::draw() const
+{
+  if( mTexture )
+  {
+    gl::enableAlphaBlending( true );
+    gl::enable( GL_TEXTURE_2D );
+    mTexture->bind();
+  }
+  glEnableClientState( GL_VERTEX_ARRAY );
+  glEnableClientState( GL_COLOR_ARRAY );
+  glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
+  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex2d ), &mVertices[0].position.x );
+  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex2d ), &mVertices[0].tex_coord.x );
+  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex2d ), &mVertices[0].color.r );
+  glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices.size() );
+
+  glDisableClientState( GL_VERTEX_ARRAY );
+  glDisableClientState( GL_COLOR_ARRAY );
+  glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+}
