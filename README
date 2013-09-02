@@ -4,10 +4,7 @@ A set of useful entities built on top of Cinder and entityx.
 
 Requires:
 Cinder 0.8.5
-entityx (included in src/ with it's own license)
-
-To be released under the Modified BSD License
-http://opensource.org/licenses/BSD-2-Clause
+entityx (necessary bits included in src/)
 
 
 Renderer performance

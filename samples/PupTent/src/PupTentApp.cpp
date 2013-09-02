@@ -152,12 +152,14 @@ struct MovementSystem : public System<MovementSystem>
         mElements.push_back( entity.component<Locus>() );
       }
     }
+    time += dt;
     for( auto& loc : mElements )
     {
       loc->rotation = fmodf( loc->rotation + M_PI * 0.01f, M_PI * 2 );
+      loc->scale = math<float>::sin( 0.5f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
     }
   }
-
+  double time;
   vector<shared_ptr<Locus>> mElements;
 };
 
@@ -173,13 +175,14 @@ private:
   shared_ptr<EntityManager> mEntities;
   shared_ptr<SystemManager> mSystemManager;
   shared_ptr<MovementSystem>  mMovement;
-  double mLastUpdate = 0.0;
   double            mAverageRenderTime = 0;
+  Timer  mTimer;
 };
 
 void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
+//  settings->setFullScreen();
 }
 
 void PupTentApp::setup()
@@ -194,7 +197,7 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
-  for( int i = 0; i < 1000; ++i )
+  for( int i = 0; i < 4000; ++i )
   {
     Entity entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -210,13 +213,14 @@ void PupTentApp::setup()
     entity.assign<Locus>( loc );
     entity.assign<RenderMesh2d>( mesh );
   }
+
+  mTimer.start();
 }
 
 void PupTentApp::update()
 {
-  double now = getElapsedSeconds();
-  double dt = now - mLastUpdate;
-  mLastUpdate = now;
+  double dt = mTimer.getSeconds();
+  mTimer.start();
   double start = getElapsedSeconds();
   mSystemManager->update<MovementSystem>( dt );
   double end = getElapsedSeconds();
@@ -236,10 +240,7 @@ void PupTentApp::draw()
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
-  if( getElapsedFrames() % 120 == 0 )
-  {
-    cout << "Render ms: " << mAverageRenderTime << endl;
-  }
+  cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
 }
 
 CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_8 ) )

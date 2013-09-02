@@ -45,12 +45,14 @@ namespace puptent
     ci::Vec2f         position = ci::Vec2f::zero();
     ci::Vec2f         registration_point = ci::Vec2f::zero();
     float             rotation = 0.0f;
+    float             scale = 1.0f;
     shared_ptr<Locus> parent = nullptr;
 
     ci::MatrixAffine2f  toMatrix() const{
       ci::MatrixAffine2f mat;
       mat.translate( position + registration_point );
       mat.rotate( rotation );
+      mat.scale( scale );
       mat.translate( -registration_point );
       if( parent ){ mat = parent->toMatrix() * mat; }
       return mat;
@@ -78,7 +80,7 @@ namespace puptent
   };
 
   /**
-   Basic layer-sorted rendering system
+   Simple 2d layer-sorted rendering system
    */
   struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
   {
@@ -156,6 +158,10 @@ namespace puptent
 private:
   std::vector<MeshPair> mGeometry;
   std::vector<Vertex2d> mVertices;
+  // maybe add a TextureRef for whatever texturing is needed (e.g. spriting)
+  // then if( tex ){ tex->enableAndBind(); }
+  // maybe add a CameraRef for positioning the scene
+  // use a POV2d and Locus component as camera, allowing dynamic switching
 };
 
 }
