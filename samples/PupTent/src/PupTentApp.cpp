@@ -52,7 +52,7 @@ struct MovementSystem : public System<MovementSystem>
       loc->scale = math<float>::sin( 0.5f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
     }
   }
-  double time;
+  double time = 0.0;
   vector<shared_ptr<Locus>> mElements;
 };
 
@@ -91,7 +91,7 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 3; ++i )
+  for( int i = 0; i < 1000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -116,7 +116,6 @@ void PupTentApp::setup()
     if( entity.valid() )
     {
       cout << "Removing mesh component: " << entity << endl;
-//      entity.destroy();
       if( entity.component<RenderMesh2d>() )
       {
         entity.remove<RenderMesh2d>();
@@ -124,10 +123,9 @@ void PupTentApp::setup()
       else
       {
         auto mesh = RenderMesh2dRef{ new RenderMesh2d{ 4 } };
-        float x = Rand::randFloat( 10.0f, 40.0f );
-        float y = Rand::randFloat( 10.0f, 40.0f );
-        mesh->setAsBox( { -x, -y, x, y } );
-        //    mesh->setAsCircle( Vec2f{ 20.0f, 20.0f }, 0.0f, M_PI * 1.5f );
+        float r = Rand::randFloat( 20.0f, 100.0f );
+        mesh->setAsCircle( Vec2f{ r, r }, 0.0f, M_PI * 1.5f );
+        mesh->render_layer = 1000;
         ColorA color{ CM_HSV, Rand::randFloat( 0.4f, 0.8f ), 0.9f, 0.7f, 1.0f };
         for( auto &v : mesh->vertices )
         {
@@ -150,7 +148,7 @@ void PupTentApp::update()
   double end = getElapsedSeconds();
   if( getElapsedFrames() % 60 == 0 )
   {
-//    cout << "Update: " << (end - start) * 1000 << endl;
+    cout << "Update: " << (end - start) * 1000 << endl;
   }
 }
 
@@ -166,7 +164,7 @@ void PupTentApp::draw()
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 30 == 0 )
   {
-//    cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
+    cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
   }
 }
 
