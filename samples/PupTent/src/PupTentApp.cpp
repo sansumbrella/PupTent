@@ -106,8 +106,8 @@ void PupTentApp::setup()
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
     mesh->render_layer = loc->position.distance( center );
-    entity.assign<Locus>( loc );
-    entity.assign<RenderMesh2d>( mesh );
+    entity.assign( loc );
+    entity.assign( mesh );
     entity.assign<Velocity>();
   }
 
@@ -117,9 +117,24 @@ void PupTentApp::setup()
     {
       cout << "Removing mesh component: " << entity << endl;
 //      entity.destroy();
-      entity.remove<RenderMesh2d>();
-//      entity.assign<RenderMesh2d>();
-//      entity.component<RenderMesh2d>().reset();
+      if( entity.component<RenderMesh2d>() )
+      {
+        entity.remove<RenderMesh2d>();
+      }
+      else
+      {
+        auto mesh = RenderMesh2dRef{ new RenderMesh2d{ 4 } };
+        float x = Rand::randFloat( 10.0f, 40.0f );
+        float y = Rand::randFloat( 10.0f, 40.0f );
+        mesh->setAsBox( { -x, -y, x, y } );
+        //    mesh->setAsCircle( Vec2f{ 20.0f, 20.0f }, 0.0f, M_PI * 1.5f );
+        ColorA color{ CM_HSV, Rand::randFloat( 0.4f, 0.8f ), 0.9f, 0.7f, 1.0f };
+        for( auto &v : mesh->vertices )
+        {
+          v.color = color;
+        }
+        entity.assign( mesh );
+      }
     }
   });
 
