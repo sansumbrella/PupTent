@@ -26,18 +26,19 @@
  */
 
 #pragma once
+#include "puptent/PupTent.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
+/**
+ Some functions to ease the creation of different components
+*/
 
-namespace pockets {}
-namespace puptent
+namespace cinder
 {
-  using namespace pockets;
-  using namespace entityx;
-
-  typedef std::shared_ptr<class Sprite> SpriteRef;
+  class JsonTree;
 }
 
-namespace pt = puptent;
+namespace puptent
+{
+  class TextureAtlas;
+  SpriteRef createSpriteAnimationFromJson( const ci::JsonTree &anim, const TextureAtlas &atlas );
+}

@@ -17,6 +17,9 @@
 		15053BEC17D4EE9500C2FE2D /* Sprites.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BEA17D4EE9500C2FE2D /* Sprites.cpp */; };
 		15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BED17D4EF2900C2FE2D /* Locus.cpp */; };
 		15053BF217D4F42D00C2FE2D /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF017D4F42D00C2FE2D /* Mesh.cpp */; };
+		15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */; };
+		15053BF817D541EA00C2FE2D /* ComponentGenerators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF617D541EA00C2FE2D /* ComponentGenerators.cpp */; };
+		15053BFB17D543BE00C2FE2D /* SpriteData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF917D543BE00C2FE2D /* SpriteData.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
 		15D4415917D298C600A926F0 /* Event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413717D298C600A926F0 /* Event.cc */; };
@@ -60,6 +63,12 @@
 		15053BEE17D4EF2900C2FE2D /* Locus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locus.h; sourceTree = "<group>"; };
 		15053BF017D4F42D00C2FE2D /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		15053BF117D4F42D00C2FE2D /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
+		15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAtlas.cpp; sourceTree = "<group>"; };
+		15053BF417D5418C00C2FE2D /* TextureAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureAtlas.h; sourceTree = "<group>"; };
+		15053BF617D541EA00C2FE2D /* ComponentGenerators.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentGenerators.cpp; sourceTree = "<group>"; };
+		15053BF717D541EA00C2FE2D /* ComponentGenerators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentGenerators.h; sourceTree = "<group>"; };
+		15053BF917D543BE00C2FE2D /* SpriteData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteData.cpp; sourceTree = "<group>"; };
+		15053BFA17D543BE00C2FE2D /* SpriteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteData.h; sourceTree = "<group>"; };
 		15D4413017D298C600A926F0 /* simplesignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplesignal.h; sourceTree = "<group>"; };
 		15D4413317D298C600A926F0 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
 		15D4413417D298C600A926F0 /* Entity.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cc; sourceTree = "<group>"; };
@@ -238,6 +247,12 @@
 				15053BEE17D4EF2900C2FE2D /* Locus.h */,
 				15053BF017D4F42D00C2FE2D /* Mesh.cpp */,
 				15053BF117D4F42D00C2FE2D /* Mesh.h */,
+				15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */,
+				15053BF417D5418C00C2FE2D /* TextureAtlas.h */,
+				15053BF617D541EA00C2FE2D /* ComponentGenerators.cpp */,
+				15053BF717D541EA00C2FE2D /* ComponentGenerators.h */,
+				15053BF917D543BE00C2FE2D /* SpriteData.cpp */,
+				15053BFA17D543BE00C2FE2D /* SpriteData.h */,
 			);
 			path = puptent;
 			sourceTree = "<group>";
@@ -442,7 +457,10 @@
 				79D663C296144B1FACB3CD93 /* SpriteAnimation.cpp in Sources */,
 				E701C741B41A410E8C0D5415 /* SpriteSheet.cpp in Sources */,
 				C1D9AA5DFFE14A7DA28020F1 /* SweptPath3d.cpp in Sources */,
+				15053BF817D541EA00C2FE2D /* ComponentGenerators.cpp in Sources */,
 				9BAA506004CA4B559D751E29 /* Vbo.cpp in Sources */,
+				15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */,
+				15053BFB17D543BE00C2FE2D /* SpriteData.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

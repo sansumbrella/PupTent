@@ -25,19 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include "ComponentGenerators.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
+#include "puptent/Sprites.h"
+#include "puptent/TextureAtlas.h"
+#include "cinder/Json.h"
 
-namespace pockets {}
-namespace puptent
+using namespace puptent;
+using namespace cinder;
+using namespace std;
+
+SpriteRef pt::createSpriteAnimationFromJson( const JsonTree &anim, const TextureAtlas &atlas )
 {
-  using namespace pockets;
-  using namespace entityx;
-
-  typedef std::shared_ptr<class Sprite> SpriteRef;
+  try
+  {
+    vector<Sprite::Drawing> drawings;
+    float frame_duration = 1.0f / anim.getChild("fps").getValue<float>();
+    auto frames = anim.getChild("frames");
+    for( auto &child : frames.getChildren() )
+    { // stored in json as [ "id", duration ]
+      drawings.emplace_back( atlas[child[0].getValue()], child[1].getValue<float>() );
+    }
+    return SpriteRef{ new Sprite{ move(drawings), frame_duration } };
+  }
+  catch( JsonTree::Exception &exc )
+  {
+    std::cout << __FUNCTION__ << " error: " << exc.what() << std::endl;
+  }
+  return SpriteRef{ new Sprite{} };
 }
 
-namespace pt = puptent;

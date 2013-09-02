@@ -26,18 +26,32 @@
  */
 
 #pragma once
+#include "puptent/PupTent.h"
+#include "puptent/SpriteData.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
-
-namespace pockets {}
-namespace puptent
+namespace cinder
 {
-  using namespace pockets;
-  using namespace entityx;
-
-  typedef std::shared_ptr<class Sprite> SpriteRef;
+  class JsonTree;
 }
 
-namespace pt = puptent;
+namespace puptent
+{
+  class TextureAtlas
+  {
+  public:
+    TextureAtlas( const ci::Surface &images, const ci::JsonTree &description );
+    inline const SpriteData&  operator [] ( const std::string &sprite_name ) const
+    {
+      auto iter = mData.find(sprite_name);
+      if( iter != mData.end() )
+      {
+        return iter->second;
+      }
+      return SpriteData{};
+    }
+  private:
+    std::map<std::string, SpriteData>   mData;
+    ci::gl::TextureRef                  mTexture;
+  };
+
+} // puptent::

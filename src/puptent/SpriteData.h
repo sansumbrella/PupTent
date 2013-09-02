@@ -27,17 +27,19 @@
 
 #pragma once
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
-
-namespace pockets {}
 namespace puptent
 {
-  using namespace pockets;
-  using namespace entityx;
-
-  typedef std::shared_ptr<class Sprite> SpriteRef;
+  struct SpriteData
+  {
+    SpriteData( const ci::Vec2f &registration = ci::Vec2f::zero(),
+               const ci::Vec2i &size = ci::Vec2i{ 96, 96 },
+               const ci::Rectf &bounds = ci::Rectf{ 0.0f, 0.0f, 1.0f, 1.0f } ):
+    registration_point( registration ),
+    size( size ),
+    texture_bounds( bounds )
+    {}
+    ci::Vec2f       registration_point;
+    ci::Vec2i       size;
+    ci::Rectf       texture_bounds;
+  };
 }
-
-namespace pt = puptent;

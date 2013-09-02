@@ -25,19 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
-
-namespace pockets {}
-namespace puptent
-{
-  using namespace pockets;
-  using namespace entityx;
-
-  typedef std::shared_ptr<class Sprite> SpriteRef;
-}
-
-namespace pt = puptent;
+#include "SpriteData.h"

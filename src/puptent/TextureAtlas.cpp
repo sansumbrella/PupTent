@@ -25,19 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include "TextureAtlas.h"
+#include "cinder/Json.h"
+#include "cinder/gl/Texture.h"
 
-#include "entityx/Entity.h"
-#include "entityx/System.h"
-#include "entityx/Event.h"
-
-namespace pockets {}
-namespace puptent
-{
-  using namespace pockets;
-  using namespace entityx;
-
-  typedef std::shared_ptr<class Sprite> SpriteRef;
-}
-
-namespace pt = puptent;

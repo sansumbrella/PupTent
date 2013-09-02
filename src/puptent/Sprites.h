@@ -27,7 +27,8 @@
 
 #pragma once
 #include "puptent/PupTent.h"
-#include "Mesh.h"  // for 2d render meshes
+#include "puptent/SpriteData.h"
+#include "puptent/Mesh.h"
 #include "pockets/CollectionUtilities.hpp"
 
 namespace puptent
@@ -36,10 +37,12 @@ namespace puptent
   {
     struct Drawing
     {
-      ci::Vec2f       registration_point = ci::Vec2f::zero();
-      ci::Vec2i       size = ci::Vec2i( 48, 48 );
-      ci::Rectf       texture_bounds = ci::Rectf(0,0,1,1);
-      float           hold = 1.0f; // frames to hold
+      Drawing( const SpriteData &drawing=SpriteData{}, float hold=1.0f ):
+      drawing( drawing ),
+      hold( hold )
+      {}
+      SpriteData      drawing;
+      float           hold; // frames to hold
     };
 
     Sprite()
@@ -47,15 +50,24 @@ namespace puptent
       drawings.assign( 1, Drawing{} );
       applyDataToMesh();
     }
+    // build a sprite from a list of drawings
+    Sprite( std::vector<Drawing> &&drawings, float frame_duration = 1.0f / 24.0f ):
+    drawings( std::move(drawings) ),
+    frame_duration( frame_duration )
+    {
+      applyDataToMesh();
+    }
 
     //! commits the current frame position and texture coordinates to mesh
     void applyDataToMesh();
     //! returns the current drawing
     inline const Drawing &currentDrawing() const { return drawings.at( current_index ); }
+    //! set the frame duration as frame rate
+    void setFrameRate( float frame_rate ){ frame_duration = 1.0f / frame_rate; }
     std::vector<Drawing>  drawings;
     int                   current_index = 0; // index of current animation frame
     float                 hold = 0.0f;      // time spent on this frame
-    float                 frame_duration = 0.0f;  // default is no animation
+    float                 frame_duration = 1.0f / 24.0f;
     bool                  looping = true;
     // we create the mesh here and then add that mesh to entities
     // that way, we know we are using the expected mesh in the entity

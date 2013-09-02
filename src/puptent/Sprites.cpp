@@ -32,7 +32,7 @@ using namespace cinder;
 
 void Sprite::applyDataToMesh()
 { // set mesh data from current frame
-  const auto drawing = currentDrawing();
+  const auto drawing = currentDrawing().drawing;
   Rectf tex_coord_rect = drawing.texture_bounds;
   Rectf position_rect( Vec2f::zero(), drawing.size );
   position_rect -= drawing.registration_point;
