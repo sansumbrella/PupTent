@@ -95,7 +95,8 @@ void PupTentApp::setup()
     Entity entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
     auto mesh = RenderMesh2d::createBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
-    ColorA color{ CM_HSV, r.nextFloat( 1.0f ), 0.9f, 0.9f, 1.0f };
+    mesh = RenderMesh2d::createCircle( 20.0f, M_PI * 0.25f, M_PI * 1.5f, 24 );
+    ColorA color{ CM_HSV, r.nextFloat( 0.1f, 0.4f ), 0.9f, 0.6f, 1.0f };
     for( auto &v : mesh->vertices )
     {
       v.color = color;
