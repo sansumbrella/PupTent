@@ -43,36 +43,13 @@ namespace puptent
       vertices.assign( vertex_count, Vertex2d{} );
     }
 
-    static RenderMesh2dRef createCircle( float radius, float start_radians, float completion_radians, size_t segments, int render_layer=0 )
-    { // triangle strips are unfortunately inefficient at rendering circular shapes
-      RenderMesh2dRef mesh{ new RenderMesh2d{ segments * 5, render_layer } };
-      ci::Vec2f a{ 0.0f, 0.0f };
-      for( int i = 0; i < segments; ++i )
-      {
-        float t1 = ci::lmap<float>( i, 0, segments, start_radians, completion_radians );
-        float t2 = ci::lmap<float>( i + 1, 0, segments, start_radians, completion_radians );
-        ci::Vec2f b = { ci::math<float>::cos( t1 ) * radius, ci::math<float>::sin( t1 ) * radius };
-        ci::Vec2f c = { ci::math<float>::cos( t2 ) * radius, ci::math<float>::sin( t2 ) * radius };
-        mesh->vertices.at(i * 5 + 0).position = a;
-        mesh->vertices.at(i * 5 + 1).position = b;
-        mesh->vertices.at(i * 5 + 2).position = c;
-        mesh->vertices.at(i * 5 + 3).position = c;
-        mesh->vertices.at(i * 5 + 4).position = a;
-      }
-      return mesh;
-    }
-
-    static RenderMesh2dRef createBox( const ci::Rectf &bounds, int render_layer=0 )
-    {
-      RenderMesh2dRef mesh{ new RenderMesh2d{ 4, render_layer } };
-      mesh->vertices[0].position = bounds.getUpperRight();
-      mesh->vertices[1].position = bounds.getUpperLeft();
-      mesh->vertices[2].position = bounds.getLowerRight();
-      mesh->vertices[3].position = bounds.getLowerLeft();
-      return mesh;
-    }
     std::vector<Vertex2d> vertices;
     int                   render_layer = 0;
+    //! Convenience method for making circular shapes
+    //! If you aren't dynamically changing the circle, consider using a Sprite
+    void setAsCircle( const ci::Vec2f &radius, float start_radians=0, float end_radians=M_PI * 2, size_t segments=0 );
+    //! Set the mesh bounds to a box shape
+    void setAsBox( const ci::Rectf &bounds );
   };
 
   struct RenderMesh3d : Component<RenderMesh3d>

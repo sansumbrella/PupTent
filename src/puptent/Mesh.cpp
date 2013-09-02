@@ -28,3 +28,42 @@
 #include "Mesh.h"
 using namespace puptent;
 using namespace cinder;
+
+void RenderMesh2d::setAsCircle(const ci::Vec2f &radius, float start_radians, float end_radians, size_t segments )
+{
+  if( segments < 2 ) { // based off of cinder, though we're less generous with the vertices
+    segments = math<float>::floor( math<float>::max( radius.x, radius.y ) * abs(end_radians - start_radians) / 3 );
+  }
+  if( segments < 3 ){
+    segments = 3;
+  }
+  if( vertices.size() != segments * 5 )
+  {
+    vertices.assign( segments * 5, Vertex2d{} );
+  }
+  Vec2f a{ 0.0f, 0.0f };
+  for( int i = 0; i < segments; ++i )
+  {
+    float t1 = lmap<float>( i, 0, segments, start_radians, end_radians );
+    float t2 = lmap<float>( i + 1, 0, segments, start_radians, end_radians );
+    Vec2f b = Vec2f{ math<float>::cos( t1 ), math<float>::sin( t1 ) } * radius;
+    Vec2f c = Vec2f{ math<float>::cos( t2 ), math<float>::sin( t2 ) } * radius;
+    vertices.at(i * 5 + 0).position = a;
+    vertices.at(i * 5 + 1).position = b;
+    vertices.at(i * 5 + 2).position = c;
+    vertices.at(i * 5 + 3).position = c;
+    vertices.at(i * 5 + 4).position = a;
+  }
+}
+
+void RenderMesh2d::setAsBox( const Rectf &bounds )
+{
+  if( vertices.size() != 4 )
+  {
+    vertices.assign( 4, Vertex2d{} );
+  }
+  vertices[0].position = bounds.getUpperRight();
+  vertices[1].position = bounds.getUpperLeft();
+  vertices[2].position = bounds.getLowerRight();
+  vertices[3].position = bounds.getLowerLeft();
+}
