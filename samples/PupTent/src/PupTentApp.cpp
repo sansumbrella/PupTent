@@ -92,7 +92,8 @@ struct SpriteSystem : public System<SpriteSystem>, Receiver<SpriteSystem>
   void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
   {
     for( auto entity : mEntities )
-    {
+    { // what is the performance of this component casting business?
+      // fast enough for most things, no doubt
       auto sprite = entity.component<Sprite>();
       sprite->hold += dt;
       int next_index = sprite->current_index;
