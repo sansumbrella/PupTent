@@ -46,6 +46,7 @@ namespace puptent
       std::cout << __PRETTY_FUNCTION__ << std::endl;
       event_manager->subscribe<EntityDestroyedEvent>( *this );
       event_manager->subscribe<ComponentAddedEvent<RenderMesh2d>>( *this );
+      event_manager->subscribe<ComponentRemovedEvent<RenderMesh2d>>( *this );
     }
 
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
@@ -95,6 +96,12 @@ namespace puptent
   void receive( const ComponentAddedEvent<RenderMesh2d> &event )
   { // empty our geometry
     std::cout << "Render component added: " << event.component << std::endl;
+    mGeometry.clear();
+  }
+
+  void receive( const ComponentRemovedEvent<RenderMesh2d> &event )
+  {
+    std::cout << "Render component removed: " << event.component << std::endl;
     mGeometry.clear();
   }
 

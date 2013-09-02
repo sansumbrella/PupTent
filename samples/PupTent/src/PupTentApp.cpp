@@ -108,14 +108,16 @@ void PupTentApp::setup()
     mesh->render_layer = loc->position.distance( center );
     entity.assign<Locus>( loc );
     entity.assign<RenderMesh2d>( mesh );
+    entity.assign<Velocity>();
   }
 
   getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
   {
     if( entity.valid() )
     {
-      cout << "Destroying entity: " << entity << endl;
-      entity.destroy();
+      cout << "Removing mesh component: " << entity << endl;
+//      entity.destroy();
+      entity.remove<RenderMesh2d>();
 //      entity.assign<RenderMesh2d>();
 //      entity.component<RenderMesh2d>().reset();
     }
@@ -133,7 +135,7 @@ void PupTentApp::update()
   double end = getElapsedSeconds();
   if( getElapsedFrames() % 60 == 0 )
   {
-    cout << "Update: " << (end - start) * 1000 << endl;
+//    cout << "Update: " << (end - start) * 1000 << endl;
   }
 }
 
@@ -149,7 +151,7 @@ void PupTentApp::draw()
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 30 == 0 )
   {
-    cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
+//    cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
   }
 }
 
