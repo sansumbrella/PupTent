@@ -68,6 +68,7 @@ void SpriteAnimationSystem::configure( shared_ptr<EventManager> events )
   std::cout << __PRETTY_FUNCTION__ << std::endl;
   events->subscribe<EntityDestroyedEvent>( *this );
   events->subscribe<ComponentAddedEvent<SpriteAnimation>>( *this );
+  events->subscribe<ComponentRemovedEvent<SpriteAnimation>>( *this );
 }
 
 SpriteAnimationRef SpriteAnimationSystem::getSpriteAnimation(const std::string &id) const
@@ -98,7 +99,10 @@ void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &
 
 void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation> &event)
 {
+  cout << "Removing sprite animation from system" << endl;
+  cout << mSpriteAnimations.size() << endl;
   vector_remove( &mSpriteAnimations, event.component );
+  cout << mSpriteAnimations.size() << endl;
 }
 
 void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )

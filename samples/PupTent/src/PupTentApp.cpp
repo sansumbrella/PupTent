@@ -42,7 +42,7 @@ struct MovementSystem : public System<MovementSystem>
     for( auto& loc : mElements )
     {
       loc->rotation = fmodf( loc->rotation + M_PI * 0.01f, M_PI * 2 );
-      loc->scale = math<float>::sin( 0.25f * time + 2 * M_PI * loc->position.x / 640.0f + 3 * M_PI * loc->position.y / 480.0f );
+      loc->scale = math<float>::sin( 0.25f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
     }
   }
   double time = 0.0;
@@ -124,23 +124,24 @@ void PupTentApp::setup()
   {
     if( entity.valid() )
     {
-      cout << "Removing mesh component: " << entity << endl;
-      if( entity.component<RenderMesh2d>() )
+      if( entity.component<SpriteAnimation>() )
       {
-        entity.remove<RenderMesh2d>();
+        cout << "Removing Sprite Animation component: " << entity << endl;
+        entity.remove<SpriteAnimation>();
       }
       else
       {
+        cout << "Adding Mesh component: " << entity << endl;
         auto mesh = RenderMesh2dRef{ new RenderMesh2d{ 4 } };
-        float r = Rand::randFloat( 20.0f, 100.0f );
-        mesh->setAsCircle( Vec2f{ r, r }, 0.0f, M_PI * 1.5f );
+        // perhaps have a component to hang on to texturing data
+        mesh->setAsTexture( atlas->get( "dl-0001" ) );
         mesh->render_layer = 1000;
-        ColorA color{ CM_HSV, Rand::randFloat( 0.4f, 0.8f ), 0.9f, 0.7f, 1.0f };
+        ColorA color{ 1.0f, 1.0f, 1.0f, 1.0f };
         for( auto &v : mesh->vertices )
         {
           v.color = color;
         }
-        entity.assign( mesh );
+        entity.assign<RenderMesh2d>( mesh );
       }
     }
   });
@@ -159,7 +160,7 @@ void PupTentApp::update()
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
-  if( getElapsedFrames() % 30 == 0 )
+  if( getElapsedFrames() % 90 == 0 )
   {
     cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
   }
@@ -167,14 +168,16 @@ void PupTentApp::update()
 
 void PupTentApp::draw()
 {
-	// clear out the window with black
-	gl::clear( Color( 0, 0, 0 ) );
+	gl::clear( Color::black() );
+  gl::disableDepthRead();
+  gl::disableDepthWrite();
+  gl::color( Color::white() );
   double start = getElapsedSeconds();
   mSystemManager->system<BatchRenderSystem2d>()->draw();
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
-  if( getElapsedFrames() % 30 == 0 )
+  if( getElapsedFrames() % 90 == 0 )
   {
     cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
   }
