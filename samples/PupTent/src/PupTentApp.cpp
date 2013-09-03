@@ -64,7 +64,8 @@ private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
   shared_ptr<SystemManager> mSystemManager;
-  double                    mAverageRenderTime = 0;
+  double                    mAverageUpdateTime = 1.0;
+  double                    mAverageRenderTime = 1.0;
   Timer                     mTimer;
   TextureAtlas              mTextureAtlas;
 };
@@ -72,7 +73,7 @@ private:
 void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
-  settings->setFullScreen();
+//  settings->setFullScreen();
 }
 
 void PupTentApp::setup()
@@ -98,23 +99,22 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 1000; ++i )
+  for( int i = 0; i < 10000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
-    auto anim = createSpriteAnimationFromJson( animations["jellyfish"], mTextureAtlas );
+    auto anim = createSpriteAnimationFromJson( animations["deerleg"], mTextureAtlas );
     anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
     auto mesh = anim->mesh;
-//    mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
-//    mesh->setAsCircle( Vec2f{ 20.0f, 20.0f }, 0.0f, M_PI * 1.5f );
-    ColorA color{ CM_HSV, 0.0f, 0.0f, r.nextFloat( 0.2f, 1.0f ), 1.0f };
+    loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
+    loc->rotation = r.nextFloat( M_PI * 2 );
+    float dist = loc->position.distance( center );
+    ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.0f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
     for( auto &v : mesh->vertices )
     {
       v.color = color;
     }
-    loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
-    loc->rotation = r.nextFloat( M_PI * 2 );
-    mesh->render_layer = loc->position.distance( center );
+    mesh->render_layer = dist;
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );
@@ -157,9 +157,11 @@ void PupTentApp::update()
   mSystemManager->update<SpriteSystem>( dt );
   mSystemManager->update<BatchRenderSystem2d>( dt );
   double end = getElapsedSeconds();
+  double ms = (end - start) * 1000;
+  mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 60 == 0 )
   {
-    cout << "Update: " << (end - start) * 1000 << endl;
+    cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
   }
 }
 
