@@ -57,6 +57,11 @@ namespace puptent
     void receive( const EntityDestroyedEvent &event );
     //! steps our physics and synchronizes locus components with physics coords
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    void debugDraw();
+
+    void createBoundaryRect( ci::Rectf screen_bounds ) { mSandbox.createBoundaryRect( mScale.toPhysics( screen_bounds ) ); }
+    //! Destroy the boundary rectangle
+    void destroyBoundaryRect() { mSandbox.destroyBoundaryRect(); }
     //! Create a box using screen coordinates
     PhysicsComponent2dRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size );
     //! Create a circle using screen coordinates

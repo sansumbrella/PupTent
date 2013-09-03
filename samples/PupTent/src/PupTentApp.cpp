@@ -89,6 +89,7 @@ void PupTentApp::setup()
   mSystemManager = SystemManager::make( mEntities, mEvents );
 //  mSystemManager->add<MovementSystem>();
   auto physics = mSystemManager->add<PhysicsSystem2d>();
+  physics->createBoundaryRect( getWindowBounds() );
   auto renderer = mSystemManager->add<BatchRenderSystem2d>();
   renderer->setTexture( atlas->getTexture() );
   shared_ptr<SpriteAnimationSystem> sprite_system{ new SpriteAnimationSystem{ atlas, animations } };
@@ -103,12 +104,12 @@ void PupTentApp::setup()
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
-//    loc->registration_point = { 0.0f, -75.0f };
     // get an animation out of the sprite system
     auto anim = sprite_system->createSpriteAnimation( "deerleg" );
     auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
+    loc->registration_point = { 0, 0 };
     float dist = loc->position.distance( center );
     ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.0f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
     for( auto &v : mesh->vertices )
@@ -116,7 +117,7 @@ void PupTentApp::setup()
       v.color = color;
     }
     mesh->render_layer = dist;
-    entity.assign( physics->createBox( loc->position, atlas->get( "dl-0001" ).size ) );
+    entity.assign( physics->createBox( loc->position, atlas->get( "dl-0001" ).size / 2.0f ) );
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );
@@ -176,6 +177,7 @@ void PupTentApp::draw()
   gl::color( Color::white() );
   double start = getElapsedSeconds();
   mSystemManager->system<BatchRenderSystem2d>()->draw();
+  mSystemManager->system<PhysicsSystem2d>()->debugDraw();
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;

@@ -38,6 +38,9 @@ PhysicsSystem2d::PhysicsSystem2d()
 
 PhysicsSystem2d::~PhysicsSystem2d()
 {
+// Make sure no entities have physics after we are destructed
+// Since their reference to the b2bodies will be invalid and try
+// to reference the nonexistant world when they are destructed
   auto entities = mEntities;
   for( auto entity : entities )
   {
@@ -77,6 +80,11 @@ void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<e
     locus->position = mScale.fromPhysics( Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } );
     locus->rotation = physics->body->GetTransform().q.GetAngle();
   }
+}
+
+void PhysicsSystem2d::debugDraw()
+{
+  mSandbox.debugDraw( mScale.getPointsPerMeter() );
 }
 
 PhysicsComponent2dRef PhysicsSystem2d::createBox( const ci::Vec2f &pos, const ci::Vec2f &size )
