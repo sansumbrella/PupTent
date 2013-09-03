@@ -70,10 +70,10 @@ void BatchRenderSystem2d::update( shared_ptr<EntityManager> es, shared_ptr<Event
     {
       mGeometry.emplace_back( entity.component<Locus>(), entity.component<RenderMesh2d>() );
     }
-    stable_sort( mGeometry.begin(), mGeometry.end(), []( const MeshPair &lhs, const MeshPair &rhs ) -> bool {
-      return lhs.second->render_layer < rhs.second->render_layer;
-    } );
   }
+  stable_sort( mGeometry.begin(), mGeometry.end(), []( const MeshPair &lhs, const MeshPair &rhs ) -> bool {
+    return lhs.second->render_layer < rhs.second->render_layer;
+  } );
   // assemble all vertices
   mVertices.clear();
   for( auto pair : mGeometry )

@@ -71,6 +71,7 @@
 		1556C85B17D65FB900811B85 /* Sandbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82417D65FB900811B85 /* Sandbox.cpp */; };
 		1556C85C17D65FB900811B85 /* Scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82617D65FB900811B85 /* Scale.cpp */; };
 		1556C85D17D65FB900811B85 /* SimpleControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82817D65FB900811B85 /* SimpleControl.cpp */; };
+		15A8A94217D6A10700474DA6 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
 		15D4415917D298C600A926F0 /* Event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413717D298C600A926F0 /* Event.cc */; };
@@ -219,6 +220,8 @@
 		1556C82817D65FB900811B85 /* SimpleControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleControl.cpp; sourceTree = "<group>"; };
 		1556C82917D65FB900811B85 /* SimpleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleControl.h; sourceTree = "<group>"; };
 		1556C82A17D65FB900811B85 /* suBox2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = suBox2D.h; sourceTree = "<group>"; };
+		15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
+		15A8A94117D6A10700474DA6 /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
 		15D4413017D298C600A926F0 /* simplesignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplesignal.h; sourceTree = "<group>"; };
 		15D4413317D298C600A926F0 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
 		15D4413417D298C600A926F0 /* Entity.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cc; sourceTree = "<group>"; };
@@ -587,6 +590,8 @@
 				1556C7B417D63E7600811B85 /* PhysicsSystem2d.h */,
 				1556C7B617D64EF300811B85 /* ScriptSystem.cpp */,
 				1556C7B717D64EF300811B85 /* ScriptSystem.h */,
+				15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */,
+				15A8A94117D6A10700474DA6 /* ParticleSystem.h */,
 			);
 			path = puptent;
 			sourceTree = "<group>";
@@ -790,6 +795,7 @@
 				1556C82E17D65FB900811B85 /* b2CollidePolygon.cpp in Sources */,
 				1556C85317D65FB900811B85 /* b2RevoluteJoint.cpp in Sources */,
 				1556C84917D65FB900811B85 /* b2EdgeAndPolygonContact.cpp in Sources */,
+				15A8A94217D6A10700474DA6 /* ParticleSystem.cpp in Sources */,
 				1556C85017D65FB900811B85 /* b2MouseJoint.cpp in Sources */,
 				1556C83017D65FB900811B85 /* b2Distance.cpp in Sources */,
 				309C6F5D770445D8A51544BF /* ExpandedPath3d.cpp in Sources */,

@@ -107,6 +107,7 @@ void PupTentApp::setup()
     auto loc = shared_ptr<Locus>{ new Locus };
     // get an animation out of the sprite system
     auto anim = sprite_system->createSpriteAnimation( "dot" );
+    anim->current_index = r.nextInt( 0, 10 );
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
     loc->registration_point = { 0, 0 };
@@ -173,8 +174,6 @@ void PupTentApp::update()
 void PupTentApp::draw()
 {
 	gl::clear( Color::black() );
-  gl::disableDepthRead();
-  gl::disableDepthWrite();
   gl::color( Color::white() );
   Timer dr;
   dr.start();
