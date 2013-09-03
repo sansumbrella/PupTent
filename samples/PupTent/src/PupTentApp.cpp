@@ -118,7 +118,7 @@ void PupTentApp::setup()
       v.color = color;
     }
     mesh->render_layer = dist;
-    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 2.0f, loc->rotation ) );
+    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 12.0f, loc->rotation ) );
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );
@@ -157,12 +157,12 @@ void PupTentApp::update()
 {
   double dt = mTimer.getSeconds();
   mTimer.start();
-  double start = getElapsedSeconds();
+  Timer up;
+  up.start();
   mSystemManager->update<PhysicsSystem2d>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<BatchRenderSystem2d>( dt );
-  double end = getElapsedSeconds();
-  double ms = (end - start) * 1000;
+  double ms = up.getSeconds() * 1000;
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {
@@ -176,11 +176,11 @@ void PupTentApp::draw()
   gl::disableDepthRead();
   gl::disableDepthWrite();
   gl::color( Color::white() );
-  double start = getElapsedSeconds();
+  Timer dr;
+  dr.start();
   mSystemManager->system<BatchRenderSystem2d>()->draw();
 //  mSystemManager->system<PhysicsSystem2d>()->debugDraw();
-  double end = getElapsedSeconds();
-  double ms = (end - start) * 1000;
+  double ms = dr.getSeconds() * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {

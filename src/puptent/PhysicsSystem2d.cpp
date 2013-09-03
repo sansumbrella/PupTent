@@ -32,6 +32,7 @@
 using namespace puptent;
 using namespace cinder;
 using namespace box2d;
+using namespace std;
 
 PhysicsSystem2d::PhysicsSystem2d()
 {}
