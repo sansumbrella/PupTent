@@ -458,13 +458,16 @@ class EntityManager : public entityx::enable_shared_from_this<EntityManager>, bo
 
   /**
    * Remove a Component from an Entity::Id
+   *
+   * Emits a ComponentRemovedEvent<C> event.
    */
   template <typename C>
   entityx::shared_ptr<C> remove(Entity::Id id) {
     entityx::shared_ptr<C> component = entityx::static_pointer_cast<C>(entity_components_.at(C::family()).at(id.index()));
-    entity_components_.at(C::family()).at(id.index()) = nullptr;
-    entity_component_mask_.at(id.index()) ^= uint64_t(1) << C::family();
-    event_manager_->emit<ComponentRemovedEvent<C>>(Entity(shared_from_this(), id), component);
+    entity_components_.at(C::family()).at(id.index()).reset();
+    entity_component_mask_.at(id.index()) &= ~(uint64_t(1) << C::family());
+    if (component)
+      event_manager_->emit<ComponentRemovedEvent<C>>(Entity(shared_from_this(), id), component);
     return component;
   }
 
