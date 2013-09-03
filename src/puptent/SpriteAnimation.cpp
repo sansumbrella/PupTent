@@ -100,7 +100,16 @@ SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation(AnimationId anim
 
 void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &event)
 { // track the sprite
-  mEntities.push_back( event.entity );
+  auto entity = event.entity;
+  auto mesh = entity.component<RenderMesh2d>();
+  if( mesh )
+  {
+    auto sprite = event.component;
+    auto drawings = mAnimations.at( sprite->animation ).drawings;
+    sprite->current_index = math<int>::clamp( sprite->current_index, 0, drawings.size() - 1 );
+    mesh->setAsTexture( drawings.at( sprite->current_index ).drawing );
+  }
+  mEntities.push_back( entity );
 }
 
 void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation> &event)
