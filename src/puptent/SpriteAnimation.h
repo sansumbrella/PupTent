@@ -28,7 +28,6 @@
 #pragma once
 #include "puptent/PupTent.h"
 #include "puptent/SpriteData.h"
-#include "puptent/RenderMesh.h"
 #include "pockets/CollectionUtilities.hpp"
 
 namespace cinder
@@ -45,11 +44,10 @@ namespace puptent
   typedef size_t AnimationId;
   struct SpriteAnimation : Component<SpriteAnimation>
   {
-    SpriteAnimation()
-    {}
-    // build a sprite from a list of drawings
-    SpriteAnimation( AnimationId animation ):
-    animation( animation )
+    SpriteAnimation();
+    SpriteAnimation( AnimationId animation, RenderMesh2dRef mesh ):
+    animation( animation ),
+    mesh( mesh )
     {}
     AnimationId               animation = 0;
     bool                      looping = true;
@@ -57,7 +55,7 @@ namespace puptent
     int                       current_index = 0;
     // we create the mesh here and then add that mesh to entities
     // that way, we know we are using the expected mesh in the entity
-    shared_ptr<RenderMesh2d>  mesh = shared_ptr<RenderMesh2d>{ new RenderMesh2d{ 4, 0 } };
+    RenderMesh2dRef           mesh;
   };
 
   /**
@@ -69,17 +67,6 @@ namespace puptent
   typedef std::shared_ptr<class SpriteAnimationSystem> SpriteAnimationSystemRef;
   struct SpriteAnimationSystem : public System<SpriteAnimationSystem>, Receiver<SpriteAnimationSystem>
   {
-    SpriteAnimationSystem( TextureAtlasRef atlas, const ci::JsonTree &animations );
-    static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
-    void configure( shared_ptr<EventManager> events ) override;
-    //! remove sprites from our collection when entities are destroyed
-    void receive( const EntityDestroyedEvent &event );
-    //! Add sprite to our collection on creation
-    void receive( const ComponentAddedEvent<SpriteAnimation> &event );
-    void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
-    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
-    //! Returns a SpriteAnimation component that will play the named animation
-    SpriteAnimationRef getSpriteAnimation( const std::string &animation_name ) const;
     struct Drawing
     {
       Drawing( const SpriteData &drawing=SpriteData{}, float hold=1.0f ):
@@ -95,6 +82,31 @@ namespace puptent
       std::vector<Drawing>  drawings;
       float                 frame_duration;
     };
+    SpriteAnimationSystem( TextureAtlasRef atlas, const ci::JsonTree &animations );
+    //! create a new animation system drawing from \a atlas with \a animations
+    static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
+    //! called by SystemManager to register event handlers
+    void configure( shared_ptr<EventManager> events ) override;
+    //! remove sprites from our collection when entities are destroyed
+    void receive( const EntityDestroyedEvent &event );
+    //! Add sprite to our collection on creation
+    void receive( const ComponentAddedEvent<SpriteAnimation> &event );
+    void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
+    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    //! Create a component to play \a animation_name
+    //! To display the animation properly, you will need to assign new component's mesh
+    SpriteAnimationRef createSpriteAnimation( const std::string &animation_name ) const;
+    //! Create a component to play \a animation_name; system will update given mesh
+    SpriteAnimationRef createSpriteAnimation( const std::string &animation_name, RenderMesh2dRef mesh ) const;
+    //! Create a component to play \a animation_id
+    SpriteAnimationRef createSpriteAnimation( AnimationId animation_id ) const;
+    //! Create a component to play \a animation_id
+    SpriteAnimationRef createSpriteAnimation( AnimationId animation_id, RenderMesh2dRef mesh ) const;
+    //! Returns the id of \a animation_name
+    AnimationId        getAnimationId( const std::string &animation_name ) const;
+    //! Add a new animation to the system's list of animations
+    //! You can then create components that reference your animation
+    void addAnimation( const std::string &name, const Animation &animation );
   private:
     //! active sprite components
     std::vector<SpriteAnimationRef>     mSpriteAnimations;

@@ -97,13 +97,13 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 10000; ++i )
+  for( int i = 0; i < 10; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
-    // consider storing atlas and animations in SpriteSystem
-    // that way the system can create fully-fleshed Sprite components
-    auto anim = sprite_system->getSpriteAnimation( "dot" );
+//    loc->registration_point = { 0.0f, -75.0f };
+    // get an animation out of the sprite system
+    auto anim = sprite_system->createSpriteAnimation( "deerleg" );
 //    anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
     auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };

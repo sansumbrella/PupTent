@@ -27,11 +27,17 @@
 
 #include "puptent/SpriteAnimation.h"
 #include "puptent/TextureAtlas.h"
+#include "puptent/RenderMesh.h"
 #include "cinder/Json.h"
 
 using namespace puptent;
 using namespace cinder;
 using namespace std;
+
+SpriteAnimation::SpriteAnimation():
+animation( 0 ),
+mesh( new RenderMesh2d{ 4, 0 } )
+{}
 
 SpriteAnimationSystemRef SpriteAnimationSystem::create( TextureAtlasRef atlas, const ci::JsonTree &animations )
 {
@@ -71,15 +77,42 @@ void SpriteAnimationSystem::configure( shared_ptr<EventManager> events )
   events->subscribe<ComponentRemovedEvent<SpriteAnimation>>( *this );
 }
 
-SpriteAnimationRef SpriteAnimationSystem::getSpriteAnimation(const std::string &id) const
+void SpriteAnimationSystem::addAnimation(const string &name, const Animation &animation)
+{
+  mAnimations.emplace_back( animation );
+  mAnimationIds[name] = mAnimations.size() - 1;
+}
+
+AnimationId SpriteAnimationSystem::getAnimationId( const string &name ) const
 {
   AnimationId index = 0;
-  auto iter = mAnimationIds.find( id );
+  auto iter = mAnimationIds.find( name );
   if( iter != mAnimationIds.end() )
   {
     index = iter->second;
   }
-  return SpriteAnimationRef{ new SpriteAnimation{ index } };
+  return index;
+}
+
+SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation(const string &name) const
+{
+  return createSpriteAnimation( getAnimationId( name ) );
+}
+
+SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation( const string &animation_name, RenderMesh2dRef mesh ) const
+{
+  return createSpriteAnimation( getAnimationId( animation_name ), mesh );
+}
+
+SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation(AnimationId animation_id ) const
+{
+  RenderMesh2dRef mesh{ new RenderMesh2d{ 4, 0 } };
+  return createSpriteAnimation( animation_id, mesh );
+}
+
+SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation( AnimationId animation_id, RenderMesh2dRef mesh ) const
+{
+  return SpriteAnimationRef{ new SpriteAnimation{ animation_id, mesh } };
 }
 
 void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
