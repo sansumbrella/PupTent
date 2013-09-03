@@ -40,5 +40,5 @@ namespace cinder
 namespace puptent
 {
   class TextureAtlas;
-  SpriteRef createSpriteAnimationFromJson( const ci::JsonTree &anim, const TextureAtlas &atlas );
+//  SpriteAnimationRef createSpriteAnimationFromJson( const ci::JsonTree &anim, const TextureAtlas &atlas );
 }

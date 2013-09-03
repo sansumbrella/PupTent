@@ -31,9 +31,33 @@
 #include "puptent/Mesh.h"
 #include "pockets/CollectionUtilities.hpp"
 
+namespace cinder
+{
+  class JsonTree;
+}
+
 namespace puptent
 {
-  struct Sprite : Component<Sprite>
+  typedef size_t AnimationId;
+  struct SpriteAnimation : Component<SpriteAnimation>
+  {
+    SpriteAnimation()
+    {}
+    // build a sprite from a list of drawings
+    SpriteAnimation( AnimationId animation ):
+    animation( animation )
+    {}
+    AnimationId               animation = 0;
+    bool                      looping = true;
+    float                     hold = 0.0f;      // time spent on this frame
+    int                       current_index = 0;
+    // we create the mesh here and then add that mesh to entities
+    // that way, we know we are using the expected mesh in the entity
+    shared_ptr<RenderMesh2d>  mesh = shared_ptr<RenderMesh2d>{ new RenderMesh2d{ 4, 0 } };
+  };
+
+  typedef std::shared_ptr<class SpriteAnimationSystem> SpriteAnimationSystemRef;
+  struct SpriteAnimationSystem : public System<SpriteAnimationSystem>, Receiver<SpriteAnimationSystem>
   {
     struct Drawing
     {
@@ -41,55 +65,32 @@ namespace puptent
       drawing( drawing ),
       hold( hold )
       {}
-      SpriteData      drawing;
-      float           hold; // frames to hold
+      SpriteData      drawing;  // size and texture information
+      float           hold;     // frames to hold
     };
-
-    Sprite()
+    struct Animation
     {
-      drawings.assign( 1, Drawing{} );
-      applyDataToMesh();
-    }
-    // build a sprite from a list of drawings
-    Sprite( std::vector<Drawing> &&drawings, float frame_duration = 1.0f / 24.0f ):
-    drawings( std::move(drawings) ),
-    frame_duration( frame_duration )
-    {
-      applyDataToMesh();
-    }
-    //! returns the current drawing
-    inline const Drawing     &currentDrawing() const
-    { return drawings.at( current_index ); }
-    //! set the frame duration as frame rate
-    void                      setFrameRate( float frame_rate )
-    { frame_duration = 1.0f / frame_rate; }
-    inline void               setFrameIndex( int index )
-    { current_index = ci::math<int>::clamp( index, 0, drawings.size()-1 ); applyDataToMesh(); }
-    std::vector<Drawing>      drawings;
-    float                     hold = 0.0f;      // time spent on this frame
-    float                     frame_duration = 1.0f / 24.0f;
-    bool                      looping = true;
-    // we create the mesh here and then add that mesh to entities
-    // that way, we know we are using the expected mesh in the entity
-    shared_ptr<RenderMesh2d>  mesh = shared_ptr<RenderMesh2d>{ new RenderMesh2d{ 4, 0 } }; // the mesh we will be updating
-  private:
-    friend class              SpriteSystem;
-    // index of current animation frame
-    int                       current_index = 0;
-    // commits the current frame position and texture coordinates to mesh
-    void                      applyDataToMesh();
-  };
-
-  struct SpriteSystem : public System<SpriteSystem>, Receiver<SpriteSystem>
-  {
+      std::string           name;
+      std::vector<Drawing>  drawings;
+      float                 frame_duration;
+    };
+    SpriteAnimationSystem( TextureAtlasRef atlas, const ci::JsonTree &animations );
+    static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
     void configure( shared_ptr<EventManager> events ) override;
     //! remove sprites from our collection when entities are destroyed
     void receive( const EntityDestroyedEvent &event );
     //! Add sprite to our collection on creation
-    void receive( const ComponentAddedEvent<Sprite> &event );
+    void receive( const ComponentAddedEvent<SpriteAnimation> &event );
+    void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    SpriteAnimationRef getSpriteAnimation( const std::string &id ) const;
   private:
-    std::vector<Entity>  mEntities;
+    //! active sprite components
+    std::vector<SpriteAnimationRef>     mSpriteAnimations;
+    TextureAtlasRef                     mAtlas;
+    // name : index into mAnimations
+    std::map<std::string, AnimationId>  mAnimationIds;
+    std::vector<Animation>              mAnimations;
   };
 
 } // puptent::

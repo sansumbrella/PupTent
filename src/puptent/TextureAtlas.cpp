@@ -53,3 +53,8 @@ TextureAtlas::TextureAtlas( const Surface &images, const ci::JsonTree &descripti
                               registration_point };
   }
 }
+
+TextureAtlasUniqueRef TextureAtlas::create(const ci::Surface &images, const ci::JsonTree &description)
+{
+  return TextureAtlasUniqueRef{ new TextureAtlas{ images, description } };
+}

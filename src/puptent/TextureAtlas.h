@@ -36,13 +36,13 @@ namespace cinder
 
 namespace puptent
 {
-  typedef std::shared_ptr<class TextureAtlas> TextureAtlasRef;
+  typedef std::unique_ptr<class TextureAtlas> TextureAtlasUniqueRef;
   class TextureAtlas
   {
   public:
     TextureAtlas() = default;
     TextureAtlas( const ci::Surface &images, const ci::JsonTree &description );
-    inline const SpriteData&  operator [] ( const std::string &sprite_name ) const
+    inline const SpriteData& get( const std::string &sprite_name ) const
     {
       auto iter = mData.find(sprite_name);
       if( iter != mData.end() )
@@ -51,7 +51,13 @@ namespace puptent
       }
       return mErrorData;
     }
+    //! returns SpriteData with string id \a sprite_name or default sprite if none exists
+    inline const SpriteData&  operator [] ( const std::string &sprite_name ) const
+    {
+      return get( sprite_name );
+    }
     ci::gl::TextureRef  getTexture() const { return mTexture; }
+    static TextureAtlasUniqueRef create( const ci::Surface &images, const ci::JsonTree &description );
   private:
     std::map<std::string, SpriteData>   mData;
     ci::gl::TextureRef                  mTexture;
