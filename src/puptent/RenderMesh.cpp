@@ -60,10 +60,7 @@ void RenderMesh2d::setAsCircle(const ci::Vec2f &radius, float start_radians, flo
 
 void RenderMesh2d::setAsBox( const Rectf &bounds )
 {
-  if( vertices.size() != 4 )
-  {
-    vertices.assign( 4, Vertex2d{} );
-  }
+  if( vertices.size() != 4 ){ vertices.assign( 4, Vertex2d{} ); }
   vertices[0].position = bounds.getUpperRight();
   vertices[1].position = bounds.getUpperLeft();
   vertices[2].position = bounds.getLowerRight();
@@ -72,9 +69,13 @@ void RenderMesh2d::setAsBox( const Rectf &bounds )
 
 void RenderMesh2d::setAsTexture(const SpriteData &sprite_data)
 {
+  if( vertices.size() != 4 ){ vertices.assign( 4, Vertex2d{} ); }
   Rectf screen_bounds{ { 0.0f, 0.0f }, sprite_data.size };
   screen_bounds -= sprite_data.registration_point;
-  setAsBox( screen_bounds );
+  vertices[0].position = screen_bounds.getUpperRight();
+  vertices[1].position = screen_bounds.getUpperLeft();
+  vertices[2].position = screen_bounds.getLowerRight();
+  vertices[3].position = screen_bounds.getLowerLeft();
   vertices[0].tex_coord = sprite_data.texture_bounds.getUpperRight();
   vertices[1].tex_coord = sprite_data.texture_bounds.getUpperLeft();
   vertices[2].tex_coord = sprite_data.texture_bounds.getLowerRight();

@@ -33,11 +33,6 @@ using namespace puptent;
 using namespace cinder;
 using namespace std;
 
-SpriteAnimation::SpriteAnimation():
-animation( 0 ),
-mesh( new RenderMesh2d{ 4, 0 } )
-{}
-
 SpriteAnimationSystemRef SpriteAnimationSystem::create( TextureAtlasRef atlas, const ci::JsonTree &animations )
 {
   return SpriteAnimationSystemRef{ new SpriteAnimationSystem{ atlas, animations } };
@@ -98,49 +93,37 @@ SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation(const string &na
   return createSpriteAnimation( getAnimationId( name ) );
 }
 
-SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation( const string &animation_name, RenderMesh2dRef mesh ) const
-{
-  return createSpriteAnimation( getAnimationId( animation_name ), mesh );
-}
-
 SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation(AnimationId animation_id ) const
 {
-  RenderMesh2dRef mesh{ new RenderMesh2d{ 4, 0 } };
-  return createSpriteAnimation( animation_id, mesh );
-}
-
-SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation( AnimationId animation_id, RenderMesh2dRef mesh ) const
-{
-  return SpriteAnimationRef{ new SpriteAnimation{ animation_id, mesh } };
-}
-
-void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
-{ // stop tracking the entity
-  auto entity = event.entity;
-  SpriteAnimationRef sprite = entity.component<SpriteAnimation>();
-  if( sprite )
-  {
-    vector_remove( &mSpriteAnimations, sprite );
-  }
+  return SpriteAnimationRef{ new SpriteAnimation{ animation_id } };
 }
 
 void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &event)
 { // track the sprite
-  mSpriteAnimations.push_back( event.component );
+  mEntities.push_back( event.entity );
 }
 
 void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation> &event)
 {
   cout << "Removing sprite animation from system" << endl;
-  cout << mSpriteAnimations.size() << endl;
-  vector_remove( &mSpriteAnimations, event.component );
-  cout << mSpriteAnimations.size() << endl;
+  cout << mEntities.size() << endl;
+  vector_remove( &mEntities, event.entity );
+  cout << mEntities.size() << endl;
+}
+
+void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
+{ // stop tracking the entity (assuming we are looking at it)
+  cout << "Before remove: " << mEntities.size() << endl;
+  vector_remove( &mEntities, event.entity );
+  cout << "After remove : " << mEntities.size() << endl;
 }
 
 void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
 {
-  for( auto &sprite : mSpriteAnimations )
+  for( auto &entity : mEntities )
   {
+    auto sprite = entity.component<SpriteAnimation>();
+
     const auto &anim = mAnimations.at( sprite->animation );
     const auto &current_drawing = anim.drawings.at( sprite->current_index );
     sprite->hold += dt; // this becomes a problem if many share the same sprite
@@ -169,21 +152,9 @@ void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<Eve
     if( next_index != sprite->current_index )
     { // the frame index has changed, update display
       sprite->current_index = next_index;
-      auto mesh = sprite->mesh;
       const auto new_drawing = anim.drawings.at( sprite->current_index ).drawing;
-      Rectf tex_coord_rect = new_drawing.texture_bounds;
-      Rectf position_rect( Vec2f::zero(), new_drawing.size );
-      position_rect -= new_drawing.registration_point;
-
-      mesh->vertices[0].position = { position_rect.getX2(), position_rect.getY1() };
-      mesh->vertices[1].position = { position_rect.getX1(), position_rect.getY1() };
-      mesh->vertices[2].position = { position_rect.getX2(), position_rect.getY2() };
-      mesh->vertices[3].position = { position_rect.getX1(), position_rect.getY2() };
-
-      mesh->vertices[0].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY1() };
-      mesh->vertices[1].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY1() };
-      mesh->vertices[2].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY2() };
-      mesh->vertices[3].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY2() };
+      auto mesh = entity.component<RenderMesh2d>();
+      mesh->setAsTexture( new_drawing );
     }
   }
 }

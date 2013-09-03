@@ -107,21 +107,19 @@ void PupTentApp::setup()
     auto loc = shared_ptr<Locus>{ new Locus };
     // get an animation out of the sprite system
     auto anim = sprite_system->createSpriteAnimation( "dot" );
-    auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
     loc->registration_point = { 0, 0 };
     float dist = loc->position.distance( center );
     ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.0f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
+//    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 12.0f, loc->rotation ) );
+    auto mesh = entity.assign<RenderMesh2d>( 4, dist );
     for( auto &v : mesh->vertices )
     {
       v.color = color;
     }
-    mesh->render_layer = dist;
-//    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 12.0f, loc->rotation ) );
     entity.assign( anim );
     entity.assign( loc );
-    entity.assign( mesh );
   }
 
   getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
