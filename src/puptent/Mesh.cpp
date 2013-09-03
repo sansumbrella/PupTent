@@ -26,6 +26,8 @@
  */
 
 #include "Mesh.h"
+#include "puptent/SpriteData.h"
+
 using namespace puptent;
 using namespace cinder;
 
@@ -66,4 +68,15 @@ void RenderMesh2d::setAsBox( const Rectf &bounds )
   vertices[1].position = bounds.getUpperLeft();
   vertices[2].position = bounds.getLowerRight();
   vertices[3].position = bounds.getLowerLeft();
+}
+
+void RenderMesh2d::setAsTexture(const SpriteData &sprite_data)
+{
+  Rectf screen_bounds{ { 0.0f, 0.0f }, sprite_data.size };
+  screen_bounds -= sprite_data.registration_point;
+  setAsBox( screen_bounds );
+  vertices[0].tex_coord = sprite_data.texture_bounds.getUpperRight();
+  vertices[1].tex_coord = sprite_data.texture_bounds.getUpperLeft();
+  vertices[2].tex_coord = sprite_data.texture_bounds.getLowerRight();
+  vertices[3].tex_coord = sprite_data.texture_bounds.getLowerLeft();
 }

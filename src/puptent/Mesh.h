@@ -35,6 +35,7 @@ namespace puptent
    Collection of 2d vertices suitable for rendering as a triangle strip.
   */
   typedef std::shared_ptr<class RenderMesh2d> RenderMesh2dRef;
+  class SpriteData;
   struct RenderMesh2d : Component<RenderMesh2d>
   {
     RenderMesh2d( int vertex_count=3, int render_layer=0 ):
@@ -50,6 +51,8 @@ namespace puptent
     void setAsCircle( const ci::Vec2f &radius, float start_radians=0, float end_radians=M_PI * 2, size_t segments=0 );
     //! Set the mesh bounds to a box shape
     void setAsBox( const ci::Rectf &bounds );
+    //! Set the mesh as a box with texture coordinates
+    void setAsTexture( const SpriteData &sprite_data );
   };
 
   struct RenderMesh3d : Component<RenderMesh3d>
