@@ -26,10 +26,42 @@
  */
 
 #include "PhysicsSystem2d.h"
+#include "pockets/CollectionUtilities.hpp"
 
-PhysicsSystem2d::PhysicsSystem2d()
-{}
+#include "puptent/Locus.h"
 
-PhysicsSystem2d::~PhysicsSystem2d()
-{}
+using namespace puptent;
+using namespace cinder;
 
+void PhysicsSystem2d::configure( shared_ptr<EventManager> events )
+{
+  events->subscribe<ComponentAddedEvent<PhysicsComponent2d>>( *this );
+  events->subscribe<ComponentRemovedEvent<PhysicsComponent2d>>( *this );
+  events->subscribe<EntityDestroyedEvent>( *this );
+}
+
+void PhysicsSystem2d::receive(const ComponentAddedEvent<puptent::PhysicsComponent2d> &event)
+{
+  mEntities.push_back( event.entity );
+}
+
+void PhysicsSystem2d::receive(const ComponentRemovedEvent<puptent::PhysicsComponent2d> &event)
+{
+  vector_remove( &mEntities, event.entity );
+}
+
+void PhysicsSystem2d::receive(const entityx::EntityDestroyedEvent &event)
+{ // in case we were tracking it, stop (if it had a physics component we were)
+  vector_remove( &mEntities, event.entity );
+}
+
+void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
+{
+  for( auto entity : mEntities )
+  {
+    auto locus = entity.component<Locus>();
+    auto physics = entity.component<PhysicsComponent2d>();
+//    locus->position = Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } * mScale;
+//    locus->rotation = physics->body->GetRotation();
+  }
+}

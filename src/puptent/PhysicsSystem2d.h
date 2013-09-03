@@ -26,11 +26,32 @@
  */
 
 #pragma once
+#include "puptent/PupTent.h"
 
-class PhysicsSystem2d
+namespace puptent
 {
-public:
-  PhysicsSystem2d();
-  ~PhysicsSystem2d();
-private:
-};
+  typedef std::shared_ptr<class PhysicsComponent2d> PhysicsComponent2dRef;
+  struct PhysicsComponent2d : Component<PhysicsComponent2d>
+  {
+    int physics_body;
+  };
+  /**
+   PhysicsSystem2d:
+   Physics calculation using Box2D
+   Updates Entity's Locus component with physics transformations
+   */
+  typedef std::shared_ptr<class PhysicsSystem2d> PhysicsSystem2dRef;
+  struct PhysicsSystem2d : public System<PhysicsSystem2d>, Receiver<PhysicsSystem2d>
+  {
+    //! called by SystemManager to register event handlers
+    void configure( shared_ptr<EventManager> events ) override;
+    //! add/remove components when they are created
+    void receive( const ComponentAddedEvent<PhysicsComponent2d> &event );
+    void receive( const ComponentRemovedEvent<PhysicsComponent2d> &event );
+    void receive( const EntityDestroyedEvent &event );
+    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+  private:
+    std::vector<Entity> mEntities;
+    float               mScale = 1.0f;
+  };
+}
