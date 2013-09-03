@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Mesh.h"
+#include "puptent/RenderMesh.h"
 #include "puptent/SpriteData.h"
 
 using namespace puptent;

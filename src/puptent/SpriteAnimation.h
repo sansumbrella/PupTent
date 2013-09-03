@@ -28,7 +28,7 @@
 #pragma once
 #include "puptent/PupTent.h"
 #include "puptent/SpriteData.h"
-#include "puptent/Mesh.h"
+#include "puptent/RenderMesh.h"
 #include "pockets/CollectionUtilities.hpp"
 
 namespace cinder
@@ -38,6 +38,10 @@ namespace cinder
 
 namespace puptent
 {
+  /**
+   SpriteAnimation:
+   A playing animation
+  */
   typedef size_t AnimationId;
   struct SpriteAnimation : Component<SpriteAnimation>
   {
@@ -56,9 +60,26 @@ namespace puptent
     shared_ptr<RenderMesh2d>  mesh = shared_ptr<RenderMesh2d>{ new RenderMesh2d{ 4, 0 } };
   };
 
+  /**
+   SpriteAnimationSystem:
+   Plays back SpriteAnimations
+   Updates a RenderMesh2d component with the current animation frame
+   Assumes that whatever renderer will bind the correct texture for display
+   */
   typedef std::shared_ptr<class SpriteAnimationSystem> SpriteAnimationSystemRef;
   struct SpriteAnimationSystem : public System<SpriteAnimationSystem>, Receiver<SpriteAnimationSystem>
   {
+    SpriteAnimationSystem( TextureAtlasRef atlas, const ci::JsonTree &animations );
+    static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
+    void configure( shared_ptr<EventManager> events ) override;
+    //! remove sprites from our collection when entities are destroyed
+    void receive( const EntityDestroyedEvent &event );
+    //! Add sprite to our collection on creation
+    void receive( const ComponentAddedEvent<SpriteAnimation> &event );
+    void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
+    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    //! Returns a SpriteAnimation component that will play the named animation
+    SpriteAnimationRef getSpriteAnimation( const std::string &animation_name ) const;
     struct Drawing
     {
       Drawing( const SpriteData &drawing=SpriteData{}, float hold=1.0f ):
@@ -74,16 +95,6 @@ namespace puptent
       std::vector<Drawing>  drawings;
       float                 frame_duration;
     };
-    SpriteAnimationSystem( TextureAtlasRef atlas, const ci::JsonTree &animations );
-    static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
-    void configure( shared_ptr<EventManager> events ) override;
-    //! remove sprites from our collection when entities are destroyed
-    void receive( const EntityDestroyedEvent &event );
-    //! Add sprite to our collection on creation
-    void receive( const ComponentAddedEvent<SpriteAnimation> &event );
-    void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
-    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
-    SpriteAnimationRef getSpriteAnimation( const std::string &id ) const;
   private:
     //! active sprite components
     std::vector<SpriteAnimationRef>     mSpriteAnimations;
@@ -94,4 +105,3 @@ namespace puptent
   };
 
 } // puptent::
-

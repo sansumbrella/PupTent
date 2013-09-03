@@ -8,13 +8,9 @@
 #include "entityx/Entity.h"
 #include "entityx/System.h"
 
-#include "pockets/Types.h"
-#include "pockets/CollectionUtilities.hpp"
-
-#include "puptent/Rendering.h"
-#include "puptent/Sprites.h"
-#include "puptent/ComponentGenerators.h"
+#include "puptent/BatchRenderSystem2d.h"
 #include "puptent/TextureAtlas.h"
+#include "puptent/SpriteAnimation.h"
 
 /**
  Sample app used to develop features of PupTent.

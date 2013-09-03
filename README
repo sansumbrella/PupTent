@@ -1,36 +1,24 @@
 PupTent
 
-A set of useful entities built on top of Cinder and entityx.
+A set of useful components and systems built on top of Cinder and entityx.
+
+PupTent is meant for use in the development of small games with big hearts.
+Don't be afraid to create a new entity system for each level.
+Also don't be afraid to have each level become the next by modifying the system.
+
+Provides:
+Fast batch renderer for 2d geometry
+Locus component for flexible 2d spatial transformations
+Sprite animation, loading from disk
+
+Todo:
+Physics component and system wrapper around suBox2d
+Line/Path expansion system, writing to RenderMesh2d
+Script component (for Lua scripting, this is a bit longer term)
 
 Requires:
 Cinder 0.8.5
 entityx (necessary bits included in src/)
-
-
-Renderer performance
-Stored in Geometry vector:
-Render ms: 0.628613
-Render ms: 0.625753
-Render ms: 0.651454
-Render ms: 0.663725
-Render ms: 0.671469
-Render ms: 0.685221
-
-With lookup every frame:
-Render ms: 1.57936
-Render ms: 1.68094
-Render ms: 1.48158
-Render ms: 1.28504
-Render ms: 1.34472
-Render ms: 1.62948
-
-Old way:
-Batch 2d avg render time: 2.33869ms
-Batch 2d avg render time: 2.31445ms
-Batch 2d avg render time: 2.26326ms
-Batch 2d avg render time: 2.43113ms
-Batch 2d avg render time: 2.39248ms
-Batch 2d avg render time: 2.22816ms
 
 /*
  * Copyright (C) 2013 David Wicks <david@sansumbrella.com>

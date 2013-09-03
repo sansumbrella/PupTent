@@ -30,6 +30,13 @@
 
 namespace puptent
 {
+  /**
+   A Component storing the basic positional information for an Entity
+   Position, Rotation, and Scale
+   Scales and rotates around the Registration Point when using toMatrix()
+
+   No assumption is made about the units used
+  */
   struct Locus : Component<Locus>
   {
     Locus() = default;

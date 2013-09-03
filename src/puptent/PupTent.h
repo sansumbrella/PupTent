@@ -37,8 +37,8 @@ namespace puptent
   using namespace pockets;
   using namespace entityx;
   // forward declarations
-  typedef std::shared_ptr<class SpriteAnimation> SpriteAnimationRef;
-  typedef std::shared_ptr<class TextureAtlas> TextureAtlasRef;
+  typedef std::shared_ptr<class SpriteAnimation>  SpriteAnimationRef;
+  typedef std::shared_ptr<class TextureAtlas>     TextureAtlasRef;
 }
 
 namespace pt = puptent;

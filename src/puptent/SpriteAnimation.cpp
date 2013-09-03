@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/Sprites.h"
+#include "puptent/SpriteAnimation.h"
 #include "puptent/TextureAtlas.h"
 #include "cinder/Json.h"
 

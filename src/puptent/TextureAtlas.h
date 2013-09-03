@@ -36,6 +36,11 @@ namespace cinder
 
 namespace puptent
 {
+  /**
+   TextureAtlas:
+   A texture and lookup information for named sprites on that texture.
+   Not a component, but used by the SpriteAnimationSystem
+  */
   typedef std::unique_ptr<class TextureAtlas> TextureAtlasUniqueRef;
   class TextureAtlas
   {

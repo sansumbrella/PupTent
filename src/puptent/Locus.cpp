@@ -40,4 +40,3 @@ MatrixAffine2f Locus::toMatrix() const
   if( parent ){ mat = parent->toMatrix() * mat; }
   return mat;
 }
-

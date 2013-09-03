@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/Rendering.h"
+#include "puptent/BatchRenderSystem2d.h"
 #include "cinder/gl/Texture.h"
 
 using namespace cinder;
@@ -114,4 +114,11 @@ void BatchRenderSystem2d::draw() const
   glDisableClientState( GL_VERTEX_ARRAY );
   glDisableClientState( GL_COLOR_ARRAY );
   glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+
+  if( mTexture )
+  {
+    mTexture->unbind();
+    gl::disable( GL_TEXTURE_2D );
+    gl::disableAlphaBlending();
+  }
 }
