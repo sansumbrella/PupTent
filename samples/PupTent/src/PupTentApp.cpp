@@ -41,7 +41,7 @@ struct MovementSystem : public System<MovementSystem>
     time += dt;
     for( auto& loc : mElements )
     {
-      loc->rotation = fmodf( loc->rotation + M_PI * 0.01f, M_PI * 2 );
+      loc->rotation = fmodf( loc->rotation - M_PI * 0.01f, M_PI * 2 );
       loc->scale = math<float>::sin( 0.25f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
     }
   }
