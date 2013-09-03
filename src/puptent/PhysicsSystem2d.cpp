@@ -87,9 +87,9 @@ void PhysicsSystem2d::debugDraw()
   mSandbox.debugDraw( mScale.getPointsPerMeter() );
 }
 
-PhysicsComponent2dRef PhysicsSystem2d::createBox( const ci::Vec2f &pos, const ci::Vec2f &size )
+PhysicsComponent2dRef PhysicsSystem2d::createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation )
 {
-  return PhysicsComponent2dRef{ new PhysicsComponent2d{ mSandbox.createBox( mScale.toPhysics( pos ), mScale.toPhysics( size ) ) } };
+  return PhysicsComponent2dRef{ new PhysicsComponent2d{ mSandbox.createBox( mScale.toPhysics( pos ), mScale.toPhysics( size ), rotation ) } };
 }
 
 PhysicsComponent2dRef PhysicsSystem2d::createCircle( const ci::Vec2f &pos, float radius )

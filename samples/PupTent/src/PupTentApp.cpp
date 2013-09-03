@@ -70,6 +70,7 @@ private:
 void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
+  settings->setWindowSize( 1024, 768 );
 //  settings->setFullScreen();
 }
 
@@ -100,12 +101,12 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 10; ++i )
+  for( int i = 0; i < 8; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
     // get an animation out of the sprite system
-    auto anim = sprite_system->createSpriteAnimation( "deerleg" );
+    auto anim = sprite_system->createSpriteAnimation( "jellyfish" );
     auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
@@ -117,7 +118,7 @@ void PupTentApp::setup()
       v.color = color;
     }
     mesh->render_layer = dist;
-    entity.assign( physics->createBox( loc->position, atlas->get( "dl-0001" ).size / 2.0f ) );
+    entity.assign( physics->createBox( loc->position, atlas->get( "j-0001" ).size / 2.0f, loc->rotation ) );
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );

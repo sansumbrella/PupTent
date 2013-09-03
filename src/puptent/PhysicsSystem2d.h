@@ -63,7 +63,7 @@ namespace puptent
     //! Destroy the boundary rectangle
     void destroyBoundaryRect() { mSandbox.destroyBoundaryRect(); }
     //! Create a box using screen coordinates
-    PhysicsComponent2dRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size );
+    PhysicsComponent2dRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation );
     //! Create a circle using screen coordinates
     PhysicsComponent2dRef createCircle( const ci::Vec2f &pos, float radius );
   private:
