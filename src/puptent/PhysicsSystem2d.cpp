@@ -77,8 +77,11 @@ void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<e
   {
     auto locus = entity.component<Locus>();
     auto physics = entity.component<PhysicsComponent2d>();
-    locus->position = mScale.fromPhysics( Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } );
-    locus->rotation = physics->body->GetTransform().q.GetAngle();
+    if( locus )
+    {
+      locus->position = mScale.fromPhysics( Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } );
+      locus->rotation = physics->body->GetTransform().q.GetAngle();
+    }
   }
 }
 
