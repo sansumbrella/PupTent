@@ -103,7 +103,7 @@ void PupTentApp::setup()
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
-    auto anim = createSpriteAnimationFromJson( animations["deerleg"], mTextureAtlas );
+    auto anim = createSpriteAnimationFromJson( animations["dot"], mTextureAtlas );
     anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
     auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
@@ -159,7 +159,7 @@ void PupTentApp::update()
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
-  if( getElapsedFrames() % 60 == 0 )
+  if( getElapsedFrames() % 30 == 0 )
   {
     cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
   }
@@ -174,7 +174,7 @@ void PupTentApp::draw()
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
-  if( getElapsedFrames() % 60 == 0 )
+  if( getElapsedFrames() % 30 == 0 )
   {
     cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
   }
