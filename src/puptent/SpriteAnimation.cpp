@@ -154,7 +154,7 @@ void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<Eve
       sprite->current_index = next_index;
       const auto new_drawing = anim.drawings.at( sprite->current_index ).drawing;
       auto mesh = entity.component<RenderMesh2d>();
-      mesh->setAsTexture( new_drawing );
+      if( mesh ){ mesh->setAsTexture( new_drawing ); }
     }
   }
 }
