@@ -25,60 +25,92 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Sprites.h"
+#include "puptent/Sprites.h"
+#include "puptent/TextureAtlas.h"
+#include "cinder/Json.h"
 
 using namespace puptent;
 using namespace cinder;
+using namespace std;
 
-void Sprite::applyDataToMesh()
-{ // set mesh data from current frame
-  const auto drawing = currentDrawing().drawing;
-  Rectf tex_coord_rect = drawing.texture_bounds;
-  Rectf position_rect( Vec2f::zero(), drawing.size );
-  position_rect -= drawing.registration_point;
-
-  mesh->vertices[0].position = { position_rect.getX2(), position_rect.getY1() };
-  mesh->vertices[1].position = { position_rect.getX1(), position_rect.getY1() };
-  mesh->vertices[2].position = { position_rect.getX2(), position_rect.getY2() };
-  mesh->vertices[3].position = { position_rect.getX1(), position_rect.getY2() };
-
-  mesh->vertices[0].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY1() };
-  mesh->vertices[1].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY1() };
-  mesh->vertices[2].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY2() };
-  mesh->vertices[3].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY2() };
-}
-
-void SpriteSystem::configure( shared_ptr<EventManager> events )
+SpriteAnimationSystemRef SpriteAnimationSystem::create( TextureAtlasRef atlas, const ci::JsonTree &animations )
 {
-  std::cout << __PRETTY_FUNCTION__ << std::endl;
-  events->subscribe<EntityDestroyedEvent>( *this );
-  events->subscribe<ComponentAddedEvent<Sprite>>( *this );
+  return SpriteAnimationSystemRef{ new SpriteAnimationSystem{ atlas, animations } };
 }
 
-void SpriteSystem::receive(const entityx::EntityDestroyedEvent &event)
-{ // stop tracking the entity
-  auto entity = event.entity;
-  if( entity.component<Sprite>() )
+SpriteAnimationSystem::SpriteAnimationSystem( TextureAtlasRef atlas, const JsonTree &animations ):
+mAtlas( atlas )
+{
+  try
   {
-    vector_remove( &mEntities, entity );
+    for( auto &anim : animations )
+    {
+      vector<Drawing> drawings;
+      float frame_duration = 1.0f / anim.getChild("fps").getValue<float>();
+      string key = anim.getKey();
+      auto frames = anim.getChild("frames");
+      for( auto &child : frames.getChildren() )
+      { // stored in json as [ "id", duration ]
+        drawings.emplace_back( mAtlas->get(child[0].getValue()), child[1].getValue<float>() );
+      }
+      mAnimations.emplace_back( Animation{ key, drawings, frame_duration } );
+      mAnimationIds[key] = mAnimations.size() - 1;
+    }
+  }
+  catch( JsonTree::Exception &exc )
+  {
+    std::cout << __FUNCTION__ << " error: " << exc.what() << std::endl;
   }
 }
 
-void SpriteSystem::receive(const ComponentAddedEvent<puptent::Sprite> &event)
-{ // track the sprite
-  mEntities.push_back( event.entity );
+void SpriteAnimationSystem::configure( shared_ptr<EventManager> events )
+{
+  std::cout << __PRETTY_FUNCTION__ << std::endl;
+  events->subscribe<EntityDestroyedEvent>( *this );
+  events->subscribe<ComponentAddedEvent<SpriteAnimation>>( *this );
 }
 
-void SpriteSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+SpriteAnimationRef SpriteAnimationSystem::getSpriteAnimation(const std::string &id) const
 {
-  for( auto entity : mEntities )
-  { // what is the performance of this component casting business?
-    // fast enough for most things, no doubt
-    auto sprite = entity.component<Sprite>();
+  AnimationId index = 0;
+  auto iter = mAnimationIds.find( id );
+  if( iter != mAnimationIds.end() )
+  {
+    index = iter->second;
+  }
+  return SpriteAnimationRef{ new SpriteAnimation{ index } };
+}
+
+void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
+{ // stop tracking the entity
+  auto entity = event.entity;
+  SpriteAnimationRef sprite = entity.component<SpriteAnimation>();
+  if( sprite )
+  {
+    vector_remove( &mSpriteAnimations, sprite );
+  }
+}
+
+void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &event)
+{ // track the sprite
+  mSpriteAnimations.push_back( event.component );
+}
+
+void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation> &event)
+{
+  vector_remove( &mSpriteAnimations, event.component );
+}
+
+void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+{
+  for( auto &sprite : mSpriteAnimations )
+  {
+    const auto &anim = mAnimations.at( sprite->animation );
+    const auto &current_drawing = anim.drawings.at( sprite->current_index );
     sprite->hold += dt; // this becomes a problem if many share the same sprite
     int next_index = sprite->current_index;
     // check timing
-    if( sprite->hold > sprite->frame_duration * sprite->currentDrawing().hold )
+    if( sprite->hold > anim.frame_duration * current_drawing.hold )
     { // move to next frame
       next_index += 1;
       sprite->hold = 0.0f;
@@ -86,22 +118,36 @@ void SpriteSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager
     else if ( sprite->hold < 0.0f )
     { // step back a frame
       next_index -= 1;
-      sprite->hold = sprite->frame_duration * sprite->currentDrawing().hold;
+      sprite->hold = anim.frame_duration * current_drawing.hold;
     }
     // handle wrapping around beginning and end
-    if( next_index >= static_cast<int>( sprite->drawings.size() ) )
+    if( next_index >= static_cast<int>( anim.drawings.size() ) )
     { // handle wraparound at end
-      next_index = sprite->looping ? 0 : sprite->drawings.size() - 1;
+      next_index = sprite->looping ? 0 : anim.drawings.size() - 1;
     }
     else if( next_index < 0 )
     { // handle wraparound at beginning
-      next_index = sprite->looping ? sprite->drawings.size() - 1 : 0;
+      next_index = sprite->looping ? anim.drawings.size() - 1 : 0;
     }
     // actually change the drawing
     if( next_index != sprite->current_index )
     { // the frame index has changed, update display
       sprite->current_index = next_index;
-      sprite->applyDataToMesh();
+      auto mesh = sprite->mesh;
+      const auto new_drawing = anim.drawings.at( sprite->current_index ).drawing;
+      Rectf tex_coord_rect = new_drawing.texture_bounds;
+      Rectf position_rect( Vec2f::zero(), new_drawing.size );
+      position_rect -= new_drawing.registration_point;
+
+      mesh->vertices[0].position = { position_rect.getX2(), position_rect.getY1() };
+      mesh->vertices[1].position = { position_rect.getX1(), position_rect.getY1() };
+      mesh->vertices[2].position = { position_rect.getX2(), position_rect.getY2() };
+      mesh->vertices[3].position = { position_rect.getX1(), position_rect.getY2() };
+
+      mesh->vertices[0].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY1() };
+      mesh->vertices[1].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY1() };
+      mesh->vertices[2].tex_coord = { tex_coord_rect.getX2(), tex_coord_rect.getY2() };
+      mesh->vertices[3].tex_coord = { tex_coord_rect.getX1(), tex_coord_rect.getY2() };
     }
   }
 }

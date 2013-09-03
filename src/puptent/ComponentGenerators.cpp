@@ -34,24 +34,24 @@
 using namespace puptent;
 using namespace cinder;
 using namespace std;
-
-SpriteRef pt::createSpriteAnimationFromJson( const JsonTree &anim, const TextureAtlas &atlas )
-{
-  try
-  {
-    vector<Sprite::Drawing> drawings;
-    float frame_duration = 1.0f / anim.getChild("fps").getValue<float>();
-    auto frames = anim.getChild("frames");
-    for( auto &child : frames.getChildren() )
-    { // stored in json as [ "id", duration ]
-      drawings.emplace_back( atlas[child[0].getValue()], child[1].getValue<float>() );
-    }
-    return SpriteRef{ new Sprite{ move(drawings), frame_duration } };
-  }
-  catch( JsonTree::Exception &exc )
-  {
-    std::cout << __FUNCTION__ << " error: " << exc.what() << std::endl;
-  }
-  return SpriteRef{ new Sprite{} };
-}
+//
+//SpriteAnimationRef pt::createSpriteAnimationFromJson( const JsonTree &anim, const TextureAtlas &atlas )
+//{
+//  try
+//  {
+//    vector<SpriteAnimation::Drawing> drawings;
+//    float frame_duration = 1.0f / anim.getChild("fps").getValue<float>();
+//    auto frames = anim.getChild("frames");
+//    for( auto &child : frames.getChildren() )
+//    { // stored in json as [ "id", duration ]
+//      drawings.emplace_back( atlas[child[0].getValue()], child[1].getValue<float>() );
+//    }
+//    return SpriteAnimationRef{ new SpriteAnimation{ move(drawings), frame_duration } };
+//  }
+//  catch( JsonTree::Exception &exc )
+//  {
+//    std::cout << __FUNCTION__ << " error: " << exc.what() << std::endl;
+//  }
+//  return SpriteAnimationRef{ new SpriteAnimation{} };
+//}
 

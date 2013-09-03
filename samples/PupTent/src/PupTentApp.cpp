@@ -79,22 +79,24 @@ void PupTentApp::prepareSettings( Settings *settings )
 void PupTentApp::setup()
 {
   gl::enableVerticalSync();
-  mEvents = EventManager::make();
-  mEntities = EntityManager::make(mEvents);
-  mSystemManager = SystemManager::make( mEntities, mEvents );
-  mSystemManager->add<MovementSystem>();
-  auto renderer = mSystemManager->add<BatchRenderSystem2d>();
-  mSystemManager->add<SpriteSystem>();
-  mSystemManager->configure();
-
   Surface sprite_surf{ loadImage( loadAsset( "spritesheet.png" ) ) };
   if( !sprite_surf.isPremultiplied() )
   {
     ip::premultiply( &sprite_surf );
   }
-  mTextureAtlas = TextureAtlas( sprite_surf, JsonTree( loadAsset( "spritesheet.json" ) ) );
-  renderer->setTexture( mTextureAtlas.getTexture() );
+  TextureAtlasRef atlas = TextureAtlas::create( sprite_surf, JsonTree( loadAsset( "spritesheet.json" ) ) );
   JsonTree animations{ loadAsset( "animations.json" ) };
+
+  mEvents = EventManager::make();
+  mEntities = EntityManager::make(mEvents);
+  mSystemManager = SystemManager::make( mEntities, mEvents );
+  mSystemManager->add<MovementSystem>();
+  auto renderer = mSystemManager->add<BatchRenderSystem2d>();
+  renderer->setTexture( atlas->getTexture() );
+  shared_ptr<SpriteAnimationSystem> sprite_system{ new SpriteAnimationSystem{ atlas, animations } };
+  mSystemManager->add( sprite_system );
+  mSystemManager->configure();
+
 
   Rand r;
   Vec2f center = getWindowCenter();
@@ -103,8 +105,10 @@ void PupTentApp::setup()
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
-    auto anim = createSpriteAnimationFromJson( animations["dot"], mTextureAtlas );
-    anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
+    // consider storing atlas and animations in SpriteSystem
+    // that way the system can create fully-fleshed Sprite components
+    auto anim = sprite_system->getSpriteAnimation( "dot" );
+//    anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
     auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
@@ -154,7 +158,7 @@ void PupTentApp::update()
   mTimer.start();
   double start = getElapsedSeconds();
   mSystemManager->update<MovementSystem>( dt );
-  mSystemManager->update<SpriteSystem>( dt );
+  mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<BatchRenderSystem2d>( dt );
   double end = getElapsedSeconds();
   double ms = (end - start) * 1000;
