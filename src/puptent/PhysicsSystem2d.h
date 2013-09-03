@@ -27,13 +27,17 @@
 
 #pragma once
 #include "puptent/PupTent.h"
+#include "sansumbrella/suBox2D.h"
 
 namespace puptent
 {
   typedef std::shared_ptr<class PhysicsComponent2d> PhysicsComponent2dRef;
   struct PhysicsComponent2d : Component<PhysicsComponent2d>
   {
-    int physics_body;
+    PhysicsComponent2d( b2::unique_body_ptr &&body ):
+    body( std::move( body ) )
+    {}
+    b2::unique_body_ptr body;
   };
   /**
    PhysicsSystem2d:
@@ -43,15 +47,22 @@ namespace puptent
   typedef std::shared_ptr<class PhysicsSystem2d> PhysicsSystem2dRef;
   struct PhysicsSystem2d : public System<PhysicsSystem2d>, Receiver<PhysicsSystem2d>
   {
+    PhysicsSystem2d();
     //! called by SystemManager to register event handlers
     void configure( shared_ptr<EventManager> events ) override;
     //! add/remove components when they are created
     void receive( const ComponentAddedEvent<PhysicsComponent2d> &event );
     void receive( const ComponentRemovedEvent<PhysicsComponent2d> &event );
     void receive( const EntityDestroyedEvent &event );
+    //! steps our physics and synchronizes locus components with physics coords
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    //! Create a box using screen coordinates
+    PhysicsComponent2dRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size );
+    //! Create a circle using screen coordinates
+    PhysicsComponent2dRef createCircle( const ci::Vec2f &pos, float radius );
   private:
+    box2d::Sandbox      mSandbox;
     std::vector<Entity> mEntities;
-    float               mScale = 1.0f;
+    box2d::Scale        mScale;
   };
 }

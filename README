@@ -10,15 +10,20 @@ Provides:
 Fast batch renderer for 2d geometry
 Locus component for flexible 2d spatial transformations
 Sprite animation, loading from disk
+Script system (c++ lambdas supported for now)
 
 Todo:
 Physics component and system wrapper around suBox2d
 Line/Path expansion system, writing to RenderMesh2d
-Script component (for Lua scripting, this is a bit longer term)
+Lua scripting with script system
 
 Requires:
 Cinder 0.8.5
 entityx (necessary bits included in src/)
+
+Conventions:
+typedef std::shared_ptr<T> TRef;
+typedef std::unique_ptr<T> UTRef;
 
 /*
  * Copyright (C) 2013 David Wicks <david@sansumbrella.com>

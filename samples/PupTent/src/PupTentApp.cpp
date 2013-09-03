@@ -9,6 +9,7 @@
 #include "entityx/System.h"
 
 #include "puptent/BatchRenderSystem2d.h"
+#include "puptent/PhysicsSystem2d.h"
 #include "puptent/TextureAtlas.h"
 #include "puptent/SpriteAnimation.h"
 
@@ -86,7 +87,8 @@ void PupTentApp::setup()
   mEvents = EventManager::make();
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
-  mSystemManager->add<MovementSystem>();
+//  mSystemManager->add<MovementSystem>();
+  auto physics = mSystemManager->add<PhysicsSystem2d>();
   auto renderer = mSystemManager->add<BatchRenderSystem2d>();
   renderer->setTexture( atlas->getTexture() );
   shared_ptr<SpriteAnimationSystem> sprite_system{ new SpriteAnimationSystem{ atlas, animations } };
@@ -115,6 +117,7 @@ void PupTentApp::setup()
       v.color = color;
     }
     mesh->render_layer = dist;
+    entity.assign( physics->createBox( loc->position, anim->getSize() ) );
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );
@@ -154,7 +157,7 @@ void PupTentApp::update()
   double dt = mTimer.getSeconds();
   mTimer.start();
   double start = getElapsedSeconds();
-  mSystemManager->update<MovementSystem>( dt );
+  mSystemManager->update<PhysicsSystem2d>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<BatchRenderSystem2d>( dt );
   double end = getElapsedSeconds();

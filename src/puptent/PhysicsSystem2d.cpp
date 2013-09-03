@@ -27,11 +27,14 @@
 
 #include "PhysicsSystem2d.h"
 #include "pockets/CollectionUtilities.hpp"
-
 #include "puptent/Locus.h"
 
 using namespace puptent;
 using namespace cinder;
+using namespace box2d;
+
+PhysicsSystem2d::PhysicsSystem2d()
+{}
 
 void PhysicsSystem2d::configure( shared_ptr<EventManager> events )
 {
@@ -51,17 +54,28 @@ void PhysicsSystem2d::receive(const ComponentRemovedEvent<puptent::PhysicsCompon
 }
 
 void PhysicsSystem2d::receive(const entityx::EntityDestroyedEvent &event)
-{ // in case we were tracking it, stop (if it had a physics component we were)
+{ // in case we were tracking this entity, stop (if it had a physics component we were)
   vector_remove( &mEntities, event.entity );
 }
 
 void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
 {
+  mSandbox.step();
   for( auto entity : mEntities )
   {
     auto locus = entity.component<Locus>();
     auto physics = entity.component<PhysicsComponent2d>();
-//    locus->position = Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } * mScale;
-//    locus->rotation = physics->body->GetRotation();
+    locus->position = mScale.fromPhysics( Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } );
+    locus->rotation = physics->body->GetTransform().q.GetAngle();
   }
+}
+
+PhysicsComponent2dRef PhysicsSystem2d::createBox( const ci::Vec2f &pos, const ci::Vec2f &size )
+{
+  return PhysicsComponent2dRef{ new PhysicsComponent2d{ mSandbox.createBox( mScale.toPhysics( pos ), mScale.toPhysics( size ) ) } };
+}
+
+PhysicsComponent2dRef PhysicsSystem2d::createCircle( const ci::Vec2f &pos, float radius )
+{
+  return PhysicsComponent2dRef{ new PhysicsComponent2d{ mSandbox.createCircle( mScale.toPhysics( pos ), mScale.toPhysics( radius ) ) } };
 }
