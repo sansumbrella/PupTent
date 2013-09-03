@@ -26,7 +26,7 @@
  */
 
 #include "puptent/RenderMesh.h"
-#include "puptent/SpriteData.h"
+#include "puptent/TextureAtlas.h"
 
 using namespace puptent;
 using namespace cinder;

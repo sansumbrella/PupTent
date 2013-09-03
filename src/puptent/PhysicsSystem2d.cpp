@@ -25,22 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include "PhysicsSystem2d.h"
 
-namespace puptent
-{
-  struct SpriteData
-  {
-    // build from texture bounds, screen size, and local registration point
-    SpriteData( const ci::Rectf &bounds = ci::Rectf{ 0.0f, 0.0f, 1.0f, 1.0f },
-                const ci::Vec2i &size = ci::Vec2i{ 96, 96 },
-                const ci::Vec2f &registration = ci::Vec2f::zero() ):
-    texture_bounds( bounds ),
-    size( size ),
-    registration_point( registration )
-    {}
-    ci::Rectf       texture_bounds;
-    ci::Vec2i       size;
-    ci::Vec2f       registration_point;
-  };
-}
+PhysicsSystem2d::PhysicsSystem2d()
+{}
+
+PhysicsSystem2d::~PhysicsSystem2d()
+{}
+

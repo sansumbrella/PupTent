@@ -26,7 +26,6 @@
  */
 
 #include "puptent/SpriteAnimation.h"
-#include "puptent/TextureAtlas.h"
 #include "puptent/RenderMesh.h"
 #include "cinder/Json.h"
 

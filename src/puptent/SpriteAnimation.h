@@ -27,7 +27,7 @@
 
 #pragma once
 #include "puptent/PupTent.h"
-#include "puptent/SpriteData.h"
+#include "puptent/TextureAtlas.h"
 #include "pockets/CollectionUtilities.hpp"
 
 namespace cinder

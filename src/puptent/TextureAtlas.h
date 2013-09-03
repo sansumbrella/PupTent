@@ -27,7 +27,6 @@
 
 #pragma once
 #include "puptent/PupTent.h"
-#include "puptent/SpriteData.h"
 
 namespace cinder
 {
@@ -36,6 +35,22 @@ namespace cinder
 
 namespace puptent
 {
+  /**
+   Sprite location within a TextureAtlas
+  */
+  struct SpriteData
+  { // build from texture bounds, screen size, and local registration point
+    SpriteData( const ci::Rectf &bounds = ci::Rectf{ 0.0f, 0.0f, 1.0f, 1.0f },
+               const ci::Vec2i &size = ci::Vec2i{ 96, 96 },
+               const ci::Vec2f &registration = ci::Vec2f::zero() ):
+    texture_bounds( bounds ),
+    size( size ),
+    registration_point( registration )
+    {}
+    ci::Rectf       texture_bounds;
+    ci::Vec2i       size;
+    ci::Vec2f       registration_point;
+  };
   /**
    TextureAtlas:
    A texture and lookup information for named sprites on that texture.
@@ -47,6 +62,7 @@ namespace puptent
   public:
     TextureAtlas() = default;
     TextureAtlas( const ci::Surface &images, const ci::JsonTree &description );
+    //! returns SpriteData with string id \a sprite_name or default sprite if none exists
     inline const SpriteData& get( const std::string &sprite_name ) const
     {
       auto iter = mData.find(sprite_name);
@@ -61,7 +77,9 @@ namespace puptent
     {
       return get( sprite_name );
     }
+    //! returns the texture where sprites are stored on GPU
     ci::gl::TextureRef  getTexture() const { return mTexture; }
+    //! create a new texture atlas from a surface and json description
     static TextureAtlasUniqueRef create( const ci::Surface &images, const ci::JsonTree &description );
   private:
     std::map<std::string, SpriteData>   mData;

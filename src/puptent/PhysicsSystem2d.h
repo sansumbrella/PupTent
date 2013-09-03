@@ -25,4 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "SpriteData.h"
+#pragma once
+
+class PhysicsSystem2d
+{
+public:
+  PhysicsSystem2d();
+  ~PhysicsSystem2d();
+private:
+};
