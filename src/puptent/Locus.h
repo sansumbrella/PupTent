@@ -35,6 +35,8 @@ namespace puptent
    Position, Rotation, and Scale
    Scales and rotates around the Registration Point when using toMatrix()
 
+   Used by BatchRenderSystem2d to transform RenderMesh2d component vertices
+   Updated by various movement systems (Physics, Custom Motion)
    No assumption is made about the units used
   */
   struct Locus : Component<Locus>

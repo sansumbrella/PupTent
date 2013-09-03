@@ -35,6 +35,7 @@ namespace puptent
    RenderMesh2d:
    Collection of 2d vertices suitable for rendering as a triangle strip.
    Drawn by the BatchRenderSystem2d
+   Updated by various systems that want content to be visible
   */
   typedef std::shared_ptr<class RenderMesh2d> RenderMesh2dRef;
   class SpriteData;
