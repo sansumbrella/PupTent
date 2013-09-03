@@ -114,17 +114,12 @@ void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &
 
 void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation> &event)
 {
-  cout << "Removing sprite animation from system" << endl;
-  cout << mEntities.size() << endl;
   vector_remove( &mEntities, event.entity );
-  cout << mEntities.size() << endl;
 }
 
 void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
 { // stop tracking the entity (assuming we are looking at it)
-  cout << "Before remove: " << mEntities.size() << endl;
   vector_remove( &mEntities, event.entity );
-  cout << "After remove : " << mEntities.size() << endl;
 }
 
 void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
