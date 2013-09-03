@@ -106,7 +106,6 @@ void PupTentApp::setup()
 //    loc->registration_point = { 0.0f, -75.0f };
     // get an animation out of the sprite system
     auto anim = sprite_system->createSpriteAnimation( "deerleg" );
-//    anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
     auto mesh = anim->mesh;
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
@@ -117,7 +116,7 @@ void PupTentApp::setup()
       v.color = color;
     }
     mesh->render_layer = dist;
-    entity.assign( physics->createBox( loc->position, anim->getSize() ) );
+    entity.assign( physics->createBox( loc->position, atlas->get( "dl-0001" ).size ) );
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );

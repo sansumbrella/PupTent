@@ -48,6 +48,7 @@ namespace puptent
   struct PhysicsSystem2d : public System<PhysicsSystem2d>, Receiver<PhysicsSystem2d>
   {
     PhysicsSystem2d();
+    ~PhysicsSystem2d();
     //! called by SystemManager to register event handlers
     void configure( shared_ptr<EventManager> events ) override;
     //! add/remove components when they are created

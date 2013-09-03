@@ -36,6 +36,15 @@ using namespace box2d;
 PhysicsSystem2d::PhysicsSystem2d()
 {}
 
+PhysicsSystem2d::~PhysicsSystem2d()
+{
+  auto entities = mEntities;
+  for( auto entity : entities )
+  {
+    entity.remove<PhysicsComponent2d>();
+  }
+}
+
 void PhysicsSystem2d::configure( shared_ptr<EventManager> events )
 {
   events->subscribe<ComponentAddedEvent<PhysicsComponent2d>>( *this );
