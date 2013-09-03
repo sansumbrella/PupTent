@@ -71,9 +71,13 @@ void PhysicsSystem2d::receive(const entityx::EntityDestroyedEvent &event)
   vector_remove( &mEntities, event.entity );
 }
 
-void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
+void PhysicsSystem2d::stepPhysics()
 {
   mSandbox.step();
+}
+
+void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
+{
   for( auto entity : mEntities )
   {
     auto locus = entity.component<Locus>();

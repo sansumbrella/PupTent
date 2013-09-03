@@ -55,7 +55,9 @@ namespace puptent
     void receive( const ComponentAddedEvent<PhysicsComponent2d> &event );
     void receive( const ComponentRemovedEvent<PhysicsComponent2d> &event );
     void receive( const EntityDestroyedEvent &event );
-    //! steps our physics and synchronizes locus components with physics coords
+    //! steps the physics simulation
+    void stepPhysics();
+    //! synchronizes locus components with physics coords
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
     void debugDraw();
 

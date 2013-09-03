@@ -159,6 +159,7 @@ void PupTentApp::update()
   mTimer.start();
   Timer up;
   up.start();
+  mSystemManager->system<PhysicsSystem2d>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
   mSystemManager->update<PhysicsSystem2d>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<BatchRenderSystem2d>( dt );
