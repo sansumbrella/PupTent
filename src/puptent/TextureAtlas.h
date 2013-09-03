@@ -36,9 +36,11 @@ namespace cinder
 
 namespace puptent
 {
+  typedef std::shared_ptr<class TextureAtlas> TextureAtlasRef;
   class TextureAtlas
   {
   public:
+    TextureAtlas() = default;
     TextureAtlas( const ci::Surface &images, const ci::JsonTree &description );
     inline const SpriteData&  operator [] ( const std::string &sprite_name ) const
     {
@@ -47,11 +49,13 @@ namespace puptent
       {
         return iter->second;
       }
-      return SpriteData{};
+      return mErrorData;
     }
+    ci::gl::TextureRef  getTexture() const { return mTexture; }
   private:
     std::map<std::string, SpriteData>   mData;
     ci::gl::TextureRef                  mTexture;
+    SpriteData                          mErrorData;
   };
 
 } // puptent::

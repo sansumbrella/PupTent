@@ -1,6 +1,8 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
+#include "cinder/Json.h"
+#include "cinder/ip/Premultiply.h"
 
 #include "entityx/Event.h"
 #include "entityx/Entity.h"
@@ -11,6 +13,8 @@
 
 #include "puptent/Rendering.h"
 #include "puptent/Sprites.h"
+#include "puptent/ComponentGenerators.h"
+#include "puptent/TextureAtlas.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -42,7 +46,7 @@ struct MovementSystem : public System<MovementSystem>
     for( auto& loc : mElements )
     {
       loc->rotation = fmodf( loc->rotation + M_PI * 0.01f, M_PI * 2 );
-      loc->scale = math<float>::sin( 0.5f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
+      loc->scale = math<float>::sin( 0.25f * time + 2 * M_PI * loc->position.x / 640.0f + 3 * M_PI * loc->position.y / 480.0f );
     }
   }
   double time = 0.0;
@@ -60,15 +64,15 @@ private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
   shared_ptr<SystemManager> mSystemManager;
-  shared_ptr<MovementSystem>  mMovement;
-  double            mAverageRenderTime = 0;
-  Timer  mTimer;
+  double                    mAverageRenderTime = 0;
+  Timer                     mTimer;
+  TextureAtlas              mTextureAtlas;
 };
 
 void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
-//  settings->setFullScreen();
+  settings->setFullScreen();
 }
 
 void PupTentApp::setup()
@@ -78,8 +82,18 @@ void PupTentApp::setup()
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
   mSystemManager->add<MovementSystem>();
-  mSystemManager->add<BatchRenderSystem2d>();
+  auto renderer = mSystemManager->add<BatchRenderSystem2d>();
+  mSystemManager->add<SpriteSystem>();
   mSystemManager->configure();
+
+  Surface sprite_surf{ loadImage( loadAsset( "spritesheet.png" ) ) };
+  if( !sprite_surf.isPremultiplied() )
+  {
+    ip::premultiply( &sprite_surf );
+  }
+  mTextureAtlas = TextureAtlas( sprite_surf, JsonTree( loadAsset( "spritesheet.json" ) ) );
+  renderer->setTexture( mTextureAtlas.getTexture() );
+  JsonTree animations{ loadAsset( "animations.json" ) };
 
   Rand r;
   Vec2f center = getWindowCenter();
@@ -88,10 +102,12 @@ void PupTentApp::setup()
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
-    auto mesh = RenderMesh2dRef{ new RenderMesh2d{ 4 } };
-    mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
+    auto anim = createSpriteAnimationFromJson( animations["jellyfish"], mTextureAtlas );
+    anim->setFrameIndex( r.randInt( anim->drawings.size() ) );
+    auto mesh = anim->mesh;
+//    mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
 //    mesh->setAsCircle( Vec2f{ 20.0f, 20.0f }, 0.0f, M_PI * 1.5f );
-    ColorA color{ CM_HSV, r.nextFloat( 0.4f, 0.8f ), 0.9f, 0.7f, 1.0f };
+    ColorA color{ CM_HSV, 0.0f, 0.0f, r.nextFloat( 0.2f, 1.0f ), 1.0f };
     for( auto &v : mesh->vertices )
     {
       v.color = color;
@@ -99,6 +115,7 @@ void PupTentApp::setup()
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
     mesh->render_layer = loc->position.distance( center );
+    entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );
   }
@@ -137,7 +154,8 @@ void PupTentApp::update()
   mTimer.start();
   double start = getElapsedSeconds();
   mSystemManager->update<MovementSystem>( dt );
-  mSystemManager->update<BatchRenderSystem2d>( 0.0 );
+  mSystemManager->update<SpriteSystem>( dt );
+  mSystemManager->update<BatchRenderSystem2d>( dt );
   double end = getElapsedSeconds();
   if( getElapsedFrames() % 60 == 0 )
   {

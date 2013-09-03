@@ -29,3 +29,27 @@
 #include "cinder/Json.h"
 #include "cinder/gl/Texture.h"
 
+using namespace cinder;
+using namespace puptent;
+using namespace std;
+
+TextureAtlas::TextureAtlas( const Surface &images, const ci::JsonTree &description )
+{
+  gl::Texture::Format format;
+  
+  mTexture = gl::Texture::create( images, format );
+
+  JsonTree sprites = description["sprites"];
+  JsonTree meta = description["meta"];
+  Vec2i bitmap_size( meta["width"].getValue<int>(), meta["height"].getValue<int>() );
+  for( const auto &child : sprites )
+  {
+    Rectf bounds( child["x1"].getValue<int>(), child["y1"].getValue<int>()
+                 , child["x2"].getValue<int>(), child["y2"].getValue<int>() );
+    Vec2i registration_point( child["rx"].getValue<float>(), child["ry"].getValue<float>() );
+    string id = child["id"].getValue();
+    mData[ id ] = SpriteData{ { bounds.getUpperLeft() / bitmap_size, bounds.getLowerRight() / bitmap_size },
+                              bounds.getSize(),
+                              registration_point };
+  }
+}

@@ -57,21 +57,27 @@ namespace puptent
     {
       applyDataToMesh();
     }
-
-    //! commits the current frame position and texture coordinates to mesh
-    void applyDataToMesh();
     //! returns the current drawing
-    inline const Drawing &currentDrawing() const { return drawings.at( current_index ); }
+    inline const Drawing     &currentDrawing() const
+    { return drawings.at( current_index ); }
     //! set the frame duration as frame rate
-    void setFrameRate( float frame_rate ){ frame_duration = 1.0f / frame_rate; }
-    std::vector<Drawing>  drawings;
-    int                   current_index = 0; // index of current animation frame
-    float                 hold = 0.0f;      // time spent on this frame
-    float                 frame_duration = 1.0f / 24.0f;
-    bool                  looping = true;
+    void                      setFrameRate( float frame_rate )
+    { frame_duration = 1.0f / frame_rate; }
+    inline void               setFrameIndex( int index )
+    { current_index = ci::math<int>::clamp( index, 0, drawings.size()-1 ); applyDataToMesh(); }
+    std::vector<Drawing>      drawings;
+    float                     hold = 0.0f;      // time spent on this frame
+    float                     frame_duration = 1.0f / 24.0f;
+    bool                      looping = true;
     // we create the mesh here and then add that mesh to entities
     // that way, we know we are using the expected mesh in the entity
     shared_ptr<RenderMesh2d>  mesh = shared_ptr<RenderMesh2d>{ new RenderMesh2d{ 4, 0 } }; // the mesh we will be updating
+  private:
+    friend class              SpriteSystem;
+    // index of current animation frame
+    int                       current_index = 0;
+    // commits the current frame position and texture coordinates to mesh
+    void                      applyDataToMesh();
   };
 
   struct SpriteSystem : public System<SpriteSystem>, Receiver<SpriteSystem>

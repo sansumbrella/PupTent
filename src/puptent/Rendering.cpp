@@ -40,19 +40,19 @@ void BatchRenderSystem2d::configure( shared_ptr<EventManager> event_manager )
 
 void BatchRenderSystem2d::receive(const ComponentAddedEvent<puptent::RenderMesh2d> &event)
 {
-  std::cout << "Render component added: " << event.component << std::endl;
+//  std::cout << "Render component added: " << event.component << std::endl;
   mGeometry.clear();
 }
 
 void BatchRenderSystem2d::receive(const ComponentRemovedEvent<puptent::RenderMesh2d> &event)
 {
-  std::cout << "Render component removed: " << event.component << std::endl;
+//  std::cout << "Render component removed: " << event.component << std::endl;
   mGeometry.clear();
 }
 
 void BatchRenderSystem2d::receive(const EntityDestroyedEvent &event)
 {
-  std::cout << "Entity destroyed" << std::endl;
+//  std::cout << "Entity destroyed" << std::endl;
   auto entity = event.entity;
   if( entity.component<RenderMesh2d>() )
   { // if a mesh was destroyed, we will update our render list this frame

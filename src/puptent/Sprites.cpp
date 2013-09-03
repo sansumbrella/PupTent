@@ -75,7 +75,7 @@ void SpriteSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager
   { // what is the performance of this component casting business?
     // fast enough for most things, no doubt
     auto sprite = entity.component<Sprite>();
-    sprite->hold += dt;
+    sprite->hold += dt; // this becomes a problem if many share the same sprite
     int next_index = sprite->current_index;
     // check timing
     if( sprite->hold > sprite->frame_duration * sprite->currentDrawing().hold )

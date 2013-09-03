@@ -31,15 +31,16 @@ namespace puptent
 {
   struct SpriteData
   {
-    SpriteData( const ci::Vec2f &registration = ci::Vec2f::zero(),
-               const ci::Vec2i &size = ci::Vec2i{ 96, 96 },
-               const ci::Rectf &bounds = ci::Rectf{ 0.0f, 0.0f, 1.0f, 1.0f } ):
-    registration_point( registration ),
+    // build from texture bounds, screen size, and local registration point
+    SpriteData( const ci::Rectf &bounds = ci::Rectf{ 0.0f, 0.0f, 1.0f, 1.0f },
+                const ci::Vec2i &size = ci::Vec2i{ 96, 96 },
+                const ci::Vec2f &registration = ci::Vec2f::zero() ):
+    texture_bounds( bounds ),
     size( size ),
-    texture_bounds( bounds )
+    registration_point( registration )
     {}
-    ci::Vec2f       registration_point;
-    ci::Vec2i       size;
     ci::Rectf       texture_bounds;
+    ci::Vec2i       size;
+    ci::Vec2f       registration_point;
   };
 }
