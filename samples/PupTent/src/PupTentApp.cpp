@@ -43,7 +43,7 @@ struct MovementSystem : public System<MovementSystem>
     for( auto& loc : mElements )
     {
       loc->rotation = fmodf( loc->rotation - M_PI * 0.01f, M_PI * 2 );
-      loc->scale = math<float>::sin( 0.25f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
+      loc->scale = math<float>::sin( 0.5f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
     }
   }
   double time = 0.0;
@@ -88,7 +88,7 @@ void PupTentApp::setup()
   mEvents = EventManager::make();
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
-//  mSystemManager->add<MovementSystem>();
+  mSystemManager->add<MovementSystem>();
   auto physics = mSystemManager->add<PhysicsSystem2d>();
   physics->createBoundaryRect( getWindowBounds() );
   auto renderer = mSystemManager->add<BatchRenderSystem2d>();
@@ -101,7 +101,7 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 100; ++i )
+  for( int i = 0; i < 2000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -118,7 +118,7 @@ void PupTentApp::setup()
       v.color = color;
     }
     mesh->render_layer = dist;
-    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 12.0f, loc->rotation ) );
+//    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 12.0f, loc->rotation ) );
     entity.assign( anim );
     entity.assign( loc );
     entity.assign( mesh );
@@ -161,6 +161,7 @@ void PupTentApp::update()
   up.start();
   mSystemManager->system<PhysicsSystem2d>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
   mSystemManager->update<PhysicsSystem2d>( dt );
+  mSystemManager->update<MovementSystem>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<BatchRenderSystem2d>( dt );
   double ms = up.getSeconds() * 1000;
