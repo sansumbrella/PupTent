@@ -106,7 +106,7 @@ void PupTentApp::setup()
   Vec2f center = getWindowCenter();
   float max_dist = center.length();
   Entity entity;
-  for( int i = 0; i < 20000; ++i )
+  for( int i = 0; i < 10000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
