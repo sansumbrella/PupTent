@@ -106,7 +106,7 @@ void PupTentApp::setup()
   Vec2f center = getWindowCenter();
   float max_dist = center.length();
   Entity entity;
-  for( int i = 0; i < 10000; ++i )
+  for( int i = 0; i < 5000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -115,13 +115,13 @@ void PupTentApp::setup()
     anim->current_index = r.nextInt( 0, 10 );
     loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
     loc->rotation = r.nextFloat( M_PI * 2 );
-    loc->registration_point = { 0, 0 };
+    loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
     float dist = loc->position.distance( center );
     loc->render_layer = dist;
     auto color = ColorA::gray( math<float>::clamp( lmap( dist, 0.0f, max_dist - 10.0f, 0.0f, 1.0f ) ) );
 //    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
-    mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
+    mesh->setAsBox( { 0.0f, 0.0f, 40.0f, 20.0f } );
     for( auto &v : mesh->vertices )
     {
       v.color = color;
