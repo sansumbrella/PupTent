@@ -34,10 +34,10 @@ using namespace cinder;
 using namespace box2d;
 using namespace std;
 
-PhysicsSystem2d::PhysicsSystem2d()
+PhysicsSystem::PhysicsSystem()
 {}
 
-PhysicsSystem2d::~PhysicsSystem2d()
+PhysicsSystem::~PhysicsSystem()
 {
 // Make sure no entities have physics after we are destructed
 // Since their reference to the b2bodies will be invalid and try
@@ -45,43 +45,43 @@ PhysicsSystem2d::~PhysicsSystem2d()
   auto entities = mEntities;
   for( auto entity : entities )
   {
-    entity.remove<PhysicsComponent2d>();
+    entity.remove<PhysicsComponent>();
   }
 }
 
-void PhysicsSystem2d::configure( shared_ptr<EventManager> events )
+void PhysicsSystem::configure( shared_ptr<EventManager> events )
 {
-  events->subscribe<ComponentAddedEvent<PhysicsComponent2d>>( *this );
-  events->subscribe<ComponentRemovedEvent<PhysicsComponent2d>>( *this );
+  events->subscribe<ComponentAddedEvent<PhysicsComponent>>( *this );
+  events->subscribe<ComponentRemovedEvent<PhysicsComponent>>( *this );
   events->subscribe<EntityDestroyedEvent>( *this );
 }
 
-void PhysicsSystem2d::receive(const ComponentAddedEvent<puptent::PhysicsComponent2d> &event)
+void PhysicsSystem::receive(const ComponentAddedEvent<puptent::PhysicsComponent> &event)
 {
   mEntities.push_back( event.entity );
 }
 
-void PhysicsSystem2d::receive(const ComponentRemovedEvent<puptent::PhysicsComponent2d> &event)
+void PhysicsSystem::receive(const ComponentRemovedEvent<puptent::PhysicsComponent> &event)
 {
   vector_remove( &mEntities, event.entity );
 }
 
-void PhysicsSystem2d::receive(const entityx::EntityDestroyedEvent &event)
+void PhysicsSystem::receive(const entityx::EntityDestroyedEvent &event)
 { // in case we were tracking this entity, stop (if it had a physics component we were)
   vector_remove( &mEntities, event.entity );
 }
 
-void PhysicsSystem2d::stepPhysics()
+void PhysicsSystem::stepPhysics()
 {
   mSandbox.step();
 }
 
-void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
+void PhysicsSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
 {
   for( auto entity : mEntities )
   {
     auto locus = entity.component<Locus>();
-    auto physics = entity.component<PhysicsComponent2d>();
+    auto physics = entity.component<PhysicsComponent>();
     if( locus )
     {
       locus->position = mScale.fromPhysics( Vec2f{ physics->body->GetPosition().x, physics->body->GetPosition().y } );
@@ -90,17 +90,17 @@ void PhysicsSystem2d::update(shared_ptr<entityx::EntityManager> es, shared_ptr<e
   }
 }
 
-void PhysicsSystem2d::debugDraw()
+void PhysicsSystem::debugDraw()
 {
   mSandbox.debugDraw( mScale.getPointsPerMeter() );
 }
 
-PhysicsComponent2dRef PhysicsSystem2d::createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation )
+PhysicsComponentRef PhysicsSystem::createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation )
 {
-  return PhysicsComponent2dRef{ new PhysicsComponent2d{ mSandbox.createBox( mScale.toPhysics( pos ), mScale.toPhysics( size ), rotation ) } };
+  return PhysicsComponentRef{ new PhysicsComponent{ mSandbox.createBox( mScale.toPhysics( pos ), mScale.toPhysics( size ), rotation ) } };
 }
 
-PhysicsComponent2dRef PhysicsSystem2d::createCircle( const ci::Vec2f &pos, float radius )
+PhysicsComponentRef PhysicsSystem::createCircle( const ci::Vec2f &pos, float radius )
 {
-  return PhysicsComponent2dRef{ new PhysicsComponent2d{ mSandbox.createCircle( mScale.toPhysics( pos ), mScale.toPhysics( radius ) ) } };
+  return PhysicsComponentRef{ new PhysicsComponent{ mSandbox.createCircle( mScale.toPhysics( pos ), mScale.toPhysics( radius ) ) } };
 }

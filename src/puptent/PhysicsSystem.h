@@ -31,29 +31,29 @@
 
 namespace puptent
 {
-  typedef std::shared_ptr<class PhysicsComponent2d> PhysicsComponent2dRef;
-  struct PhysicsComponent2d : Component<PhysicsComponent2d>
+  typedef std::shared_ptr<class PhysicsComponent> PhysicsComponentRef;
+  struct PhysicsComponent : Component<PhysicsComponent>
   {
-    PhysicsComponent2d( b2::unique_body_ptr &&body ):
+    PhysicsComponent( b2::unique_body_ptr &&body ):
     body( std::move( body ) )
     {}
     b2::unique_body_ptr body;
   };
   /**
-   PhysicsSystem2d:
+   PhysicsSystem:
    Physics calculation using Box2D
    Updates Entity's Locus component with physics transformations
    */
-  typedef std::shared_ptr<class PhysicsSystem2d> PhysicsSystem2dRef;
-  struct PhysicsSystem2d : public System<PhysicsSystem2d>, Receiver<PhysicsSystem2d>
+  typedef std::shared_ptr<class PhysicsSystem> PhysicsSystemRef;
+  struct PhysicsSystem : public System<PhysicsSystem>, Receiver<PhysicsSystem>
   {
-    PhysicsSystem2d();
-    ~PhysicsSystem2d();
+    PhysicsSystem();
+    ~PhysicsSystem();
     //! called by SystemManager to register event handlers
     void configure( shared_ptr<EventManager> events ) override;
     //! add/remove components when they are created
-    void receive( const ComponentAddedEvent<PhysicsComponent2d> &event );
-    void receive( const ComponentRemovedEvent<PhysicsComponent2d> &event );
+    void receive( const ComponentAddedEvent<PhysicsComponent> &event );
+    void receive( const ComponentRemovedEvent<PhysicsComponent> &event );
     void receive( const EntityDestroyedEvent &event );
     //! steps the physics simulation
     void stepPhysics();
@@ -65,10 +65,10 @@ namespace puptent
     //! Destroy the boundary rectangle
     void destroyBoundaryRect() { mSandbox.destroyBoundaryRect(); }
     //! Create a box using screen coordinates
-    PhysicsComponent2dRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation );
+    PhysicsComponentRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation );
     //! Create a circle using screen coordinates
-    PhysicsComponent2dRef createCircle( const ci::Vec2f &pos, float radius );
-    
+    PhysicsComponentRef createCircle( const ci::Vec2f &pos, float radius );
+
   private:
     box2d::Sandbox       mSandbox;
     std::vector<Entity>  mEntities;

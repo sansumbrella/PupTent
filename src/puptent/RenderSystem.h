@@ -35,7 +35,7 @@ namespace puptent
 {
   /**
    RenderSystem:
-   2d layer-sorted rendering system
+    layer-sorted rendering system
    Batch renders RenderMesh components by combining them into a single
    triangle strip. This is very efficient for ribbons and other common
    generative geometry and also efficient for rectangles (like sprites).
@@ -62,10 +62,10 @@ namespace puptent
     void receive( const ComponentRemovedEvent<RenderMesh> &event );
   private:
     std::vector<RenderMeshPair>         mGeometry;
-    std::vector<Vertex2d>         mVertices;
+    std::vector<Vertex>         mVertices;
     ci::gl::TextureRef            mTexture;
     // maybe add a CameraRef for positioning the scene
-    // use a POV2d and Locus component as camera, allowing dynamic switching
+    // use a POV and Locus component as camera, allowing dynamic switching
   };
 
 } // puptent::

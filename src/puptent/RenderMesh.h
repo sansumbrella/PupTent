@@ -27,13 +27,18 @@
 
 #pragma once
 #include "puptent/PupTent.h"
-#include "pockets/Types.h"
 
 namespace puptent
 {
+  struct Vertex
+  {
+    ci::Vec2f     position;
+    ci::ColorA8u  color;
+    ci::Vec2f     tex_coord;
+  };
   /**
    RenderMesh:
-   Collection of 2d vertices suitable for rendering as a triangle strip.
+   Collection of vertices suitable for rendering as a triangle strip.
    Drawn by the RenderSystem
    Updated by various systems that want content to be visible
   */
@@ -44,10 +49,10 @@ namespace puptent
     RenderMesh( int vertex_count=3, int render_layer=0 ):
     render_layer( render_layer )
     {
-      vertices.assign( vertex_count, Vertex2d{} );
+      vertices.assign( vertex_count, Vertex{} );
     }
 
-    std::vector<Vertex2d> vertices;
+    std::vector<Vertex> vertices;
     int                   render_layer = 0;
     //! Convenience method for making circular shapes
     //! If you aren't dynamically changing the circle, consider using a Sprite

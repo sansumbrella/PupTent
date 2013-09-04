@@ -85,11 +85,11 @@ void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager
     { // create degenerate triangle between previous and current shape
       mVertices.emplace_back( mVertices.back() );
       auto vert = mesh->vertices.front();
-      mVertices.emplace_back( Vertex2d{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      mVertices.emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
     }
     for( auto &vert : mesh->vertices )
     {
-      mVertices.emplace_back( Vertex2d{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      mVertices.emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
     }
   }
 }
@@ -106,9 +106,9 @@ void RenderSystem::draw() const
   glEnableClientState( GL_COLOR_ARRAY );
   glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex2d ), &mVertices[0].position.x );
-  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex2d ), &mVertices[0].tex_coord.x );
-  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex2d ), &mVertices[0].color.r );
+  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[0].position.x );
+  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[0].tex_coord.x );
+  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[0].color.r );
   glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices.size() );
 
   glDisableClientState( GL_VERTEX_ARRAY );

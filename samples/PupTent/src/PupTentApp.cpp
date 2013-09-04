@@ -27,7 +27,6 @@ using namespace std;
 using namespace puptent;
 
 using namespace entityx;
-using pockets::Vertex2d;
 
 struct MovementSystem : public System<MovementSystem>
 {
@@ -90,8 +89,8 @@ void PupTentApp::setup()
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
   mSystemManager->add<MovementSystem>();
-  mSystemManager->add<ParticleSystem2d>();
-  auto physics = mSystemManager->add<PhysicsSystem2d>();
+  mSystemManager->add<ParticleSystem>();
+  auto physics = mSystemManager->add<PhysicsSystem>();
   physics->createBoundaryRect( getWindowBounds() );
   auto renderer = mSystemManager->add<RenderSystem>();
   renderer->setTexture( atlas->getTexture() );
@@ -160,11 +159,11 @@ void PupTentApp::update()
   mTimer.start();
   Timer up;
   up.start();
-  mSystemManager->system<PhysicsSystem2d>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
-  mSystemManager->update<PhysicsSystem2d>( dt );
+  mSystemManager->system<PhysicsSystem>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
+  mSystemManager->update<PhysicsSystem>( dt );
 //  mSystemManager->update<MovementSystem>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
-  mSystemManager->update<ParticleSystem2d>( dt );
+  mSystemManager->update<ParticleSystem>( dt );
   mSystemManager->update<RenderSystem>( dt );
   double ms = up.getSeconds() * 1000;
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;

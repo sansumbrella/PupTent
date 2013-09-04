@@ -30,7 +30,7 @@
 
 namespace puptent
 {
-  struct ParticleEmitter2d : Component<ParticleEmitter2d>
+  struct ParticleEmitter : Component<ParticleEmitter>
   {
     int         tag;
     ci::Vec3f   direction;  // direction in which to fire particles
@@ -38,7 +38,7 @@ namespace puptent
     float       hold;
   };
 
-  struct Particle2d : Component<Particle2d>
+  struct Particle : Component<Particle>
   {
     float life; // life remaining in seconds
     float seed; // seed enabling some random variation from norm
@@ -47,13 +47,13 @@ namespace puptent
 
   /**
    ParticleSystem:
-   Simple sprited 2d particle system
-   Each "particle" is an entity with Particle2d and Locus components
+   Simple sprited  particle system
+   Each "particle" is an entity with Particle and Locus components
    This lets us integrate the particles with the BatchRenderSystem and avoid
    writing any new rendering code.
    System manages basic colliders, adding forces, gravity
    */
-  struct ParticleSystem2d : public System<ParticleSystem2d>
+  struct ParticleSystem : public System<ParticleSystem>
   {
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
   private:
