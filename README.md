@@ -7,7 +7,9 @@ By providing basic systems, PupTent lets you get start coding your gameplay
 systems without a lot of set up. If you want to change how something works later,
 feel free to swap in your own System. The component architecture means that
 it's easy to replace one system with another.
-Systems only know about components, and the built-in components only know about themselves.
+Systems only know about components, and components only know about themselves.
+Locus and RenderMesh are the only components used by multiple systems.
+
 File loading
 
 ## Features (Existing and Planned):
@@ -18,7 +20,7 @@ File loading
   - Scale
   - Registration point
 
-### Fast batch renderer for 2d geometry
+### Quick batch renderer for 2d geometry
 - Attach a RenderMesh component to store triangle_strip vertices
 - RenderSystem batches all meshes into a single draw call
   - Each entity's RenderMesh verticies are transformed by its Locus
