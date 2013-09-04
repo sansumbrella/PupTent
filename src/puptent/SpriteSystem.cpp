@@ -107,7 +107,7 @@ void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &
     auto sprite = event.component;
     auto drawings = mAnimations.at( sprite->animation ).drawings;
     sprite->current_index = math<int>::clamp( sprite->current_index, 0, drawings.size() - 1 );
-    mesh->setAsTexture( drawings.at( sprite->current_index ).drawing );
+    mesh->matchTexture( drawings.at( sprite->current_index ).drawing );
   }
   mEntities.push_back( entity );
 }
@@ -158,7 +158,7 @@ void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<Eve
       sprite->current_index = next_index;
       const auto new_drawing = anim.drawings.at( sprite->current_index ).drawing;
       auto mesh = entity.component<RenderMesh>();
-      if( mesh ){ mesh->setAsTexture( new_drawing ); }
+      if( mesh ){ mesh->matchTexture( new_drawing ); }
     }
   }
 }

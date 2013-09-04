@@ -57,7 +57,9 @@ namespace puptent
     void setAsCircle( const ci::Vec2f &radius, float start_radians=0, float end_radians=M_PI * 2, size_t segments=0 );
     //! Set the mesh bounds to a box shape
     void setAsBox( const ci::Rectf &bounds );
-    //! Set the mesh as a box with texture coordinates
-    void setAsTexture( const SpriteData &sprite_data );
+    //! Set the texture coords to those specified by the sprite data
+    void setBoxTextureCoords( const SpriteData &sprite_data );
+    //! Set the mesh as a box of sprite's size with correct texture coordinates
+    void matchTexture( const SpriteData &sprite_data );
   };
 } // puptent::

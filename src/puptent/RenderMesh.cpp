@@ -67,7 +67,15 @@ void RenderMesh::setAsBox( const Rectf &bounds )
   vertices[3].position = bounds.getLowerLeft();
 }
 
-void RenderMesh::setAsTexture(const SpriteData &sprite_data)
+void RenderMesh::setBoxTextureCoords( const SpriteData &sprite_data )
+{
+  vertices[0].tex_coord = sprite_data.texture_bounds.getUpperRight();
+  vertices[1].tex_coord = sprite_data.texture_bounds.getUpperLeft();
+  vertices[2].tex_coord = sprite_data.texture_bounds.getLowerRight();
+  vertices[3].tex_coord = sprite_data.texture_bounds.getLowerLeft();
+}
+
+void RenderMesh::matchTexture(const SpriteData &sprite_data)
 {
   if( vertices.size() != 4 ){ vertices.assign( 4, Vertex{} ); }
   Rectf screen_bounds{ { 0.0f, 0.0f }, sprite_data.size };

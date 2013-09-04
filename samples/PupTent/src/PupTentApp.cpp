@@ -146,7 +146,7 @@ void PupTentApp::setup()
         }
         auto mesh = RenderMeshRef{ new RenderMesh{ 4 } };
         // perhaps have a component to hang on to texturing data
-        mesh->setAsTexture( atlas->get( "dl-0001" ) );
+        mesh->matchTexture( atlas->get( "dl-0001" ) );
         ColorA color{ 1.0f, 1.0f, 1.0f, 1.0f };
         for( auto &v : mesh->vertices )
         {
