@@ -39,12 +39,13 @@ void ParticleSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManag
     auto emitter = entity.component<ParticleEmitter>();
     auto loc = entity.component<Locus>();
     Entity e = es->create();
-    e.assign<Particle>();
-    e.assign<Locus>();
+    auto p = e.assign<Particle>();
+    auto l = e.assign<Locus>();
     if( emitter->build_fn )
     {
       emitter->build_fn( e );
     }
+    mParticles.push_back( { p, l, e } );
   }
 
   for( auto info : mParticles )
