@@ -41,7 +41,6 @@ void RenderSystem::configure( shared_ptr<EventManager> event_manager )
 
 void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event)
 {
-  std::cout << "Render component added: " << event.component << std::endl;
   auto data = event.component;
   int target_layer = data->locus->render_layer;
   if( mGeometry.empty() )
@@ -75,12 +74,11 @@ void RenderSystem::checkOrdering() const
 
 void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderData> &event)
 {
-  std::cout << "Render component removed: " << event.component << std::endl;
   mGeometry.push_back( event.component );
 }
 
 void RenderSystem::receive(const EntityDestroyedEvent &event)
-{ std::cout << "Entity destroyed" << std::endl;
+{
   auto entity = event.entity;
   auto render_data = entity.component<RenderData>();
   if( render_data )

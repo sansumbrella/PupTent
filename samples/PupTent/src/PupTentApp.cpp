@@ -40,12 +40,13 @@ struct MovementSystem : public System<MovementSystem>
       }
     }
     time += dt;
+    Vec2f center = getWindowCenter();
+    float max_dist = center.length();
     for( auto& loc : mElements )
     {
       loc->rotation = fmodf( loc->rotation - M_PI * 0.01f, M_PI * 2 );
-      float half_time = time * 0.5f;
-      loc->scale = cos( half_time + M_PI * loc->position.x / 640.0f ) *
-                   sin( half_time + M_PI * loc->position.y / 480.0f );
+      float theta = loc->position.distance( center );
+      loc->scale = cos( -time * 0.66f + M_PI * theta / max_dist );
     }
   }
   double time = 0.0;
@@ -105,7 +106,7 @@ void PupTentApp::setup()
   Vec2f center = getWindowCenter();
   float max_dist = center.length();
   Entity entity;
-  for( int i = 0; i < 10000; ++i )
+  for( int i = 0; i < 20000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -117,7 +118,7 @@ void PupTentApp::setup()
     loc->registration_point = { 0, 0 };
     float dist = loc->position.distance( center );
     loc->render_layer = dist;
-    auto color = ColorA::gray( lmap( dist, 0.0f, max_dist, 0.0f, 1.0f ) );
+    auto color = ColorA::gray( math<float>::clamp( lmap( dist, 0.0f, max_dist - 10.0f, 0.0f, 1.0f ) ) );
 //    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
     mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
@@ -202,5 +203,5 @@ void PupTentApp::draw()
   }
 }
 
-CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_8 ) )
+CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_4 ) )
 
