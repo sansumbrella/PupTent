@@ -27,3 +27,9 @@
 
 #include "ParticleSystem.h"
 
+using namespace puptent;
+
+void ParticleSystem2d::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+{
+
+}

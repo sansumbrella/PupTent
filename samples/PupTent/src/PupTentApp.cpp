@@ -8,10 +8,11 @@
 #include "entityx/Entity.h"
 #include "entityx/System.h"
 
-#include "puptent/BatchRenderSystem2d.h"
-#include "puptent/PhysicsSystem2d.h"
+#include "puptent/RenderSystem.h"
+#include "puptent/PhysicsSystem.h"
 #include "puptent/TextureAtlas.h"
-#include "puptent/SpriteAnimation.h"
+#include "puptent/SpriteSystem.h"
+#include "puptent/ParticleSystem.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -89,9 +90,10 @@ void PupTentApp::setup()
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
   mSystemManager->add<MovementSystem>();
+  mSystemManager->add<ParticleSystem2d>();
   auto physics = mSystemManager->add<PhysicsSystem2d>();
   physics->createBoundaryRect( getWindowBounds() );
-  auto renderer = mSystemManager->add<BatchRenderSystem2d>();
+  auto renderer = mSystemManager->add<RenderSystem>();
   renderer->setTexture( atlas->getTexture() );
   shared_ptr<SpriteAnimationSystem> sprite_system{ new SpriteAnimationSystem{ atlas, animations } };
   mSystemManager->add( sprite_system );
@@ -101,7 +103,7 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 10000; ++i )
+  for( int i = 0; i < 500; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -112,9 +114,9 @@ void PupTentApp::setup()
     loc->rotation = r.nextFloat( M_PI * 2 );
     loc->registration_point = { 0, 0 };
     float dist = loc->position.distance( center );
-    ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.0f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
-//    entity.assign( physics->createBox( loc->position, atlas->get( "d-0001" ).size / 12.0f, loc->rotation ) );
-    auto mesh = entity.assign<RenderMesh2d>( 4, dist );
+    ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.2f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
+    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
+    auto mesh = entity.assign<RenderMesh>( 4, dist );
     for( auto &v : mesh->vertices )
     {
       v.color = color;
@@ -135,7 +137,7 @@ void PupTentApp::setup()
       else
       {
         cout << "Adding Mesh component: " << entity << endl;
-        auto mesh = RenderMesh2dRef{ new RenderMesh2d{ 4 } };
+        auto mesh = RenderMeshRef{ new RenderMesh{ 4 } };
         // perhaps have a component to hang on to texturing data
         mesh->setAsTexture( atlas->get( "dl-0001" ) );
         mesh->render_layer = 1000;
@@ -144,7 +146,7 @@ void PupTentApp::setup()
         {
           v.color = color;
         }
-        entity.assign<RenderMesh2d>( mesh );
+        entity.assign<RenderMesh>( mesh );
       }
     }
   });
@@ -160,9 +162,10 @@ void PupTentApp::update()
   up.start();
   mSystemManager->system<PhysicsSystem2d>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
   mSystemManager->update<PhysicsSystem2d>( dt );
-  mSystemManager->update<MovementSystem>( dt );
+//  mSystemManager->update<MovementSystem>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
-  mSystemManager->update<BatchRenderSystem2d>( dt );
+  mSystemManager->update<ParticleSystem2d>( dt );
+  mSystemManager->update<RenderSystem>( dt );
   double ms = up.getSeconds() * 1000;
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
@@ -177,8 +180,8 @@ void PupTentApp::draw()
   gl::color( Color::white() );
   Timer dr;
   dr.start();
-  mSystemManager->system<BatchRenderSystem2d>()->draw();
-//  mSystemManager->system<PhysicsSystem2d>()->debugDraw();
+//  mSystemManager->system<PhysicsSystem>()->debugDraw();
+  mSystemManager->system<RenderSystem>()->draw();
   double ms = dr.getSeconds() * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )

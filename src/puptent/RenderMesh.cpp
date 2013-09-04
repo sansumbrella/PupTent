@@ -31,7 +31,7 @@
 using namespace puptent;
 using namespace cinder;
 
-void RenderMesh2d::setAsCircle(const ci::Vec2f &radius, float start_radians, float end_radians, size_t segments )
+void RenderMesh::setAsCircle(const ci::Vec2f &radius, float start_radians, float end_radians, size_t segments )
 {
   if( segments < 2 ) { // based off of cinder, though we're less generous with the vertices
     segments = math<float>::floor( math<float>::max( radius.x, radius.y ) * abs(end_radians - start_radians) / 3 );
@@ -58,7 +58,7 @@ void RenderMesh2d::setAsCircle(const ci::Vec2f &radius, float start_radians, flo
   }
 }
 
-void RenderMesh2d::setAsBox( const Rectf &bounds )
+void RenderMesh::setAsBox( const Rectf &bounds )
 {
   if( vertices.size() != 4 ){ vertices.assign( 4, Vertex2d{} ); }
   vertices[0].position = bounds.getUpperRight();
@@ -67,7 +67,7 @@ void RenderMesh2d::setAsBox( const Rectf &bounds )
   vertices[3].position = bounds.getLowerLeft();
 }
 
-void RenderMesh2d::setAsTexture(const SpriteData &sprite_data)
+void RenderMesh::setAsTexture(const SpriteData &sprite_data)
 {
   if( vertices.size() != 4 ){ vertices.assign( 4, Vertex2d{} ); }
   Rectf screen_bounds{ { 0.0f, 0.0f }, sprite_data.size };

@@ -32,16 +32,16 @@
 namespace puptent
 {
   /**
-   RenderMesh2d:
+   RenderMesh:
    Collection of 2d vertices suitable for rendering as a triangle strip.
-   Drawn by the BatchRenderSystem2d
+   Drawn by the RenderSystem
    Updated by various systems that want content to be visible
   */
-  typedef std::shared_ptr<class RenderMesh2d> RenderMesh2dRef;
+  typedef std::shared_ptr<class RenderMesh> RenderMeshRef;
   class SpriteData;
-  struct RenderMesh2d : Component<RenderMesh2d>
+  struct RenderMesh : Component<RenderMesh>
   {
-    RenderMesh2d( int vertex_count=3, int render_layer=0 ):
+    RenderMesh( int vertex_count=3, int render_layer=0 ):
     render_layer( render_layer )
     {
       vertices.assign( vertex_count, Vertex2d{} );
@@ -56,10 +56,5 @@ namespace puptent
     void setAsBox( const ci::Rectf &bounds );
     //! Set the mesh as a box with texture coordinates
     void setAsTexture( const SpriteData &sprite_data );
-  };
-
-  struct RenderMesh3d : Component<RenderMesh3d>
-  {
-  	std::vector<Vertex3d> vertices;
   };
 } // puptent::

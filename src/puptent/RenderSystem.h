@@ -34,17 +34,17 @@
 namespace puptent
 {
   /**
-   BatchRenderSystem2d:
+   RenderSystem:
    2d layer-sorted rendering system
-   Batch renders RenderMesh2d components by combining them into a single
+   Batch renders RenderMesh components by combining them into a single
    triangle strip. This is very efficient for ribbons and other common
    generative geometry and also efficient for rectangles (like sprites).
    If a texture is assigned, it will be bound before rendering begins.
    Alpha blending is performed assuming colors are premultiplied.
    */
-  struct BatchRenderSystem2d : public System<BatchRenderSystem2d>, Receiver<BatchRenderSystem2d>
+  struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
   {
-    typedef std::pair<shared_ptr<Locus>, shared_ptr<RenderMesh2d>> MeshPair;
+    typedef std::pair<shared_ptr<Locus>, shared_ptr<RenderMesh>> RenderMeshPair;
 
     //! listen for events
     void configure( shared_ptr<EventManager> event_manager ) override;
@@ -58,12 +58,12 @@ namespace puptent
       mTexture = texture;
     }
     void receive( const EntityDestroyedEvent &event );
-    void receive( const ComponentAddedEvent<RenderMesh2d> &event );
-    void receive( const ComponentRemovedEvent<RenderMesh2d> &event );
+    void receive( const ComponentAddedEvent<RenderMesh> &event );
+    void receive( const ComponentRemovedEvent<RenderMesh> &event );
   private:
-    std::vector<MeshPair> mGeometry;
-    std::vector<Vertex2d> mVertices;
-    ci::gl::TextureRef    mTexture;
+    std::vector<RenderMeshPair>         mGeometry;
+    std::vector<Vertex2d>         mVertices;
+    ci::gl::TextureRef            mTexture;
     // maybe add a CameraRef for positioning the scene
     // use a POV2d and Locus component as camera, allowing dynamic switching
   };

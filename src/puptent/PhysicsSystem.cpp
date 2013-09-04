@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "PhysicsSystem2d.h"
+#include "PhysicsSystem.h"
 #include "pockets/CollectionUtilities.hpp"
 #include "puptent/Locus.h"
 

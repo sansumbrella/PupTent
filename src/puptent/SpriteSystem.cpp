@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/SpriteAnimation.h"
+#include "puptent/SpriteSystem.h"
 #include "puptent/RenderMesh.h"
 #include "cinder/Json.h"
 
@@ -101,7 +101,7 @@ SpriteAnimationRef SpriteAnimationSystem::createSpriteAnimation(AnimationId anim
 void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &event)
 { // track the sprite
   auto entity = event.entity;
-  auto mesh = entity.component<RenderMesh2d>();
+  auto mesh = entity.component<RenderMesh>();
   if( mesh )
   {
     auto sprite = event.component;
@@ -157,7 +157,7 @@ void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<Eve
     { // the frame index has changed, update display
       sprite->current_index = next_index;
       const auto new_drawing = anim.drawings.at( sprite->current_index ).drawing;
-      auto mesh = entity.component<RenderMesh2d>();
+      auto mesh = entity.component<RenderMesh>();
       if( mesh ){ mesh->setAsTexture( new_drawing ); }
     }
   }

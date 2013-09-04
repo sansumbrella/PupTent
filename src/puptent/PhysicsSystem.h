@@ -68,6 +68,7 @@ namespace puptent
     PhysicsComponent2dRef createBox( const ci::Vec2f &pos, const ci::Vec2f &size, float rotation );
     //! Create a circle using screen coordinates
     PhysicsComponent2dRef createCircle( const ci::Vec2f &pos, float radius );
+    
   private:
     box2d::Sandbox       mSandbox;
     std::vector<Entity>  mEntities;

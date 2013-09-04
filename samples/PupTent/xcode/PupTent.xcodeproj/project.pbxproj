@@ -14,11 +14,11 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		06D2053C8A0E4EE09D31C099 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C488A17000B4EB4A41BC68E /* FileUtils.cpp */; };
 		1432D287CA264169832FA33A /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0F85005B9B6046EEBB74AB6D /* CinderApp.icns */; };
-		15053BEC17D4EE9500C2FE2D /* SpriteAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BEA17D4EE9500C2FE2D /* SpriteAnimation.cpp */; };
+		15053BEC17D4EE9500C2FE2D /* SpriteSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BEA17D4EE9500C2FE2D /* SpriteSystem.cpp */; };
 		15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BED17D4EF2900C2FE2D /* Locus.cpp */; };
 		15053BF217D4F42D00C2FE2D /* RenderMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF017D4F42D00C2FE2D /* RenderMesh.cpp */; };
 		15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */; };
-		1556C7B517D63E7600811B85 /* PhysicsSystem2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B317D63E7600811B85 /* PhysicsSystem2d.cpp */; };
+		1556C7B517D63E7600811B85 /* PhysicsSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */; };
 		1556C7B817D64EF300811B85 /* ScriptSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B617D64EF300811B85 /* ScriptSystem.cpp */; };
 		1556C82B17D65FB900811B85 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7BD17D65FB900811B85 /* b2BroadPhase.cpp */; };
 		1556C82C17D65FB900811B85 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7BF17D65FB900811B85 /* b2CollideCircle.cpp */; };
@@ -78,7 +78,7 @@
 		15D4415B17D298C600A926F0 /* Manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413A17D298C600A926F0 /* Manager.cc */; };
 		15D4416817D298C600A926F0 /* System.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4414C17D298C600A926F0 /* System.cc */; };
 		15D4416A17D298C600A926F0 /* TagsComponent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4415017D298C600A926F0 /* TagsComponent.cc */; };
-		15D4417B17D409B400A926F0 /* BatchRenderSystem2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15D4417917D409B400A926F0 /* BatchRenderSystem2d.cpp */; };
+		15D4417B17D409B400A926F0 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15D4417917D409B400A926F0 /* RenderSystem.cpp */; };
 		15D4417E17D40A3C00A926F0 /* PupTent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15D4417C17D40A3C00A926F0 /* PupTent.cpp */; };
 		2BC14B3DF87C4EADAA2A53A6 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6709E3B5093C40E4ABC6414C /* Sprite.cpp */; };
 		2CC77AAE2CEC44BB970D6A3F /* ImagePacker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 51EECC52FF46449CB328CBEE /* ImagePacker.cpp */; };
@@ -105,16 +105,16 @@
 		0495832E96DC40A7B34AB66F /* ColorPalette.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ColorPalette.cpp; path = ../../../../Pockets/src/pockets/ColorPalette.cpp; sourceTree = "<group>"; };
 		0F85005B9B6046EEBB74AB6D /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		15053BEA17D4EE9500C2FE2D /* SpriteAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteAnimation.cpp; sourceTree = "<group>"; };
-		15053BEB17D4EE9500C2FE2D /* SpriteAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteAnimation.h; sourceTree = "<group>"; };
+		15053BEA17D4EE9500C2FE2D /* SpriteSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteSystem.cpp; sourceTree = "<group>"; };
+		15053BEB17D4EE9500C2FE2D /* SpriteSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteSystem.h; sourceTree = "<group>"; };
 		15053BED17D4EF2900C2FE2D /* Locus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Locus.cpp; sourceTree = "<group>"; };
 		15053BEE17D4EF2900C2FE2D /* Locus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locus.h; sourceTree = "<group>"; };
 		15053BF017D4F42D00C2FE2D /* RenderMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderMesh.cpp; sourceTree = "<group>"; };
 		15053BF117D4F42D00C2FE2D /* RenderMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderMesh.h; sourceTree = "<group>"; };
 		15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAtlas.cpp; sourceTree = "<group>"; };
 		15053BF417D5418C00C2FE2D /* TextureAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureAtlas.h; sourceTree = "<group>"; };
-		1556C7B317D63E7600811B85 /* PhysicsSystem2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsSystem2d.cpp; sourceTree = "<group>"; };
-		1556C7B417D63E7600811B85 /* PhysicsSystem2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsSystem2d.h; sourceTree = "<group>"; };
+		1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsSystem.cpp; sourceTree = "<group>"; };
+		1556C7B417D63E7600811B85 /* PhysicsSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsSystem.h; sourceTree = "<group>"; };
 		1556C7B617D64EF300811B85 /* ScriptSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptSystem.cpp; sourceTree = "<group>"; };
 		1556C7B717D64EF300811B85 /* ScriptSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptSystem.h; sourceTree = "<group>"; };
 		1556C7BB17D65FB900811B85 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
@@ -235,8 +235,8 @@
 		15D4415017D298C600A926F0 /* TagsComponent.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TagsComponent.cc; sourceTree = "<group>"; };
 		15D4415117D298C600A926F0 /* TagsComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagsComponent.h; sourceTree = "<group>"; };
 		15D4416C17D29AEB00A926F0 /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		15D4417917D409B400A926F0 /* BatchRenderSystem2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BatchRenderSystem2d.cpp; sourceTree = "<group>"; };
-		15D4417A17D409B400A926F0 /* BatchRenderSystem2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchRenderSystem2d.h; sourceTree = "<group>"; };
+		15D4417917D409B400A926F0 /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderSystem.cpp; sourceTree = "<group>"; };
+		15D4417A17D409B400A926F0 /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderSystem.h; sourceTree = "<group>"; };
 		15D4417C17D40A3C00A926F0 /* PupTent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PupTent.cpp; sourceTree = "<group>"; };
 		15D4417D17D40A3C00A926F0 /* PupTent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PupTent.h; sourceTree = "<group>"; };
 		1C488A17000B4EB4A41BC68E /* FileUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = FileUtils.cpp; path = ../../../../Pockets/src/pockets/FileUtils.cpp; sourceTree = "<group>"; };
@@ -574,20 +574,20 @@
 		15D4415317D298C600A926F0 /* puptent */ = {
 			isa = PBXGroup;
 			children = (
-				15D4417917D409B400A926F0 /* BatchRenderSystem2d.cpp */,
-				15D4417A17D409B400A926F0 /* BatchRenderSystem2d.h */,
+				15D4417917D409B400A926F0 /* RenderSystem.cpp */,
+				15D4417A17D409B400A926F0 /* RenderSystem.h */,
 				15D4417C17D40A3C00A926F0 /* PupTent.cpp */,
 				15D4417D17D40A3C00A926F0 /* PupTent.h */,
-				15053BEA17D4EE9500C2FE2D /* SpriteAnimation.cpp */,
-				15053BEB17D4EE9500C2FE2D /* SpriteAnimation.h */,
+				15053BEA17D4EE9500C2FE2D /* SpriteSystem.cpp */,
+				15053BEB17D4EE9500C2FE2D /* SpriteSystem.h */,
 				15053BED17D4EF2900C2FE2D /* Locus.cpp */,
 				15053BEE17D4EF2900C2FE2D /* Locus.h */,
 				15053BF017D4F42D00C2FE2D /* RenderMesh.cpp */,
 				15053BF117D4F42D00C2FE2D /* RenderMesh.h */,
 				15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */,
 				15053BF417D5418C00C2FE2D /* TextureAtlas.h */,
-				1556C7B317D63E7600811B85 /* PhysicsSystem2d.cpp */,
-				1556C7B417D63E7600811B85 /* PhysicsSystem2d.h */,
+				1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */,
+				1556C7B417D63E7600811B85 /* PhysicsSystem.h */,
 				1556C7B617D64EF300811B85 /* ScriptSystem.cpp */,
 				1556C7B717D64EF300811B85 /* ScriptSystem.h */,
 				15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */,
@@ -757,11 +757,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15D4417B17D409B400A926F0 /* BatchRenderSystem2d.cpp in Sources */,
+				15D4417B17D409B400A926F0 /* RenderSystem.cpp in Sources */,
 				15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */,
 				1556C84517D65FB900811B85 /* b2CircleContact.cpp in Sources */,
 				1556C85617D65FB900811B85 /* b2WheelJoint.cpp in Sources */,
-				1556C7B517D63E7600811B85 /* PhysicsSystem2d.cpp in Sources */,
+				1556C7B517D63E7600811B85 /* PhysicsSystem.cpp in Sources */,
 				33B077D9B21C4A6A973C0DA6 /* PupTentApp.cpp in Sources */,
 				1556C84E17D65FB900811B85 /* b2GearJoint.cpp in Sources */,
 				CC4A488ACD9648628B387DFB /* AnimationUtils.cpp in Sources */,
@@ -780,7 +780,7 @@
 				1556C82C17D65FB900811B85 /* b2CollideCircle.cpp in Sources */,
 				1556C84217D65FB900811B85 /* b2WorldCallbacks.cpp in Sources */,
 				1556C84A17D65FB900811B85 /* b2PolygonAndCircleContact.cpp in Sources */,
-				15053BEC17D4EE9500C2FE2D /* SpriteAnimation.cpp in Sources */,
+				15053BEC17D4EE9500C2FE2D /* SpriteSystem.cpp in Sources */,
 				1556C83D17D65FB900811B85 /* b2Body.cpp in Sources */,
 				1556C83C17D65FB900811B85 /* b2Timer.cpp in Sources */,
 				1556C84017D65FB900811B85 /* b2Island.cpp in Sources */,

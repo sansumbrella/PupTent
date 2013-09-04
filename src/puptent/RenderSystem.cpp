@@ -25,53 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/BatchRenderSystem2d.h"
+#include "puptent/RenderSystem.h"
 #include "cinder/gl/Texture.h"
 
 using namespace cinder;
 using namespace puptent;
 
-void BatchRenderSystem2d::configure( shared_ptr<EventManager> event_manager )
+void RenderSystem::configure( shared_ptr<EventManager> event_manager )
 {
   event_manager->subscribe<EntityDestroyedEvent>( *this );
-  event_manager->subscribe<ComponentAddedEvent<RenderMesh2d>>( *this );
-  event_manager->subscribe<ComponentRemovedEvent<RenderMesh2d>>( *this );
+  event_manager->subscribe<ComponentAddedEvent<RenderMesh>>( *this );
+  event_manager->subscribe<ComponentRemovedEvent<RenderMesh>>( *this );
 }
 
-void BatchRenderSystem2d::receive(const ComponentAddedEvent<puptent::RenderMesh2d> &event)
+void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderMesh> &event)
 {
   std::cout << "Render component added: " << event.component << std::endl;
   mGeometry.clear();
 }
 
-void BatchRenderSystem2d::receive(const ComponentRemovedEvent<puptent::RenderMesh2d> &event)
+void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderMesh> &event)
 {
   std::cout << "Render component removed: " << event.component << std::endl;
   mGeometry.clear();
 }
 
-void BatchRenderSystem2d::receive(const EntityDestroyedEvent &event)
+void RenderSystem::receive(const EntityDestroyedEvent &event)
 {
   std::cout << "Entity destroyed" << std::endl;
   auto entity = event.entity;
-  if( entity.component<RenderMesh2d>() )
+  if( entity.component<RenderMesh>() )
   { // if a mesh was destroyed, we will update our render list this frame
     mGeometry.clear();
   }
 }
 
-void BatchRenderSystem2d::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
 {
   // build our sorted geometry list from query if the layers/components have changed
   // will rebuild if any meshes are removed or added
   if( mGeometry.empty() )
   {
-    for( auto entity : es->entities_with_components<Locus, RenderMesh2d>() )
+    for( auto entity : es->entities_with_components<Locus, RenderMesh>() )
     {
-      mGeometry.emplace_back( entity.component<Locus>(), entity.component<RenderMesh2d>() );
+      mGeometry.emplace_back( entity.component<Locus>(), entity.component<RenderMesh>() );
     }
   }
-  stable_sort( mGeometry.begin(), mGeometry.end(), []( const MeshPair &lhs, const MeshPair &rhs ) -> bool {
+  stable_sort( mGeometry.begin(), mGeometry.end(), []( const RenderMeshPair &lhs, const RenderMeshPair &rhs ) -> bool {
     return lhs.second->render_layer < rhs.second->render_layer;
   } );
   // assemble all vertices
@@ -94,7 +94,7 @@ void BatchRenderSystem2d::update( shared_ptr<EntityManager> es, shared_ptr<Event
   }
 }
 
-void BatchRenderSystem2d::draw() const
+void RenderSystem::draw() const
 {
   if( mTexture )
   {

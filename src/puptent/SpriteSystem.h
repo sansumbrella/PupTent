@@ -57,7 +57,7 @@ namespace puptent
   /**
    SpriteAnimationSystem:
    Plays back SpriteAnimations
-   Updates a RenderMesh2d component with the current animation frame
+   Updates a RenderMesh component with the current animation frame
    Assumes that whatever renderer will bind the correct texture for display
    */
   typedef std::shared_ptr<class SpriteAnimationSystem> SpriteAnimationSystemRef;
