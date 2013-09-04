@@ -113,9 +113,10 @@ void PupTentApp::setup()
     loc->rotation = r.nextFloat( M_PI * 2 );
     loc->registration_point = { 0, 0 };
     float dist = loc->position.distance( center );
+    loc->render_layer = dist;
     ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.2f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
     entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
-    auto mesh = entity.assign<RenderMesh>( 4, dist );
+    auto mesh = entity.assign<RenderMesh>( 4 );
     for( auto &v : mesh->vertices )
     {
       v.color = color;
@@ -136,10 +137,14 @@ void PupTentApp::setup()
       else
       {
         cout << "Adding Mesh component: " << entity << endl;
+        auto loc = entity.component<Locus>();
+        if( loc )
+        {
+          loc->render_layer = 1000;
+        }
         auto mesh = RenderMeshRef{ new RenderMesh{ 4 } };
         // perhaps have a component to hang on to texturing data
         mesh->setAsTexture( atlas->get( "dl-0001" ) );
-        mesh->render_layer = 1000;
         ColorA color{ 1.0f, 1.0f, 1.0f, 1.0f };
         for( auto &v : mesh->vertices )
         {

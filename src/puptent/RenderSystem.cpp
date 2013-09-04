@@ -72,7 +72,7 @@ void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager
     }
   }
   stable_sort( mGeometry.begin(), mGeometry.end(), []( const RenderMeshPair &lhs, const RenderMeshPair &rhs ) -> bool {
-    return lhs.second->render_layer < rhs.second->render_layer;
+    return lhs.first->render_layer < rhs.first->render_layer;
   } );
   // assemble all vertices
   mVertices.clear();

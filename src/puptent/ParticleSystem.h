@@ -36,28 +36,57 @@ namespace puptent
     ci::Vec3f   direction;  // direction in which to fire particles
     float       rate;
     float       hold;
+    // called whenever a particle is created from this emitter
+    // use to apply desired RenderMesh and additional behavior components
+    std::function<void (Entity)>  build_fn;
   };
 
+  /**
+   Particle:
+   A bag of attributes for performing verlet integration
+   Any custom movement systems should just change the current values. The
+   ParticleSystem will use current and previous values
+   */
+  typedef std::shared_ptr<class Particle> ParticleRef;
   struct Particle : Component<Particle>
   {
-    float life; // life remaining in seconds
-    float seed; // seed enabling some random variation from norm
-    int   tag;
+    Particle()
+    {}
+    float     life; // life remaining in seconds
+    float     seed; // seed enabling some random variation from norm
+    int       tag;
+    float     gravity_strength;
+    float     friction;
+    ci::Vec3f position;
+    ci::Vec3f p_position;
+    float     rotation;
+    float     p_rotation;
+    float     scale;
+    float     p_scale;
   };
 
   /**
    ParticleSystem:
-   Simple sprited  particle system
+   Simple particle system; a specialized movement system
    Each "particle" is an entity with Particle and Locus components
-   This lets us integrate the particles with the BatchRenderSystem and avoid
-   writing any new rendering code.
-   System manages basic colliders, adding forces, gravity
+   This lets us integrate the particles with the BatchRenderSystem so that they
+   can be layered interwoven with other entities.
+   Particles must be created through the ParticleSystem interface or through
+   the use of ParticleEmitter components.
    */
   struct ParticleSystem : public System<ParticleSystem>
   {
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
   private:
-    std::vector<Entity>     mEntities;
-    ci::Vec3f               mGravity;
+    struct ParticleInfo
+    {
+      ParticleRef particle;
+      LocusRef    locus;
+      Entity      entity;
+    };
+    std::vector<ParticleInfo> mParticles;
+    std::vector<Entity>       mEmitters;
+    ci::Vec3f                 mGravity;
+    bool                      mHandleEvents;
   };
 } // puptent::

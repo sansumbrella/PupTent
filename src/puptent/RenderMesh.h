@@ -46,14 +46,12 @@ namespace puptent
   class SpriteData;
   struct RenderMesh : Component<RenderMesh>
   {
-    RenderMesh( int vertex_count=3, int render_layer=0 ):
-    render_layer( render_layer )
+    RenderMesh( int vertex_count=3 )
     {
       vertices.assign( vertex_count, Vertex{} );
     }
-
+    //! vertices in triangle_strip order
     std::vector<Vertex> vertices;
-    int                   render_layer = 0;
     //! Convenience method for making circular shapes
     //! If you aren't dynamically changing the circle, consider using a Sprite
     void setAsCircle( const ci::Vec2f &radius, float start_radians=0, float end_radians=M_PI * 2, size_t segments=0 );

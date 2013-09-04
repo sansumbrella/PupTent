@@ -18,6 +18,7 @@
 		15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BED17D4EF2900C2FE2D /* Locus.cpp */; };
 		15053BF217D4F42D00C2FE2D /* RenderMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF017D4F42D00C2FE2D /* RenderMesh.cpp */; };
 		15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */; };
+		151F137517D76461002EC4BE /* ParticleBehaviorSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */; };
 		1556C7B517D63E7600811B85 /* PhysicsSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */; };
 		1556C7B817D64EF300811B85 /* ScriptSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B617D64EF300811B85 /* ScriptSystem.cpp */; };
 		1556C82B17D65FB900811B85 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7BD17D65FB900811B85 /* b2BroadPhase.cpp */; };
@@ -113,6 +114,8 @@
 		15053BF117D4F42D00C2FE2D /* RenderMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderMesh.h; sourceTree = "<group>"; };
 		15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAtlas.cpp; sourceTree = "<group>"; };
 		15053BF417D5418C00C2FE2D /* TextureAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureAtlas.h; sourceTree = "<group>"; };
+		151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleBehaviorSystems.cpp; sourceTree = "<group>"; };
+		151F137417D76461002EC4BE /* ParticleBehaviorSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleBehaviorSystems.h; sourceTree = "<group>"; };
 		1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsSystem.cpp; sourceTree = "<group>"; };
 		1556C7B417D63E7600811B85 /* PhysicsSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhysicsSystem.h; sourceTree = "<group>"; };
 		1556C7B617D64EF300811B85 /* ScriptSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptSystem.cpp; sourceTree = "<group>"; };
@@ -592,6 +595,8 @@
 				1556C7B717D64EF300811B85 /* ScriptSystem.h */,
 				15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */,
 				15A8A94117D6A10700474DA6 /* ParticleSystem.h */,
+				151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */,
+				151F137417D76461002EC4BE /* ParticleBehaviorSystems.h */,
 			);
 			path = puptent;
 			sourceTree = "<group>";
@@ -773,6 +778,7 @@
 				1556C84817D65FB900811B85 /* b2EdgeAndCircleContact.cpp in Sources */,
 				1556C83A17D65FB900811B85 /* b2Settings.cpp in Sources */,
 				760B05E6C6D24E8EAEC98321 /* ExpandedLine2d.cpp in Sources */,
+				151F137517D76461002EC4BE /* ParticleBehaviorSystems.cpp in Sources */,
 				15D4416A17D298C600A926F0 /* TagsComponent.cc in Sources */,
 				1556C84717D65FB900811B85 /* b2ContactSolver.cpp in Sources */,
 				1556C84F17D65FB900811B85 /* b2Joint.cpp in Sources */,

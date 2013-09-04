@@ -25,55 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/ParticleSystem.h"
-#include "puptent/Locus.h"
-#include "pockets/CollectionUtilities.hpp"
+#pragma once
 
-using namespace puptent;
-using namespace cinder;
+#include "puptent/PupTent.h"
 
-void ParticleSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+/**
+ A set of systems for adding common particle behaviors.
+ If you want a given particle to have a specific behavior, add the behavior
+ component(s) to develop it.
+ */
+namespace puptent
 {
-  for( auto entity : mEmitters )
+  /**
+   Seek:
+   Move toward a target.
+   To change to avoid, set negative strength values
+   */
+  struct Seek : Component<Seek>
   {
-    auto emitter = entity.component<ParticleEmitter>();
-    auto loc = entity.component<Locus>();
-    Entity e = es->create();
-    e.assign<Particle>();
-    e.assign<Locus>();
-    if( emitter->build_fn )
-    {
-      emitter->build_fn( e );
-    }
-  }
+    ci::Vec2f strength;
+    LocusRef  target;
+  };
 
-  for( auto info : mParticles )
-  {
-    // Perform verlet integration
-    ParticleRef p = info.particle;
-    p->life -= dt;
-    if( p->life > 0.0f )
-    {
-      Vec3f position = p->position;
-      Vec3f velocity = position - p->p_position;
-      p->position = position + velocity * p->friction;
-      p->p_position = position;
-
-      // Synchronize to Locus
-      LocusRef l = info.locus;
-      l->position.x = p->position.x;
-      l->position.y = p->position.y;
-      l->render_layer = p->position.z;
-      l->rotation = p->rotation;
-      l->scale = p->scale;
-    }
-    else
-    { // destroy associated entity
-      info.entity.destroy();
-    }
-  }
-  // stop tracking dead particles
-  vector_erase_if( &mParticles, []( const ParticleInfo &particle ){
-    return particle.particle->life <= 0.0f;
-  });
 }

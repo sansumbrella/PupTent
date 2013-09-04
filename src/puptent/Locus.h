@@ -52,6 +52,7 @@ namespace puptent
     ci::Vec2f         registration_point = ci::Vec2f::zero();
     float             rotation = 0.0f;
     float             scale = 1.0f;
+    int               render_layer = 0;
     //! transform parent; toMatrix() is multiplied by parent->toMatrix() if present
     shared_ptr<Locus> parent = nullptr;
     //! returns a matrix that will transform points based on Locus properties
