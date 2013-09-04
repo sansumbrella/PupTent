@@ -102,7 +102,7 @@ void PupTentApp::setup()
   Rand r;
   Vec2f center = getWindowCenter();
   Entity entity;
-  for( int i = 0; i < 500; ++i )
+  for( int i = 0; i < 10000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -115,7 +115,7 @@ void PupTentApp::setup()
     float dist = loc->position.distance( center );
     loc->render_layer = dist;
     ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.2f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
-    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
+//    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
     for( auto &v : mesh->vertices )
     {
@@ -123,6 +123,7 @@ void PupTentApp::setup()
     }
     entity.assign( anim );
     entity.assign( loc );
+    entity.assign<RenderData>( mesh, loc );
   }
 
   getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
@@ -151,6 +152,7 @@ void PupTentApp::setup()
           v.color = color;
         }
         entity.assign<RenderMesh>( mesh );
+        entity.component<RenderData>()->mesh = mesh;
       }
     }
   });
@@ -164,9 +166,9 @@ void PupTentApp::update()
   mTimer.start();
   Timer up;
   up.start();
-  mSystemManager->system<PhysicsSystem>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
-  mSystemManager->update<PhysicsSystem>( dt );
-//  mSystemManager->update<MovementSystem>( dt );
+//  mSystemManager->system<PhysicsSystem>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
+//  mSystemManager->update<PhysicsSystem>( dt );
+  mSystemManager->update<MovementSystem>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<ParticleSystem>( dt );
   mSystemManager->update<RenderSystem>( dt );

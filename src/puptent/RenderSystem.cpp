@@ -26,6 +26,7 @@
  */
 
 #include "puptent/RenderSystem.h"
+#include "pockets/CollectionUtilities.hpp"
 #include "cinder/gl/Texture.h"
 
 using namespace cinder;
@@ -34,52 +35,46 @@ using namespace puptent;
 void RenderSystem::configure( shared_ptr<EventManager> event_manager )
 {
   event_manager->subscribe<EntityDestroyedEvent>( *this );
-  event_manager->subscribe<ComponentAddedEvent<RenderMesh>>( *this );
-  event_manager->subscribe<ComponentRemovedEvent<RenderMesh>>( *this );
+  event_manager->subscribe<ComponentAddedEvent<RenderData>>( *this );
+  event_manager->subscribe<ComponentRemovedEvent<RenderData>>( *this );
 }
 
-void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderMesh> &event)
+void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event)
 {
   std::cout << "Render component added: " << event.component << std::endl;
-  mGeometry.clear();
+  mGeometry.push_back( event.component );
+  auto data = event.component;
+  auto iter = mGeometry.begin();
+  while( iter != mGeometry.end() && (**iter).locus->render_layer < data->locus->render_layer )
+  { // go until we
+    ++iter;
+  }
+  mGeometry.insert( iter, data );
 }
 
-void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderMesh> &event)
+void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderData> &event)
 {
   std::cout << "Render component removed: " << event.component << std::endl;
-  mGeometry.clear();
+  mGeometry.push_back( event.component );
 }
 
 void RenderSystem::receive(const EntityDestroyedEvent &event)
-{
-  std::cout << "Entity destroyed" << std::endl;
+{ std::cout << "Entity destroyed" << std::endl;
   auto entity = event.entity;
-  if( entity.component<RenderMesh>() )
-  { // if a mesh was destroyed, we will update our render list this frame
-    mGeometry.clear();
+  auto render_data = entity.component<RenderData>();
+  if( render_data )
+  { // remove render component from our list
+    vector_remove( &mGeometry, render_data );
   }
 }
 
 void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
-{
-  // build our sorted geometry list from query if the layers/components have changed
-  // will rebuild if any meshes are removed or added
-  if( mGeometry.empty() )
-  {
-    for( auto entity : es->entities_with_components<Locus, RenderMesh>() )
-    {
-      mGeometry.emplace_back( entity.component<Locus>(), entity.component<RenderMesh>() );
-    }
-  }
-  stable_sort( mGeometry.begin(), mGeometry.end(), []( const RenderMeshPair &lhs, const RenderMeshPair &rhs ) -> bool {
-    return lhs.first->render_layer < rhs.first->render_layer;
-  } );
-  // assemble all vertices
+{ // assemble all vertices
   mVertices.clear();
-  for( auto pair : mGeometry )
+  for( const auto &pair : mGeometry )
   {
-    auto loc = pair.first;
-    auto mesh = pair.second;
+    auto mesh = pair->mesh;
+    auto loc = pair->locus;
     auto mat = loc->toMatrix();
     if( !mVertices.empty() )
     { // create degenerate triangle between previous and current shape

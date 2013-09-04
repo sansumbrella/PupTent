@@ -34,6 +34,22 @@
 namespace puptent
 {
   /**
+   Composite component.
+   Lets us store information needed for RenderSystem in one fast-to-access place.
+   Requires an extra step when defining element components
+   */
+  typedef std::shared_ptr<class RenderData> RenderDataRef;
+  struct RenderData : Component<RenderData>
+  {
+    RenderData( RenderMeshRef mesh, LocusRef locus ):
+    mesh( mesh ),
+    locus( locus )
+    {}
+    RenderMeshRef mesh;
+    LocusRef      locus;
+  };
+
+  /**
    RenderSystem:
     layer-sorted rendering system
    Batch renders RenderMesh components by combining them into a single
@@ -44,11 +60,12 @@ namespace puptent
    */
   struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
   {
-    typedef std::pair<shared_ptr<Locus>, shared_ptr<RenderMesh>> RenderMeshPair;
-
     //! listen for events
     void configure( shared_ptr<EventManager> event_manager ) override;
-    //! gather geometry and apply transforms when collecting into list
+    //! sort the render data by render layer
+    inline void sort()
+    { stable_sort( mGeometry.begin(), mGeometry.end(), &RenderSystem::layerSort ); }
+    //! generate vertex list by transforming meshes by locii
     void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
     //! batch render scene to screen
     void draw() const;
@@ -58,12 +75,14 @@ namespace puptent
       mTexture = texture;
     }
     void receive( const EntityDestroyedEvent &event );
-    void receive( const ComponentAddedEvent<RenderMesh> &event );
-    void receive( const ComponentRemovedEvent<RenderMesh> &event );
+    void receive( const ComponentAddedEvent<RenderData> &event );
+    void receive( const ComponentRemovedEvent<RenderData> &event );
   private:
-    std::vector<RenderMeshPair>         mGeometry;
+    std::vector<RenderDataRef>  mGeometry;
     std::vector<Vertex>         mVertices;
-    ci::gl::TextureRef            mTexture;
+    ci::gl::TextureRef          mTexture;
+    static bool layerSort( const RenderDataRef &lhs, const RenderDataRef &rhs )
+      { return lhs->locus->render_layer < rhs->locus->render_layer; }
     // maybe add a CameraRef for positioning the scene
     // use a POV and Locus component as camera, allowing dynamic switching
   };
