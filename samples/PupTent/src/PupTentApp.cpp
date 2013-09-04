@@ -117,11 +117,12 @@ void PupTentApp::setup()
     ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.2f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
 //    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
+    mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
     for( auto &v : mesh->vertices )
     {
       v.color = color;
     }
-    entity.assign( anim );
+//    entity.assign( anim );
     entity.assign( loc );
     entity.assign<RenderData>( mesh, loc );
   }

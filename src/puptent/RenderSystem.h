@@ -61,28 +61,26 @@ namespace puptent
   struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
   {
     //! listen for events
-    void configure( shared_ptr<EventManager> event_manager ) override;
+    void        configure( shared_ptr<EventManager> event_manager ) override;
     //! sort the render data by render layer
     inline void sort()
     { stable_sort( mGeometry.begin(), mGeometry.end(), &RenderSystem::layerSort ); }
     //! generate vertex list by transforming meshes by locii
-    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    void        update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
     //! batch render scene to screen
-    void draw() const;
+    void        draw() const;
     //! set a texture to be bound for all rendering
-    void setTexture( ci::gl::TextureRef texture )
-    {
-      mTexture = texture;
-    }
-    void receive( const EntityDestroyedEvent &event );
-    void receive( const ComponentAddedEvent<RenderData> &event );
-    void receive( const ComponentRemovedEvent<RenderData> &event );
+    inline void setTexture( ci::gl::TextureRef texture )
+    { mTexture = texture; }
+    void        receive( const EntityDestroyedEvent &event );
+    void        receive( const ComponentAddedEvent<RenderData> &event );
+    void        receive( const ComponentRemovedEvent<RenderData> &event );
   private:
     std::vector<RenderDataRef>  mGeometry;
     std::vector<Vertex>         mVertices;
     ci::gl::TextureRef          mTexture;
-    static bool layerSort( const RenderDataRef &lhs, const RenderDataRef &rhs )
-      { return lhs->locus->render_layer < rhs->locus->render_layer; }
+    static bool                 layerSort( const RenderDataRef &lhs, const RenderDataRef &rhs )
+    { return lhs->locus->render_layer < rhs->locus->render_layer; }
     // maybe add a CameraRef for positioning the scene
     // use a POV and Locus component as camera, allowing dynamic switching
   };
