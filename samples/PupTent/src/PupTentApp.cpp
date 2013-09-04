@@ -43,7 +43,9 @@ struct MovementSystem : public System<MovementSystem>
     for( auto& loc : mElements )
     {
       loc->rotation = fmodf( loc->rotation - M_PI * 0.01f, M_PI * 2 );
-      loc->scale = math<float>::sin( 0.5f * time + M_PI * loc->position.x / 640.0f + M_PI * loc->position.y / 480.0f );
+      float half_time = time * 0.5f;
+      loc->scale = cos( half_time + M_PI * loc->position.x / 640.0f ) *
+                   sin( half_time + M_PI * loc->position.y / 480.0f );
     }
   }
   double time = 0.0;
@@ -101,6 +103,7 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
+  float max_dist = center.length();
   Entity entity;
   for( int i = 0; i < 10000; ++i )
   {
@@ -114,7 +117,7 @@ void PupTentApp::setup()
     loc->registration_point = { 0, 0 };
     float dist = loc->position.distance( center );
     loc->render_layer = dist;
-    ColorA color{ CM_HSV, 0.0f, 0.0f, lmap( dist, 0.2f, 0.75f * getWindowWidth(), 0.0f, 1.0f ), 1.0f };
+    auto color = ColorA::gray( lmap( dist, 0.0f, max_dist, 0.0f, 1.0f ) );
 //    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
     mesh->setAsBox( { -20.0f, -10.0f, 20.0f, 10.0f } );
@@ -126,6 +129,8 @@ void PupTentApp::setup()
     entity.assign( loc );
     entity.assign<RenderData>( mesh, loc );
   }
+
+  renderer->checkOrdering();
 
   getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
   {

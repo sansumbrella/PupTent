@@ -75,6 +75,7 @@ namespace puptent
     void        receive( const EntityDestroyedEvent &event );
     void        receive( const ComponentAddedEvent<RenderData> &event );
     void        receive( const ComponentRemovedEvent<RenderData> &event );
+    void        checkOrdering() const;
   private:
     std::vector<RenderDataRef>  mGeometry;
     std::vector<Vertex>         mVertices;

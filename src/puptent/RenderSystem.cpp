@@ -42,14 +42,35 @@ void RenderSystem::configure( shared_ptr<EventManager> event_manager )
 void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event)
 {
   std::cout << "Render component added: " << event.component << std::endl;
-  mGeometry.push_back( event.component );
   auto data = event.component;
-  auto iter = mGeometry.begin();
-  while( iter != mGeometry.end() && (**iter).locus->render_layer < data->locus->render_layer )
-  { // go until we
-    ++iter;
+  int target_layer = data->locus->render_layer;
+  if( mGeometry.empty() )
+  {
+    mGeometry.push_back( event.component );
   }
-  mGeometry.insert( iter, data );
+  else
+  {
+    auto iter = mGeometry.begin();
+    while( iter != mGeometry.end() && (**iter).locus->render_layer < target_layer )
+    { // place the component in the first position on its layer
+      ++iter;
+    }
+    mGeometry.insert( iter, data );
+  }
+}
+
+void RenderSystem::checkOrdering() const
+{
+  for( int i = 0; i < mGeometry.size() - 2; ++i )
+  {
+    int lhs = mGeometry.at( i )->locus->render_layer;
+    int rhs = mGeometry.at( i + 1 )->locus->render_layer;
+    if( rhs < lhs )
+    {
+      std::cout << "ERROR: Render order incorrect: " << rhs << " after " << lhs << std::endl;
+    }
+
+  }
 }
 
 void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderData> &event)
