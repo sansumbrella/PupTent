@@ -31,6 +31,7 @@
 
 using namespace cinder;
 using namespace puptent;
+using namespace std;
 
 void RenderSystem::configure( shared_ptr<EventManager> event_manager )
 {
@@ -77,6 +78,7 @@ void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderData> &eve
 {
   auto data = event.component;
   vector_remove( &mGeometry[data->pass], data );
+  cout << "Render entities remaining: " << mGeometry[eNormalPass].size() << endl;
 }
 
 void RenderSystem::receive(const EntityDestroyedEvent &event)
@@ -87,28 +89,31 @@ void RenderSystem::receive(const EntityDestroyedEvent &event)
   { // remove render component from our list
     vector_remove( &mGeometry[render_data->pass], render_data );
   }
+  cout << "Render entities remaining: " << mGeometry[eNormalPass].size() << endl;
 }
 
 void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
-{ // assemble all vertices
-  for( auto &v : mVertices )
-  { // clear all arrays
-    v.clear();
-  }
-  for( const auto &pair : mGeometry[eNormalPass] )
+{ // assemble vertices for each pass
+  array<RenderPass, 3> passes = { eNormalPass, eAdditivePass, eMultiplyPass };
+  for( const auto &pass : passes )
   {
-    auto mesh = pair->mesh;
-    auto loc = pair->locus;
-    auto mat = loc->toMatrix();
-    if( !mVertices[eNormalPass].empty() )
-    { // create degenerate triangle between previous and current shape
-      mVertices[eNormalPass].emplace_back( mVertices[eNormalPass].back() );
-      auto vert = mesh->vertices.front();
-      mVertices[eNormalPass].emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
-    }
-    for( auto &vert : mesh->vertices )
+    auto &v = mVertices[pass];
+    v.clear();
+    for( const auto &pair : mGeometry[pass] )
     {
-      mVertices[eNormalPass].emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      auto mesh = pair->mesh;
+      auto loc = pair->locus;
+      auto mat = loc->toMatrix();
+      if( !v.empty() )
+      { // create degenerate triangle between previous and current shape
+        v.emplace_back( v.back() );
+        auto vert = mesh->vertices.front();
+        v.emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      }
+      for( auto &vert : mesh->vertices )
+      {
+        v.emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      }
     }
   }
 }

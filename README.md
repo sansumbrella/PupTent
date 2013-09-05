@@ -10,8 +10,6 @@ it's easy to replace one system with another.
 Systems only know about components, and components only know about themselves.
 Locus and RenderMesh are the only components used by multiple systems.
 
-File loading
-
 ## Features (Existing and Planned):
 ### Simple 2d spatial transformations
 - Attach a Locus component for access to
@@ -68,4 +66,8 @@ typedef std::unique_ptr<T>  TUniqueRef;
 typedef std::weak_ptr<T>    TWeakRef;
 ```
 
-PupTent has only been tested on Mac OSX 10.8 and iOS 6.0+.
+PupTent has only been tested on Mac OSX 10.8.
+Support is planned for iOS 6.0+.
+Windows 7 will be next, assuming VS2012 has the C++11 support needed.
+Android is the final target, pending Cinder support
+(I’m looking at https://github.com/safetydank/Cinder/tree/android-dev/android)

@@ -72,6 +72,7 @@
 		1556C85B17D65FB900811B85 /* Sandbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82417D65FB900811B85 /* Sandbox.cpp */; };
 		1556C85C17D65FB900811B85 /* Scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82617D65FB900811B85 /* Scale.cpp */; };
 		1556C85D17D65FB900811B85 /* SimpleControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82817D65FB900811B85 /* SimpleControl.cpp */; };
+		15A3BBF617D8D0A500450158 /* ExpiresSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */; };
 		15A8A94217D6A10700474DA6 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
@@ -223,6 +224,8 @@
 		1556C82817D65FB900811B85 /* SimpleControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleControl.cpp; sourceTree = "<group>"; };
 		1556C82917D65FB900811B85 /* SimpleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleControl.h; sourceTree = "<group>"; };
 		1556C82A17D65FB900811B85 /* suBox2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = suBox2D.h; sourceTree = "<group>"; };
+		15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpiresSystem.cpp; sourceTree = "<group>"; };
+		15A3BBF517D8D0A500450158 /* ExpiresSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpiresSystem.h; sourceTree = "<group>"; };
 		15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
 		15A8A94117D6A10700474DA6 /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
 		15D4413017D298C600A926F0 /* simplesignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplesignal.h; sourceTree = "<group>"; };
@@ -597,6 +600,8 @@
 				15A8A94117D6A10700474DA6 /* ParticleSystem.h */,
 				151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */,
 				151F137417D76461002EC4BE /* ParticleBehaviorSystems.h */,
+				15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */,
+				15A3BBF517D8D0A500450158 /* ExpiresSystem.h */,
 			);
 			path = puptent;
 			sourceTree = "<group>";
@@ -722,8 +727,6 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			attributes = {
-			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PupTent" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -838,6 +841,7 @@
 				E701C741B41A410E8C0D5415 /* SpriteSheet.cpp in Sources */,
 				15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */,
 				1556C84C17D65FB900811B85 /* b2DistanceJoint.cpp in Sources */,
+				15A3BBF617D8D0A500450158 /* ExpiresSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

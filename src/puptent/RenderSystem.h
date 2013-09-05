@@ -67,12 +67,25 @@ namespace puptent
 
   /**
    RenderSystem:
-    layer-sorted rendering system
-   Batch renders RenderMesh components by combining them into a single
-   triangle strip. This is very efficient for ribbons and other common
-   generative geometry and also efficient for rectangles (like sprites).
+   Multi-pass, layer-sorted rendering system.
+
+   The RenderSystem is designed to quickly display active entities. It can
+   handle all of your sprites, particles, and generative 2d meshes.
+
+   For rendering large background and foreground elements, use a different system.
+
+   Each pass is a batch of RenderData components combined into a single
+   triangle strip. The render passes are:
+   1. Normal Pass
+   - Geometry is drawn in layer order with premultiplied alpha blending
+   2. Additive Pass
+   - Geometry is drawn with additive blending (color += color.rgb)
+   3. Multiply Pass
+   - Geometry is drawn with multiply blending (color *= color.rgb)
    If a texture is assigned, it will be bound before rendering begins.
-   Alpha blending is performed assuming colors are premultiplied.
+   The same texture will remain bound through all render passes.
+   For "untextured" geometry, we leave a white pixel in the top-left corner
+   of our sprite sheets and set all vertex tex coords to their default 0,0.
    */
   struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
   {

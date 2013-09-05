@@ -13,6 +13,7 @@
 #include "puptent/TextureAtlas.h"
 #include "puptent/SpriteSystem.h"
 #include "puptent/ParticleSystem.h"
+#include "puptent/ExpiresSystem.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -91,6 +92,7 @@ void PupTentApp::setup()
   mEvents = EventManager::make();
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
+  mSystemManager->add<ExpiresSystem>();
   mSystemManager->add<MovementSystem>();
   mSystemManager->add<ParticleSystem>();
   auto physics = mSystemManager->add<PhysicsSystem>();
@@ -106,6 +108,7 @@ void PupTentApp::setup()
   Vec2f center = getWindowCenter();
   float max_dist = center.length();
   Entity entity;
+  int expiring = 0;
   for( int i = 0; i < 5000; ++i )
   {
     entity = mEntities->create();
@@ -126,10 +129,13 @@ void PupTentApp::setup()
     {
       v.color = color;
     }
-//    entity.assign( anim );
+    entity.assign( anim );
     entity.assign( loc );
     entity.assign<RenderData>( mesh, loc );
+    entity.assign<Expires>( r.nextFloat( 1.0f, 5.0f ) );
   }
+
+  cout << "Expiring count: " << expiring << endl;
 
   renderer->checkOrdering();
 
@@ -175,6 +181,7 @@ void PupTentApp::update()
   up.start();
 //  mSystemManager->system<PhysicsSystem>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
 //  mSystemManager->update<PhysicsSystem>( dt );
+  mSystemManager->update<ExpiresSystem>( dt );
   mSystemManager->update<MovementSystem>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<ParticleSystem>( dt );
@@ -199,9 +206,8 @@ void PupTentApp::draw()
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {
-    cout << "Render ms: " << mAverageRenderTime << ", " << ms << endl;
+    cout << "Render: " << mAverageRenderTime << ", " << ms << endl;
   }
 }
 
 CINDER_APP_NATIVE( PupTentApp, RendererGl( RendererGl::AA_MSAA_4 ) )
-
