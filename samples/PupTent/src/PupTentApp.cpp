@@ -3,6 +3,7 @@
 #include "cinder/Rand.h"
 #include "cinder/Json.h"
 #include "cinder/ip/Premultiply.h"
+#include "cinder/Easing.h"
 
 #include "entityx/Event.h"
 #include "entityx/Entity.h"
@@ -133,7 +134,8 @@ void PupTentApp::setup()
     entity.assign( loc );
     RenderPass pass = eMultiplyPass; // r.nextFloat() < 0.9f ? eNormalPass : eMultiplyPass;
     entity.assign<RenderData>( mesh, loc, pass );
-    entity.assign<Expires>( r.nextFloat( 1.0f, 20.0f ) );
+    // randomized expire time, weighted toward end
+    entity.assign<Expires>( easeOutCubic( r.nextFloat() ) * 9.0f + 1.0f );
   }
 
   renderer->checkOrdering();
