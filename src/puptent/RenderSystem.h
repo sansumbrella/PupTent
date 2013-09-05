@@ -90,13 +90,13 @@ namespace puptent
   struct RenderSystem : public System<RenderSystem>, Receiver<RenderSystem>
   {
     //! listen for events
-    void        configure( std::shared_ptr<EventManager> event_manager ) override;
+    void        configure( EventManagerRef event_manager ) override;
     //! sort the render data in the normal pass by render layer
     //! needed if you are dynamically changing Locus render_layers
     inline void sort()
     { stable_sort( mGeometry[eNormalPass].begin(), mGeometry[eNormalPass].end(), &RenderSystem::layerSort ); }
     //! generate vertex list by transforming meshes by locii
-    void        update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt ) override;
+    void        update( EntityManagerRef es, EventManagerRef events, double dt ) override;
     //! batch render scene to screen
     void        draw() const;
     //! set a texture to be bound for all rendering

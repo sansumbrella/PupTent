@@ -36,7 +36,10 @@ namespace puptent
 {
   using namespace pockets;
   using namespace entityx;
-  // forward declarations
+  // entityx forward declarations
+  typedef entityx::ptr<EntityManager> EntityManagerRef;
+  typedef entityx::ptr<EventManager>  EventManagerRef;
+  // forward declarations for common components
   typedef std::shared_ptr<class Locus>            LocusRef;
   typedef std::shared_ptr<class RenderMesh>     	RenderMeshRef;
   typedef std::shared_ptr<class SpriteAnimation>  SpriteAnimationRef;

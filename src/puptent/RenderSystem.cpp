@@ -33,7 +33,7 @@ using namespace cinder;
 using namespace puptent;
 using namespace std;
 
-void RenderSystem::configure( shared_ptr<EventManager> event_manager )
+void RenderSystem::configure( EventManagerRef event_manager )
 {
   event_manager->subscribe<EntityDestroyedEvent>( *this );
   event_manager->subscribe<ComponentAddedEvent<RenderData>>( *this );
@@ -93,7 +93,7 @@ void RenderSystem::receive(const EntityDestroyedEvent &event)
   }
 }
 
-void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+void RenderSystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 { // assemble vertices for each pass
   array<RenderPass, 3> passes = { eNormalPass, eAdditivePass, eMultiplyPass };
   for( const auto &pass : passes )

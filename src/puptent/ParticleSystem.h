@@ -76,7 +76,7 @@ namespace puptent
    */
   struct ParticleSystem : public System<ParticleSystem>
   {
-    void update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt ) override;
+    void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
   private:
     struct ParticleInfo
     {

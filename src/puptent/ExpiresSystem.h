@@ -49,10 +49,10 @@ namespace puptent
    */
   struct ExpiresSystem : public System<ExpiresSystem>, Receiver<ExpiresSystem>
   {
-    void configure( std::shared_ptr<EventManager> events ) override;
+    void configure( EventManagerRef events ) override;
     void receive( const ComponentAddedEvent<Expires> &event );
     void receive( const ComponentRemovedEvent<Expires> &event );
-    void update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt ) override;
+    void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
   private:
     std::vector<Entity> mEntities;
   };

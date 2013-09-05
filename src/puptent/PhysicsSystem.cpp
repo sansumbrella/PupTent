@@ -49,7 +49,7 @@ PhysicsSystem::~PhysicsSystem()
   }
 }
 
-void PhysicsSystem::configure( shared_ptr<EventManager> events )
+void PhysicsSystem::configure( EventManagerRef events )
 {
   events->subscribe<ComponentAddedEvent<PhysicsComponent>>( *this );
   events->subscribe<ComponentRemovedEvent<PhysicsComponent>>( *this );

@@ -82,13 +82,13 @@ namespace puptent
     //! create a new animation system drawing from \a atlas with \a animations
     static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
     //! called by SystemManager to register event handlers
-    void configure( std::shared_ptr<EventManager> events ) override;
+    void configure( EventManagerRef events ) override;
     //! Add sprite to our collection on creation
     void receive( const ComponentAddedEvent<SpriteAnimation> &event );
     //! remove sprites from our collection when entities are destroyed
     void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
     void receive( const EntityDestroyedEvent &event );
-    void update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt ) override;
+    void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
     //! Create a component to play \a animation_name
     //! To display the animation properly, you will need to assign new component's mesh
     SpriteAnimationRef createSpriteAnimation( const std::string &animation_name ) const;

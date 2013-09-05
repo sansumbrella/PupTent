@@ -63,7 +63,7 @@ mAtlas( atlas )
   }
 }
 
-void SpriteAnimationSystem::configure( shared_ptr<EventManager> events )
+void SpriteAnimationSystem::configure( EventManagerRef events )
 {
   std::cout << __PRETTY_FUNCTION__ << std::endl;
   events->subscribe<EntityDestroyedEvent>( *this );
@@ -122,7 +122,7 @@ void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
   vector_remove( &mEntities, event.entity );
 }
 
-void SpriteAnimationSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 {
   for( auto &entity : mEntities )
   {
