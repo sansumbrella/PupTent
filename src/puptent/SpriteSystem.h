@@ -42,6 +42,7 @@ namespace puptent
    A playing animation
   */
   typedef size_t AnimationId;
+  typedef std::shared_ptr<class SpriteAnimation>  SpriteAnimationRef;
   struct SpriteAnimation : Component<SpriteAnimation>
   {
     SpriteAnimation() = default;
