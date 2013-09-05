@@ -42,28 +42,29 @@ void RenderSystem::configure( shared_ptr<EventManager> event_manager )
 void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event)
 {
   auto data = event.component;
+  const RenderPass pass = data->pass;
   int target_layer = data->locus->render_layer;
-  if( mGeometry.empty() )
+  if( mGeometry[pass].empty() )
   {
-    mGeometry.push_back( event.component );
+    mGeometry[pass].push_back( event.component );
   }
   else
   {
-    auto iter = mGeometry.begin();
-    while( iter != mGeometry.end() && (**iter).locus->render_layer < target_layer )
+    auto iter = mGeometry[pass].begin();
+    while( iter != mGeometry[pass].end() && (**iter).locus->render_layer < target_layer )
     { // place the component in the first position on its layer
       ++iter;
     }
-    mGeometry.insert( iter, data );
+    mGeometry[pass].insert( iter, data );
   }
 }
 
 void RenderSystem::checkOrdering() const
 {
-  for( int i = 0; i < mGeometry.size() - 2; ++i )
+  for( int i = 0; i < mGeometry[eNormalPass].size() - 2; ++i )
   {
-    int lhs = mGeometry.at( i )->locus->render_layer;
-    int rhs = mGeometry.at( i + 1 )->locus->render_layer;
+    int lhs = mGeometry[eNormalPass].at( i )->locus->render_layer;
+    int rhs = mGeometry[eNormalPass].at( i + 1 )->locus->render_layer;
     if( rhs < lhs )
     {
       std::cout << "ERROR: Render order incorrect: " << rhs << " after " << lhs << std::endl;
@@ -74,7 +75,8 @@ void RenderSystem::checkOrdering() const
 
 void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderData> &event)
 {
-  mGeometry.push_back( event.component );
+  auto data = event.component;
+  vector_remove( &mGeometry[data->pass], data );
 }
 
 void RenderSystem::receive(const EntityDestroyedEvent &event)
@@ -83,14 +85,14 @@ void RenderSystem::receive(const EntityDestroyedEvent &event)
   auto render_data = entity.component<RenderData>();
   if( render_data )
   { // remove render component from our list
-    vector_remove( &mGeometry, render_data );
+    vector_remove( &mGeometry[render_data->pass], render_data );
   }
 }
 
 void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
 { // assemble all vertices
   mVertices.clear();
-  for( const auto &pair : mGeometry )
+  for( const auto &pair : mGeometry[eNormalPass] )
   {
     auto mesh = pair->mesh;
     auto loc = pair->locus;

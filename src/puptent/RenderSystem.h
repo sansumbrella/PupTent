@@ -34,6 +34,20 @@
 namespace puptent
 {
   /**
+   RenderPass:
+   Flag to tell RenderSystem when to draw the given geometry.
+   First, the normal pass is drawn in layer-sorted order.
+   Second, an additive pass is made (unsorted, since it doesn't affect output).
+   Finally, a multiplicative pass is made (also unsorted).
+   */
+  enum RenderPass
+  {
+    eNormalPass,
+    eAdditivePass,
+    eMultiplyPass,
+  };
+  /**
+   RenderData:
    Composite component.
    Lets us store information needed for RenderSystem in one fast-to-access place.
    Requires an extra step when defining element components
@@ -41,12 +55,14 @@ namespace puptent
   typedef std::shared_ptr<class RenderData> RenderDataRef;
   struct RenderData : Component<RenderData>
   {
-    RenderData( RenderMeshRef mesh, LocusRef locus ):
+    RenderData( RenderMeshRef mesh, LocusRef locus, RenderPass pass=eNormalPass ):
     mesh( mesh ),
-    locus( locus )
+    locus( locus ),
+    pass( pass )
     {}
-    RenderMeshRef mesh;
-    LocusRef      locus;
+    RenderMeshRef     mesh;
+    LocusRef          locus;
+    const RenderPass  pass;
   };
 
   /**
@@ -62,9 +78,10 @@ namespace puptent
   {
     //! listen for events
     void        configure( shared_ptr<EventManager> event_manager ) override;
-    //! sort the render data by render layer
+    //! sort the render data in the normal pass by render layer
+    //! needed if you are dynamically changing Locus render_layers
     inline void sort()
-    { stable_sort( mGeometry.begin(), mGeometry.end(), &RenderSystem::layerSort ); }
+    { stable_sort( mGeometry[eNormalPass].begin(), mGeometry[eNormalPass].end(), &RenderSystem::layerSort ); }
     //! generate vertex list by transforming meshes by locii
     void        update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
     //! batch render scene to screen
@@ -77,7 +94,7 @@ namespace puptent
     void        receive( const ComponentRemovedEvent<RenderData> &event );
     void        checkOrdering() const;
   private:
-    std::vector<RenderDataRef>  mGeometry;
+    std::array<std::vector<RenderDataRef>, 3>  mGeometry;
     std::vector<Vertex>         mVertices;
     ci::gl::TextureRef          mTexture;
     static bool                 layerSort( const RenderDataRef &lhs, const RenderDataRef &rhs )
