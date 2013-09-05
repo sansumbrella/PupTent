@@ -132,10 +132,14 @@ void PupTentApp::setup()
     }
 //    entity.assign( anim );
     entity.assign( loc );
-    RenderPass pass = eMultiplyPass; // r.nextFloat() < 0.9f ? eNormalPass : eMultiplyPass;
+    RenderPass pass = eNormalPass;
+    if( r.nextFloat() < 0.5f )
+    {
+      pass = r.nextFloat() < 0.5f ? eMultiplyPass : eAdditivePass;
+    }
     entity.assign<RenderData>( mesh, loc, pass );
     // randomized expire time, weighted toward end
-    entity.assign<Expires>( easeOutCubic( r.nextFloat() ) * 9.0f + 1.0f );
+    entity.assign<Expires>( easeOutQuad( r.nextFloat() ) * 9.0f + 1.0f );
   }
 
   renderer->checkOrdering();
@@ -197,7 +201,7 @@ void PupTentApp::update()
 
 void PupTentApp::draw()
 {
-	gl::clear( Color::white() );
+	gl::clear( Color::black() );
   gl::color( Color::white() );
   Timer dr;
   dr.start();
