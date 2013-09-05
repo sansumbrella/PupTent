@@ -108,7 +108,6 @@ void PupTentApp::setup()
   Vec2f center = getWindowCenter();
   float max_dist = center.length();
   Entity entity;
-  int expiring = 0;
   for( int i = 0; i < 5000; ++i )
   {
     entity = mEntities->create();
@@ -132,10 +131,8 @@ void PupTentApp::setup()
     entity.assign( anim );
     entity.assign( loc );
     entity.assign<RenderData>( mesh, loc );
-    entity.assign<Expires>( r.nextFloat( 1.0f, 5.0f ) );
+    entity.assign<Expires>( r.nextFloat( 1.0f, 2.0f ) );
   }
-
-  cout << "Expiring count: " << expiring << endl;
 
   renderer->checkOrdering();
 
@@ -190,7 +187,7 @@ void PupTentApp::update()
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {
-    cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
+//    cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
   }
 }
 
@@ -206,7 +203,7 @@ void PupTentApp::draw()
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {
-    cout << "Render: " << mAverageRenderTime << ", " << ms << endl;
+//    cout << "Render: " << mAverageRenderTime << ", " << ms << endl;
   }
 }
 

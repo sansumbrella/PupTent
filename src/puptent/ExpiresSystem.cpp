@@ -26,18 +26,56 @@
  */
 
 #include "puptent/ExpiresSystem.h"
+#include "pockets/CollectionUtilities.hpp"
 
 using namespace puptent;
+using namespace std;
+
+void ExpiresSystem::configure(shared_ptr<entityx::EventManager> events)
+{
+  events->subscribe<ComponentAddedEvent<Expires>>( *this );
+  events->subscribe<ComponentRemovedEvent<Expires>>( *this );
+}
+
+void ExpiresSystem::receive( const ComponentAddedEvent<puptent::Expires> &event )
+{
+  mEntities.push_back( event.entity );
+}
+
+void ExpiresSystem::receive( const ComponentRemovedEvent<puptent::Expires> &event )
+{
+  vector_remove( &mEntities, event.entity );
+}
 
 void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
 {
+  for( auto entity : mEntities )
+  {
+    auto expires = entity.component<Expires>();
+    expires->time -= dt;
+    if( expires->time <= 0.0 )
+    {
+      entity.destroy();
+    }
+  }
+  vector_erase_if( &mEntities, []( const Entity &entity ){ return !entity.valid(); });
+
+  /*
+  // the following doesn't work because the query somehow doesn't get all elements
+  // collecting in events is faster, but this should work
+  vector<Entity> dead_entities;
   for( auto entity : es->entities_with_components<Expires>() )
   {
     auto expire = entity.component<Expires>();
     expire->time -= dt;
     if( expire->time <= 0.0 )
     {
-      entity.destroy();
+      dead_entities.push_back( entity );
     }
   }
+  for( auto entity : dead_entities )
+  {
+    entity.destroy();
+  }
+  //*/
 }

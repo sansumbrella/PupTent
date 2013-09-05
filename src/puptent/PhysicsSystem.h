@@ -50,7 +50,7 @@ namespace puptent
     PhysicsSystem();
     ~PhysicsSystem();
     //! called by SystemManager to register event handlers
-    void configure( shared_ptr<EventManager> events ) override;
+    void configure( std::shared_ptr<EventManager> events ) override;
     //! add/remove components when they are created
     void receive( const ComponentAddedEvent<PhysicsComponent> &event );
     void receive( const ComponentRemovedEvent<PhysicsComponent> &event );
@@ -58,7 +58,7 @@ namespace puptent
     //! steps the physics simulation
     void stepPhysics();
     //! synchronizes locus components with physics coords
-    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    void update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt ) override;
     void debugDraw();
 
     void createBoundaryRect( ci::Rectf screen_bounds ) { mSandbox.createBoundaryRect( mScale.toPhysics( screen_bounds ) ); }

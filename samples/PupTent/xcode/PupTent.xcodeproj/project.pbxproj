@@ -77,7 +77,6 @@
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
 		15D4415917D298C600A926F0 /* Event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413717D298C600A926F0 /* Event.cc */; };
-		15D4415B17D298C600A926F0 /* Manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413A17D298C600A926F0 /* Manager.cc */; };
 		15D4416817D298C600A926F0 /* System.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4414C17D298C600A926F0 /* System.cc */; };
 		15D4416A17D298C600A926F0 /* TagsComponent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4415017D298C600A926F0 /* TagsComponent.cc */; };
 		15D4417B17D409B400A926F0 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15D4417917D409B400A926F0 /* RenderSystem.cpp */; };
@@ -234,8 +233,6 @@
 		15D4413517D298C600A926F0 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		15D4413717D298C600A926F0 /* Event.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cc; sourceTree = "<group>"; };
 		15D4413817D298C600A926F0 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		15D4413A17D298C600A926F0 /* Manager.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Manager.cc; sourceTree = "<group>"; };
-		15D4413B17D298C600A926F0 /* Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Manager.h; sourceTree = "<group>"; };
 		15D4414C17D298C600A926F0 /* System.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = System.cc; sourceTree = "<group>"; };
 		15D4414D17D298C600A926F0 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
 		15D4415017D298C600A926F0 /* TagsComponent.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TagsComponent.cc; sourceTree = "<group>"; };
@@ -551,8 +548,6 @@
 				15D4413517D298C600A926F0 /* Entity.h */,
 				15D4413717D298C600A926F0 /* Event.cc */,
 				15D4413817D298C600A926F0 /* Event.h */,
-				15D4413A17D298C600A926F0 /* Manager.cc */,
-				15D4413B17D298C600A926F0 /* Manager.h */,
 				15D4414C17D298C600A926F0 /* System.cc */,
 				15D4414D17D298C600A926F0 /* System.h */,
 				15D4414F17D298C600A926F0 /* tags */,
@@ -818,7 +813,6 @@
 				54664495FDB64345AD206626 /* LineUtils.cpp in Sources */,
 				1556C82F17D65FB900811B85 /* b2Collision.cpp in Sources */,
 				1556C83E17D65FB900811B85 /* b2ContactManager.cpp in Sources */,
-				15D4415B17D298C600A926F0 /* Manager.cc in Sources */,
 				1556C84B17D65FB900811B85 /* b2PolygonContact.cpp in Sources */,
 				1556C83917D65FB900811B85 /* b2Math.cpp in Sources */,
 				1556C85A17D65FB900811B85 /* Renderer.cpp in Sources */,

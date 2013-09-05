@@ -42,7 +42,7 @@ namespace puptent
   struct Locus : Component<Locus>
   {
     Locus() = default;
-    Locus( const ci::Vec2f &pos, const ci::Vec2f &registration, float rot, shared_ptr<Locus> parent=nullptr ):
+    Locus( const ci::Vec2f &pos, const ci::Vec2f &registration, float rot, std::shared_ptr<Locus> parent=nullptr ):
     position( pos ),
     registration_point( registration ),
     rotation( rot ),
@@ -54,7 +54,7 @@ namespace puptent
     float             scale = 1.0f;
     int               render_layer = 0;
     //! transform parent; toMatrix() is multiplied by parent->toMatrix() if present
-    shared_ptr<Locus> parent = nullptr;
+    std::shared_ptr<Locus> parent = nullptr;
     //! returns a matrix that will transform points based on Locus properties
     ci::MatrixAffine2f  toMatrix() const;
   };

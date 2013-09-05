@@ -32,7 +32,7 @@
 using namespace puptent;
 using namespace cinder;
 
-void ParticleSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
+void ParticleSystem::update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt )
 {
   for( auto entity : mEmitters )
   {

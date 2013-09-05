@@ -31,7 +31,7 @@
 namespace puptent
 {
   // ScriptFn receives self entity, entity manager for world queries, event manager, and timestep
-  typedef std::function<void (Entity, shared_ptr<EntityManager>, shared_ptr<EventManager>, double)> ScriptFn;
+  typedef std::function<void (Entity, std::shared_ptr<EntityManager>, std::shared_ptr<EventManager>, double)> ScriptFn;
   struct ScriptComponent : Component<ScriptComponent>
   {
     ScriptFn script;
@@ -46,8 +46,8 @@ namespace puptent
   struct ScriptSystem : public System<ScriptSystem>, Receiver<ScriptSystem>
   {
     //! listen for events
-    void configure( shared_ptr<EventManager> event_manager ) override;
+    void configure( std::shared_ptr<EventManager> event_manager ) override;
     //! gather scripts and execute them
-    void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override;
+    void update( std::shared_ptr<EntityManager> es, std::shared_ptr<EventManager> events, double dt ) override;
   };
 }

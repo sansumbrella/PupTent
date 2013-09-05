@@ -78,7 +78,6 @@ void RenderSystem::receive(const ComponentRemovedEvent<puptent::RenderData> &eve
 {
   auto data = event.component;
   vector_remove( &mGeometry[data->pass], data );
-  cout << "Render entities remaining: " << mGeometry[eNormalPass].size() << endl;
 }
 
 void RenderSystem::receive(const EntityDestroyedEvent &event)
@@ -89,7 +88,6 @@ void RenderSystem::receive(const EntityDestroyedEvent &event)
   { // remove render component from our list
     vector_remove( &mGeometry[render_data->pass], render_data );
   }
-  cout << "Render entities remaining: " << mGeometry[eNormalPass].size() << endl;
 }
 
 void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
