@@ -49,6 +49,8 @@ void ExpiresSystem::receive( const ComponentRemovedEvent<puptent::Expires> &even
 
 void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
 {
+  // remove invalid entities first
+  vector_erase_if( &mEntities, []( const Entity &entity ){ return !entity.valid(); });
   for( auto entity : mEntities )
   {
     auto expires = entity.component<Expires>();
@@ -58,8 +60,6 @@ void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<ent
       entity.destroy();
     }
   }
-  vector_erase_if( &mEntities, []( const Entity &entity ){ return !entity.valid(); });
-
   /*
   // the following doesn't work because the query somehow doesn't get all elements
   // collecting in events is faster, but this should work
