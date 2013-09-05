@@ -133,7 +133,7 @@ void PupTentApp::setup()
     entity.assign( loc );
     RenderPass pass = eMultiplyPass; // r.nextFloat() < 0.9f ? eNormalPass : eMultiplyPass;
     entity.assign<RenderData>( mesh, loc, pass );
-    entity.assign<Expires>( r.nextFloat( 1.0f, 10.0f ) );
+    entity.assign<Expires>( r.nextFloat( 1.0f, 20.0f ) );
   }
 
   renderer->checkOrdering();
