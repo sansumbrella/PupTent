@@ -62,15 +62,18 @@ void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event
 
 void RenderSystem::checkOrdering() const
 {
-  for( int i = 0; i < mGeometry[eNormalPass].size() - 2; ++i )
+  if( mGeometry[eNormalPass].size() > 1 )
   {
-    int lhs = mGeometry[eNormalPass].at( i )->locus->render_layer;
-    int rhs = mGeometry[eNormalPass].at( i + 1 )->locus->render_layer;
-    if( rhs < lhs )
+    for( int i = 0; i < mGeometry[eNormalPass].size() - 2; ++i )
     {
-      std::cout << "ERROR: Render order incorrect: " << rhs << " after " << lhs << std::endl;
-    }
+      int lhs = mGeometry[eNormalPass].at( i )->locus->render_layer;
+      int rhs = mGeometry[eNormalPass].at( i + 1 )->locus->render_layer;
+      if( rhs < lhs )
+      {
+        std::cout << "ERROR: Render order incorrect: " << rhs << " after " << lhs << std::endl;
+      }
 
+    }
   }
 }
 

@@ -120,7 +120,8 @@ void PupTentApp::setup()
     loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
     float dist = loc->position.distance( center );
     loc->render_layer = dist;
-    auto color = ColorA::gray( math<float>::clamp( lmap( dist, 0.0f, max_dist - 10.0f, 0.0f, 1.0f ) ) );
+//    auto color = ColorA::gray( math<float>::clamp( lmap( dist, 0.0f, max_dist - 10.0f, 0.0f, 1.0f ) ) );
+    auto color = Color( CM_HSV, r.nextFloat( 0.4f, 1.0f ), 0.8f, 0.8f );
 //    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
     mesh->setAsBox( { 0.0f, 0.0f, 40.0f, 20.0f } );
@@ -128,10 +129,11 @@ void PupTentApp::setup()
     {
       v.color = color;
     }
-    entity.assign( anim );
+//    entity.assign( anim );
     entity.assign( loc );
-    entity.assign<RenderData>( mesh, loc );
-    entity.assign<Expires>( r.nextFloat( 1.0f, 2.0f ) );
+    RenderPass pass = eMultiplyPass; // r.nextFloat() < 0.9f ? eNormalPass : eMultiplyPass;
+    entity.assign<RenderData>( mesh, loc, pass );
+    entity.assign<Expires>( r.nextFloat( 1.0f, 10.0f ) );
   }
 
   renderer->checkOrdering();
@@ -187,13 +189,13 @@ void PupTentApp::update()
   mAverageUpdateTime = (mAverageUpdateTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {
-//    cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
+    cout << "Update: " << mAverageUpdateTime << ", " << ms << endl;
   }
 }
 
 void PupTentApp::draw()
 {
-	gl::clear( Color::black() );
+	gl::clear( Color::white() );
   gl::color( Color::white() );
   Timer dr;
   dr.start();
@@ -203,7 +205,7 @@ void PupTentApp::draw()
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
   if( getElapsedFrames() % 90 == 0 )
   {
-//    cout << "Render: " << mAverageRenderTime << ", " << ms << endl;
+    cout << "Render: " << mAverageRenderTime << ", " << ms << endl;
   }
 }
 
