@@ -95,8 +95,8 @@ namespace puptent
     void        checkOrdering() const;
   private:
     std::array<std::vector<RenderDataRef>, 3>  mGeometry;
-    std::vector<Vertex>         mVertices;
-    ci::gl::TextureRef          mTexture;
+    std::array<std::vector<Vertex>, 3>         mVertices;
+    ci::gl::TextureRef                         mTexture;
     static bool                 layerSort( const RenderDataRef &lhs, const RenderDataRef &rhs )
     { return lhs->locus->render_layer < rhs->locus->render_layer; }
     // maybe add a CameraRef for positioning the scene

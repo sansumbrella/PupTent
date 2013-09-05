@@ -91,21 +91,24 @@ void RenderSystem::receive(const EntityDestroyedEvent &event)
 
 void RenderSystem::update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt )
 { // assemble all vertices
-  mVertices.clear();
+  for( auto &v : mVertices )
+  { // clear all arrays
+    v.clear();
+  }
   for( const auto &pair : mGeometry[eNormalPass] )
   {
     auto mesh = pair->mesh;
     auto loc = pair->locus;
     auto mat = loc->toMatrix();
-    if( !mVertices.empty() )
+    if( !mVertices[eNormalPass].empty() )
     { // create degenerate triangle between previous and current shape
-      mVertices.emplace_back( mVertices.back() );
+      mVertices[eNormalPass].emplace_back( mVertices[eNormalPass].back() );
       auto vert = mesh->vertices.front();
-      mVertices.emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      mVertices[eNormalPass].emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
     }
     for( auto &vert : mesh->vertices )
     {
-      mVertices.emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
+      mVertices[eNormalPass].emplace_back( Vertex{ mat.transformPoint( vert.position ), vert.color, vert.tex_coord } );
     }
   }
 }
@@ -114,7 +117,6 @@ void RenderSystem::draw() const
 {
   if( mTexture )
   {
-    gl::enableAlphaBlending( true );
     gl::enable( GL_TEXTURE_2D );
     mTexture->bind();
   }
@@ -122,19 +124,33 @@ void RenderSystem::draw() const
   glEnableClientState( GL_COLOR_ARRAY );
   glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[0].position.x );
-  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[0].tex_coord.x );
-  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[0].color.r );
-  glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices.size() );
+  // premultiplied alpha blending for normal pass
+  gl::enableAlphaBlending( true );
+  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eNormalPass][0].position.x );
+  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eNormalPass][0].tex_coord.x );
+  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[eNormalPass][0].color.r );
+  glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices[eNormalPass].size() );
+  // additive blending
+  gl::enableAdditiveBlending();
+  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eAdditivePass][0].position.x );
+  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eAdditivePass][0].tex_coord.x );
+  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[eAdditivePass][0].color.r );
+  glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices[eAdditivePass].size() );
+  // multiply blending
+  glBlendFunc( GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA );
+  glVertexPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eMultiplyPass][0].position.x );
+  glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eMultiplyPass][0].tex_coord.x );
+  glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[eMultiplyPass][0].color.r );
+  glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices[eMultiplyPass].size() );
 
   glDisableClientState( GL_VERTEX_ARRAY );
   glDisableClientState( GL_COLOR_ARRAY );
   glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+  gl::disableAlphaBlending();
 
   if( mTexture )
   {
     mTexture->unbind();
     gl::disable( GL_TEXTURE_2D );
-    gl::disableAlphaBlending();
   }
 }
