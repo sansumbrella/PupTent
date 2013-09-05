@@ -137,7 +137,7 @@ void RenderSystem::draw() const
   glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[eNormalPass][0].color.r );
   glDrawArrays( GL_TRIANGLE_STRIP, 0, mVertices[eNormalPass].size() );
   // additive blending
-  gl::enableAdditiveBlending();
+  glBlendFunc( GL_SRC_ALPHA, GL_ONE );
   glVertexPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eAdditivePass][0].position.x );
   glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), &mVertices[eAdditivePass][0].tex_coord.x );
   glColorPointer( 4, GL_UNSIGNED_BYTE, sizeof( Vertex ), &mVertices[eAdditivePass][0].color.r );
