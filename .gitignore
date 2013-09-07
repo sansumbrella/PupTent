@@ -6,3 +6,4 @@ build
 *.xcworkspace
 .svn
 .DS_Store
+screenshots
