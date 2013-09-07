@@ -44,19 +44,27 @@ void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event
 {
   auto data = event.component;
   const RenderPass pass = data->pass;
-  int target_layer = data->locus->render_layer;
-  if( mGeometry[pass].empty() )
-  {
-    mGeometry[pass].push_back( event.component );
+  if( pass == eNormalPass )
+  { // put element in correct sorted position
+    int target_layer = data->locus->render_layer;
+    if( mGeometry[pass].empty() )
+    {
+      mGeometry[pass].push_back( event.component );
+    }
+    else
+    {
+      auto iter = mGeometry[pass].begin();
+      while( iter != mGeometry[pass].end() && (**iter).locus->render_layer < target_layer )
+      { // place the component in the first position on its layer
+        ++iter;
+      }
+      mGeometry[pass].insert( iter, data );
+    }
   }
   else
-  {
-    auto iter = mGeometry[pass].begin();
-    while( iter != mGeometry[pass].end() && (**iter).locus->render_layer < target_layer )
-    { // place the component in the first position on its layer
-      ++iter;
-    }
-    mGeometry[pass].insert( iter, data );
+  { // just place element at end of list
+    // for add and multiply, order doesn't matter
+    mGeometry[pass].push_back( event.component );
   }
 }
 
