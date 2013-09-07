@@ -103,7 +103,7 @@ void RenderSystem::receive(const EntityDestroyedEvent &event)
 
 void RenderSystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 { // assemble vertices for each pass
-  array<RenderPass, 3> passes = { eNormalPass, eAdditivePass, eMultiplyPass };
+  const array<RenderPass, 3> passes = { eNormalPass, eAdditivePass, eMultiplyPass };
   for( const auto &pass : passes )
   {
     auto &v = mVertices[pass];
