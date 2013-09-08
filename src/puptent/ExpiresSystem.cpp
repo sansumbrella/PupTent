@@ -60,22 +60,4 @@ void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<ent
       entity.destroy();
     }
   }
-  /*
-  // the following doesn't work because the query somehow doesn't get all elements
-  // collecting in events is faster, but this should work
-  vector<Entity> dead_entities;
-  for( auto entity : es->entities_with_components<Expires>() )
-  {
-    auto expire = entity.component<Expires>();
-    expire->time -= dt;
-    if( expire->time <= 0.0 )
-    {
-      dead_entities.push_back( entity );
-    }
-  }
-  for( auto entity : dead_entities )
-  {
-    entity.destroy();
-  }
-  //*/
 }

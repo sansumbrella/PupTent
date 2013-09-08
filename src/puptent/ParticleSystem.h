@@ -44,24 +44,20 @@ namespace puptent
   /**
    Particle:
    A bag of attributes for performing verlet integration
-   Any custom movement systems should just change the current values. The
-   ParticleSystem will use current and previous values
+   Any custom movement systems should just change the Locus component values.
+   The ParticleSystem will integrate based on the sum of changes.
+   To set a particle and force it to stay still, also set previous positions.
    */
   typedef std::shared_ptr<class Particle> ParticleRef;
   struct Particle : Component<Particle>
   {
     Particle()
     {}
-    float     life; // life remaining in seconds
-    float     seed; // seed enabling some random variation from norm
-    int       tag;
-    float     gravity_strength;
     float     friction;
-    ci::Vec3f position;
-    ci::Vec3f p_position;
-    float     rotation;
+    float     rotation_friction;
+    float     scale_friction;
+    ci::Vec2f p_position;
     float     p_rotation;
-    float     scale;
     float     p_scale;
   };
 
@@ -74,17 +70,17 @@ namespace puptent
    Particles must be created through the ParticleSystem interface or through
    the use of ParticleEmitter components.
    */
-  struct ParticleSystem : public System<ParticleSystem>
+  struct ParticleSystem : public System<ParticleSystem>, Receiver<ParticleSystem>
   {
+    void configure( EventManagerRef events ) override;
     void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
+    void receive( const ComponentAddedEvent<Particle> &event );
+    void receive( const ComponentRemovedEvent<Particle> &event );
+    void receive( const ComponentAddedEvent<ParticleEmitter> &event );
+    void receive( const ComponentRemovedEvent<ParticleEmitter> &event );
+    void receive( const EntityDestroyedEvent &event );
   private:
-    struct ParticleInfo
-    {
-      ParticleRef particle;
-      LocusRef    locus;
-      Entity      entity;
-    };
-    std::vector<ParticleInfo> mParticles;
+    std::vector<Entity>       mParticles;
     std::vector<Entity>       mEmitters;
     ci::Vec3f                 mGravity;
     bool                      mHandleEvents;

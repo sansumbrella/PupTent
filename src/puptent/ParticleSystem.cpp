@@ -32,6 +32,48 @@
 using namespace puptent;
 using namespace cinder;
 
+void ParticleSystem::configure( EventManagerRef events )
+{
+  events->subscribe<ComponentAddedEvent<Particle>>( *this );
+  events->subscribe<ComponentRemovedEvent<Particle>>( *this );
+  events->subscribe<ComponentAddedEvent<ParticleEmitter>>( *this );
+  events->subscribe<ComponentRemovedEvent<ParticleEmitter>>( *this );
+  events->subscribe<EntityDestroyedEvent>( *this );
+}
+
+void ParticleSystem::receive( const ComponentAddedEvent<Particle> &event )
+{
+  mParticles.push_back( event.entity );
+}
+
+void ParticleSystem::receive( const ComponentRemovedEvent<Particle> &event )
+{
+  vector_remove( &mParticles, event.entity );
+}
+
+void ParticleSystem::receive( const ComponentAddedEvent<ParticleEmitter> &event )
+{
+  mEmitters.push_back( event.entity );
+}
+
+void ParticleSystem::receive( const ComponentRemovedEvent<ParticleEmitter> &event )
+{
+  vector_remove( &mEmitters, event.entity );
+}
+
+void ParticleSystem::receive( const EntityDestroyedEvent &event )
+{
+  auto entity = event.entity;
+  if( entity.component<ParticleEmitter>() )
+  {
+    vector_remove( &mEmitters, entity );
+  }
+  if( entity.component<Particle>() )
+  {
+    vector_remove( &mParticles, entity );
+  }
+}
+
 void ParticleSystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 {
   for( auto entity : mEmitters )
@@ -45,36 +87,29 @@ void ParticleSystem::update( EntityManagerRef es, EventManagerRef events, double
     {
       emitter->build_fn( e );
     }
-    mParticles.push_back( { p, l, e } );
   }
 
-  for( auto info : mParticles )
+  for( auto entity : mParticles )
   {
     // Perform verlet integration
-    ParticleRef p = info.particle;
-    p->life -= dt;
-    if( p->life > 0.0f )
+    ParticleRef p = entity.component<Particle>();
+    LocusRef l = entity.component<Locus>();
+    if( l )
     {
-      Vec3f position = p->position;
-      Vec3f velocity = position - p->p_position;
-      p->position = position + velocity * p->friction;
+      Vec2f position = l->position;
+      Vec2f velocity = position - p->p_position;
+      l->position = position + velocity * p->friction;
       p->p_position = position;
 
-      // Synchronize to Locus
-      LocusRef l = info.locus;
-      l->position.x = p->position.x;
-      l->position.y = p->position.y;
-      l->render_layer = p->position.z;
-      l->rotation = p->rotation;
-      l->scale = p->scale;
-    }
-    else
-    { // destroy associated entity
-      info.entity.destroy();
+      float rotation = l->rotation;
+      float r_vel = rotation - p->p_rotation;
+      l->rotation = rotation + r_vel * p->rotation_friction;
+      p->p_rotation = rotation;
+
+      float scale = l->scale;
+      float s_vel = scale - p->p_scale;
+      l->scale = scale + s_vel * p->scale_friction;
+      p->p_scale = scale;
     }
   }
-  // stop tracking dead particles
-  vector_erase_if( &mParticles, []( const ParticleInfo &particle ){
-    return particle.particle->life <= 0.0f;
-  });
 }

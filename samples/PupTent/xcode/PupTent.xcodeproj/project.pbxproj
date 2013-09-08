@@ -19,6 +19,7 @@
 		15053BF217D4F42D00C2FE2D /* RenderMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF017D4F42D00C2FE2D /* RenderMesh.cpp */; };
 		15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */; };
 		151F137517D76461002EC4BE /* ParticleBehaviorSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */; };
+		153566AE17DD391E0060CA1C /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */; };
 		1556C7B517D63E7600811B85 /* PhysicsSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */; };
 		1556C7B817D64EF300811B85 /* ScriptSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B617D64EF300811B85 /* ScriptSystem.cpp */; };
 		1556C82B17D65FB900811B85 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7BD17D65FB900811B85 /* b2BroadPhase.cpp */; };
@@ -73,7 +74,6 @@
 		1556C85C17D65FB900811B85 /* Scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82617D65FB900811B85 /* Scale.cpp */; };
 		1556C85D17D65FB900811B85 /* SimpleControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82817D65FB900811B85 /* SimpleControl.cpp */; };
 		15A3BBF617D8D0A500450158 /* ExpiresSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */; };
-		15A8A94217D6A10700474DA6 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
 		15D4415917D298C600A926F0 /* Event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413717D298C600A926F0 /* Event.cc */; };
@@ -741,6 +741,7 @@
 				1556C84A17D65FB900811B85 /* b2PolygonAndCircleContact.cpp in Sources */,
 				15053BEC17D4EE9500C2FE2D /* SpriteSystem.cpp in Sources */,
 				1556C83D17D65FB900811B85 /* b2Body.cpp in Sources */,
+				153566AE17DD391E0060CA1C /* ParticleSystem.cpp in Sources */,
 				1556C83C17D65FB900811B85 /* b2Timer.cpp in Sources */,
 				1556C84017D65FB900811B85 /* b2Island.cpp in Sources */,
 				1556C83117D65FB900811B85 /* b2DynamicTree.cpp in Sources */,
@@ -753,7 +754,6 @@
 				1556C82E17D65FB900811B85 /* b2CollidePolygon.cpp in Sources */,
 				1556C85317D65FB900811B85 /* b2RevoluteJoint.cpp in Sources */,
 				1556C84917D65FB900811B85 /* b2EdgeAndPolygonContact.cpp in Sources */,
-				15A8A94217D6A10700474DA6 /* ParticleSystem.cpp in Sources */,
 				1556C85017D65FB900811B85 /* b2MouseJoint.cpp in Sources */,
 				1556C83017D65FB900811B85 /* b2Distance.cpp in Sources */,
 				06D2053C8A0E4EE09D31C099 /* FileUtils.cpp in Sources */,
