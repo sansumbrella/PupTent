@@ -107,10 +107,8 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
-  float max_dist = center.length();
   Entity entity;
-  vector<Entity> entity_vector;
-  for( int i = 0; i < 20000; ++i )
+  for( int i = 0; i < 10000; ++i )
   {
     entity = mEntities->create();
     auto loc = shared_ptr<Locus>{ new Locus };
@@ -122,7 +120,6 @@ void PupTentApp::setup()
     loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
     float dist = loc->position.distance( center );
     loc->render_layer = dist;
-//    auto color = ColorA::gray( math<float>::clamp( lmap( dist, 0.0f, max_dist - 10.0f, 0.0f, 1.0f ) ) );
     auto color = Color( CM_HSV, r.nextFloat( 0.4f, 1.0f ), 0.8f, 0.8f );
 //    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
     auto mesh = entity.assign<RenderMesh>( 4 );
@@ -141,61 +138,7 @@ void PupTentApp::setup()
     entity.assign<RenderData>( mesh, loc, pass );
     // randomized expire time, weighted toward end
     entity.assign<Expires>( easeOutQuad( r.nextFloat() ) * 9.0f + 1.0f );
-    entity_vector.push_back( entity );
   }
-
-  vector<Entity> empty_vec;
-  Timer performance_timer;
-  double vector_avg = 0.0;
-  double empty_avg = 0.0;
-  double query_avg = 0.0;
-  double mquery_avg = 0.0;
-  const int iterations = 100;
-  for( int i = 0; i < iterations; ++i )
-  {
-    performance_timer.start();
-    for( auto entity : entity_vector )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    vector_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    for( auto entity : empty_vec )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    empty_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    for( auto entity : mEntities->entities_with_components<Locus>() )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    query_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    for( auto entity : mEntities->entities_with_components<Locus, Expires, RenderData, SpriteAnimation>() )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    mquery_avg += performance_timer.getSeconds();
-  }
-  vector_avg /= iterations;
-  query_avg /= iterations;
-  mquery_avg /= iterations;
-  cout << "Vector AVG: " << vector_avg * 1000 << endl;
-  cout << "Empty  AVG: " << empty_avg * 1000 << endl;
-  cout << "Query  AVG: " << query_avg * 1000 << endl;
-  cout << "MQuery AVG: " << mquery_avg * 1000 << endl;
 
   renderer->checkOrdering();
 
