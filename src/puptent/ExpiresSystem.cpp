@@ -31,32 +31,16 @@
 using namespace puptent;
 using namespace std;
 
-void ExpiresSystem::configure(shared_ptr<entityx::EventManager> events)
-{
-  events->subscribe<ComponentAddedEvent<Expires>>( *this );
-  events->subscribe<ComponentRemovedEvent<Expires>>( *this );
-}
-
-void ExpiresSystem::receive( const ComponentAddedEvent<puptent::Expires> &event )
-{
-  mEntities.push_back( event.entity );
-}
-
-void ExpiresSystem::receive( const ComponentRemovedEvent<puptent::Expires> &event )
-{
-  vector_remove( &mEntities, event.entity );
-}
-
 void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
 {
   // remove invalid entities first
-  vector_erase_if( &mEntities, []( const Entity &entity ){ return !entity.valid(); });
-  for( auto entity : mEntities )
+  for( auto entity : es->entities_with_components<Expires>() )
   {
     auto expires = entity.component<Expires>();
     expires->time -= dt;
     if( expires->time <= 0.0 )
     {
+      if( expires->callback ){ expires->callback(); }
       entity.destroy();
     }
   }

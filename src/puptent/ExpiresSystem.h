@@ -34,13 +34,16 @@ namespace puptent
    Expires:
    Stores time in seconds after which the entity holding the expires will be
    destroyed.
+   If present, callback is executed when the entity is destroyed
    */
   struct Expires : Component<Expires>
   {
-    Expires( double time=1.0 ):
-    time( time )
+    Expires( double time=1.0, std::function<void ()> callback=nullptr ):
+    time( time ),
+    callback( callback )
     {}
-    double time;
+    double                  time;
+    std::function<void ()>  callback;
   };
 
   /**
@@ -49,11 +52,7 @@ namespace puptent
    */
   struct ExpiresSystem : public System<ExpiresSystem>, Receiver<ExpiresSystem>
   {
-    void configure( EventManagerRef events ) override;
-    void receive( const ComponentAddedEvent<Expires> &event );
-    void receive( const ComponentRemovedEvent<Expires> &event );
     void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
   private:
-    std::vector<Entity> mEntities;
   };
 }

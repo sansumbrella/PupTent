@@ -53,6 +53,8 @@ namespace puptent
     bool                      looping = true;
     float                     hold = 0.0f;      // time spent on this frame
     int                       current_index = 0;
+    // called when animation is completed (at the end of every loop if looping)
+    std::function<void ()>    finish_fn = nullptr;
   };
 
   /**
@@ -84,10 +86,8 @@ namespace puptent
     static SpriteAnimationSystemRef create( TextureAtlasRef atlas, const ci::JsonTree &animations );
     //! called by SystemManager to register event handlers
     void configure( EventManagerRef events ) override;
-    //! Add sprite to our collection on creation
+    //! update mesh on sprite creation
     void receive( const ComponentAddedEvent<SpriteAnimation> &event );
-    //! remove sprites from our collection when entities are destroyed
-    void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
     void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
     //! Create a component to play \a animation_name
     //! To display the animation properly, you will need to assign new component's mesh
@@ -100,8 +100,6 @@ namespace puptent
     //! You can then create components that reference your animation
     void addAnimation( const std::string &name, const Animation &animation );
   private:
-    //! active sprite components
-    std::vector<Entity>                 mEntities;
     TextureAtlasRef                     mAtlas;
     // name : index into mAnimations
     std::map<std::string, AnimationId>  mAnimationIds;

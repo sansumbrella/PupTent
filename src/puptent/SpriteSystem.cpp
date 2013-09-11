@@ -67,7 +67,6 @@ void SpriteAnimationSystem::configure( EventManagerRef events )
 {
   std::cout << __PRETTY_FUNCTION__ << std::endl;
   events->subscribe<ComponentAddedEvent<SpriteAnimation>>( *this );
-  events->subscribe<ComponentRemovedEvent<SpriteAnimation>>( *this );
 }
 
 void SpriteAnimationSystem::addAnimation(const string &name, const Animation &animation)
@@ -108,18 +107,11 @@ void SpriteAnimationSystem::receive(const ComponentAddedEvent<SpriteAnimation> &
     sprite->current_index = math<int>::clamp( sprite->current_index, 0, drawings.size() - 1 );
     mesh->matchTexture( drawings.at( sprite->current_index ).drawing );
   }
-  mEntities.push_back( entity );
-}
-
-void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation> &event)
-{
-  vector_remove( &mEntities, event.entity );
 }
 
 void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 {
-  vector_erase_if( &mEntities, []( const Entity &entity ){ return !entity.valid(); });
-  for( auto &entity : mEntities )
+  for( auto entity : es->entities_with_components<SpriteAnimation, RenderMesh>() )
   {
     auto sprite = entity.component<SpriteAnimation>();
 
@@ -142,10 +134,12 @@ void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events,
     if( next_index >= static_cast<int>( anim.drawings.size() ) )
     { // handle wraparound at end
       next_index = sprite->looping ? 0 : anim.drawings.size() - 1;
+      if( sprite->finish_fn ){ sprite->finish_fn(); }
     }
     else if( next_index < 0 )
     { // handle wraparound at beginning
       next_index = sprite->looping ? anim.drawings.size() - 1 : 0;
+      if( sprite->finish_fn ){ sprite->finish_fn(); }
     }
     // actually change the drawing
     if( next_index != sprite->current_index )
