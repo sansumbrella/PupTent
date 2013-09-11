@@ -88,7 +88,6 @@ namespace puptent
     void receive( const ComponentAddedEvent<SpriteAnimation> &event );
     //! remove sprites from our collection when entities are destroyed
     void receive( const ComponentRemovedEvent<SpriteAnimation> &event );
-    void receive( const EntityDestroyedEvent &event );
     void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
     //! Create a component to play \a animation_name
     //! To display the animation properly, you will need to assign new component's mesh

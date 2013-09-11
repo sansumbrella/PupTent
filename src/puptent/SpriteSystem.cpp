@@ -66,7 +66,6 @@ mAtlas( atlas )
 void SpriteAnimationSystem::configure( EventManagerRef events )
 {
   std::cout << __PRETTY_FUNCTION__ << std::endl;
-  events->subscribe<EntityDestroyedEvent>( *this );
   events->subscribe<ComponentAddedEvent<SpriteAnimation>>( *this );
   events->subscribe<ComponentRemovedEvent<SpriteAnimation>>( *this );
 }
@@ -117,13 +116,9 @@ void SpriteAnimationSystem::receive(const ComponentRemovedEvent<SpriteAnimation>
   vector_remove( &mEntities, event.entity );
 }
 
-void SpriteAnimationSystem::receive(const entityx::EntityDestroyedEvent &event)
-{ // stop tracking the entity (assuming we are looking at it)
-  vector_remove( &mEntities, event.entity );
-}
-
 void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 {
+  vector_erase_if( &mEntities, []( const Entity &entity ){ return !entity.valid(); });
   for( auto &entity : mEntities )
   {
     auto sprite = entity.component<SpriteAnimation>();
