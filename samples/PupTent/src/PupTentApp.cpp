@@ -107,7 +107,6 @@ void PupTentApp::setup()
 
   Rand r;
   Vec2f center = getWindowCenter();
-  float max_dist = center.length();
   Entity entity;
   vector<Entity> entity_vector;
   for( int i = 0; i < 20000; ++i )
