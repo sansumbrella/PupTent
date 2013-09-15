@@ -111,6 +111,9 @@ Entity PupTentApp::createPlayer()
   player.assign( anim );
   player.assign( loc );
   player.assign<RenderData>( mesh, loc );
+  auto verlet = player.assign<Particle>( loc );
+  verlet->friction = 0.9f;
+  verlet->rotation_friction = 0.5f;
   player.assign<ScriptComponent>( [](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
     auto locus = self.component<Locus>();
     auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
