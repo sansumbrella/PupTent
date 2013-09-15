@@ -8,6 +8,7 @@
 #include "entityx/Event.h"
 #include "entityx/Entity.h"
 #include "entityx/System.h"
+#include "entityx/tags/TagsComponent.h"
 
 #include "puptent/RenderSystem.h"
 #include "puptent/PhysicsSystem.h"
@@ -15,6 +16,9 @@
 #include "puptent/SpriteSystem.h"
 #include "puptent/ParticleSystem.h"
 #include "puptent/ExpiresSystem.h"
+#include "puptent/ScriptSystem.h"
+
+#include "PlayerController.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -28,48 +32,25 @@ using namespace ci::app;
 using namespace std;
 using namespace puptent;
 
-using namespace entityx;
-
-struct MovementSystem : public System<MovementSystem>
-{
-  void update( shared_ptr<EntityManager> es, shared_ptr<EventManager> events, double dt ) override
-  {
-    if( mElements.empty() )
-    {
-      for( auto entity : es->entities_with_components<Locus>() )
-      {
-        mElements.push_back( entity.component<Locus>() );
-      }
-    }
-    time += dt;
-    Vec2f center = getWindowCenter();
-    float max_dist = center.length();
-    for( auto& loc : mElements )
-    {
-      loc->rotation = fmodf( loc->rotation - M_PI * 0.01f, M_PI * 2 );
-      float theta = loc->position.distance( center );
-      loc->scale = cos( -time * 0.66f + M_PI * theta / max_dist );
-    }
-  }
-  double time = 0.0;
-  vector<shared_ptr<Locus>> mElements;
-};
-
 class PupTentApp : public AppNative
 {
 public:
   void prepareSettings( Settings *settings );
 	void setup();
-	void update();
-	void draw();
+	void update() override;
+	void draw() override;
+  Entity createPlayer();
+  Entity createTreasure();
 private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
   shared_ptr<SystemManager> mSystemManager;
+  SpriteAnimationSystemRef  mSpriteSystem;
   double                    mAverageUpdateTime = 1.0;
   double                    mAverageRenderTime = 1.0;
   Timer                     mTimer;
   TextureAtlas              mTextureAtlas;
+  PlayerController          mPlayerController;
 };
 
 void PupTentApp::prepareSettings( Settings *settings )
@@ -90,155 +71,83 @@ void PupTentApp::setup()
   TextureAtlasRef atlas = TextureAtlas::create( sprite_surf, JsonTree( loadAsset( "spritesheet.json" ) ) );
   JsonTree animations{ loadAsset( "animations.json" ) };
 
+  // Set up entity manager and systems
   mEvents = EventManager::make();
   mEntities = EntityManager::make(mEvents);
   mSystemManager = SystemManager::make( mEntities, mEvents );
   mSystemManager->add<ExpiresSystem>();
-  mSystemManager->add<MovementSystem>();
   mSystemManager->add<ParticleSystem>();
+  mSystemManager->add<ScriptSystem>();
+  mSpriteSystem = mSystemManager->add<SpriteAnimationSystem>( atlas, animations );
   auto physics = mSystemManager->add<PhysicsSystem>();
   physics->createBoundaryRect( getWindowBounds() );
   auto renderer = mSystemManager->add<RenderSystem>();
   renderer->setTexture( atlas->getTexture() );
-  shared_ptr<SpriteAnimationSystem> sprite_system{ new SpriteAnimationSystem{ atlas, animations } };
-  mSystemManager->add( sprite_system );
   mSystemManager->configure();
 
-
-  Rand r;
-  Vec2f center = getWindowCenter();
-  Entity entity;
-  vector<Entity> entity_vector;
-  for( int i = 0; i < 20000; ++i )
+  mPlayerController.setPlayer( createPlayer() );
+  mPlayerController.connect( getWindow() );
+  for( int i = 0; i < 1000; ++i )
   {
-    entity = mEntities->create();
-    auto loc = shared_ptr<Locus>{ new Locus };
-    // get an animation out of the sprite system
-    auto anim = sprite_system->createSpriteAnimation( "dot" );
-    anim->current_index = r.nextInt( 0, 10 );
-    loc->position = { r.nextFloat( getWindowWidth() ), r.nextFloat( getWindowHeight() ) };
-    loc->rotation = r.nextFloat( M_PI * 2 );
-    loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
-    float dist = loc->position.distance( center );
-    loc->render_layer = dist;
-//    auto color = ColorA::gray( math<float>::clamp( lmap( dist, 0.0f, max_dist - 10.0f, 0.0f, 1.0f ) ) );
-    auto color = Color( CM_HSV, r.nextFloat( 0.4f, 1.0f ), 0.8f, 0.8f );
-//    entity.assign( physics->createCircle( loc->position, atlas->get( "d-0001" ).size.x / 16.0f ) );
-    auto mesh = entity.assign<RenderMesh>( 4 );
-    mesh->setAsBox( { 0.0f, 0.0f, 40.0f, 20.0f } );
-    for( auto &v : mesh->vertices )
-    {
-      v.color = color;
-    }
-//    entity.assign( anim );
-    entity.assign( loc );
-    RenderPass pass = eNormalPass;
-    if( r.nextFloat() < 0.5f )
-    {
-      pass = r.nextFloat() < 0.5f ? eMultiplyPass : eAdditivePass;
-    }
-    entity.assign<RenderData>( mesh, loc, pass );
-    // randomized expire time, weighted toward end
-    entity.assign<Expires>( easeOutQuad( r.nextFloat() ) * 9.0f + 1.0f );
-    entity_vector.push_back( entity );
+    createTreasure();
   }
-
-  vector<Entity> empty_vec;
-  Timer performance_timer;
-  double vector_avg = 0.0;
-  double empty_avg = 0.0;
-  double clear_avg = 0.0;
-  double query_avg = 0.0;
-  double mquery_avg = 0.0;
-  const int iterations = 100;
-  for( int i = 0; i < iterations; ++i )
-  {
-    performance_timer.start();
-    for( auto entity : entity_vector )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    vector_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    vector_erase_if( &entity_vector, [](Entity entity){ return !entity.valid(); } );
-    performance_timer.stop();
-    clear_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    for( auto entity : empty_vec )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    empty_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    for( auto entity : mEntities->entities_with_components<Locus>() )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    query_avg += performance_timer.getSeconds();
-
-    performance_timer.start();
-    for( auto entity : mEntities->entities_with_components<Locus, Expires, RenderData, SpriteAnimation>() )
-    {
-      auto loc = entity.component<Locus>();
-      loc->position.x += 0.1f;
-    }
-    performance_timer.stop();
-    mquery_avg += performance_timer.getSeconds();
-  }
-  vector_avg /= iterations;
-  empty_avg /= iterations;
-  query_avg /= iterations;
-  mquery_avg /= iterations;
-  cout << "Vector AVG: " << vector_avg * 1000 << endl;
-  cout << "Empty  AVG: " << empty_avg * 1000 << endl;
-  cout << "Clear  AVG: " << clear_avg * 1000 << endl;
-  cout << "Vector Tot: " << ( clear_avg + vector_avg ) * 1000 << endl;
-  cout << "Query  AVG: " << query_avg * 1000 << endl;
-  cout << "MQuery AVG: " << mquery_avg * 1000 << endl;
-
   renderer->checkOrdering();
+  mTimer.start();
+}
 
-  getWindow()->getSignalMouseDown().connect( [=]( MouseEvent &event ) mutable
-  {
-    if( entity.valid() )
+Entity PupTentApp::createPlayer()
+{
+  Rand r;
+  auto player = mEntities->create();
+  auto loc = shared_ptr<Locus>{ new Locus };
+  // get an animation out of the sprite system
+  auto anim = mSpriteSystem->createSpriteAnimation( "jellyfish" );
+  anim->current_index = r.nextInt( 0, 10 );
+  loc->position = getWindowCenter();
+  loc->rotation = r.nextFloat( M_PI * 2 );
+  loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
+  loc->render_layer = 10;
+  auto mesh = player.assign<RenderMesh>( 4 );
+  player.assign( anim );
+  player.assign( loc );
+  player.assign<RenderData>( mesh, loc );
+  player.assign<ScriptComponent>( [](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
+    auto locus = self.component<Locus>();
+    auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
+    for( auto entity : view )
     {
-      if( entity.component<SpriteAnimation>() )
+      auto other_loc = entity.component<Locus>();
+      if( other_loc->position.distance( locus->position ) < 50.0f )
       {
-        cout << "Removing Sprite Animation component: " << entity << endl;
-        entity.remove<SpriteAnimation>();
-      }
-      else
-      {
-        cout << "Adding Mesh component: " << entity << endl;
-        auto loc = entity.component<Locus>();
-        if( loc )
-        {
-          loc->render_layer = 1000;
-        }
-        auto mesh = RenderMeshRef{ new RenderMesh{ 4 } };
-        // perhaps have a component to hang on to texturing data
-        mesh->matchTexture( atlas->get( "dl-0001" ) );
-        ColorA color{ 1.0f, 1.0f, 1.0f, 1.0f };
-        for( auto &v : mesh->vertices )
-        {
-          v.color = color;
-        }
-        entity.assign<RenderMesh>( mesh );
-        entity.component<RenderData>()->mesh = mesh;
+        cout << "Eating treasure" << endl;
+        entity.destroy();
       }
     }
-  });
+  } );
+  return player;
+}
 
-  mTimer.start();
+Entity PupTentApp::createTreasure()
+{
+  auto entity = mEntities->create();
+  auto loc = shared_ptr<Locus>{ new Locus };
+  // get an animation out of the sprite system
+  auto anim = mSpriteSystem->createSpriteAnimation( "dot" );
+  anim->current_index = Rand::randInt( 0, 10 );
+  loc->position = { Rand::randFloat( getWindowWidth() ), Rand::randFloat( getWindowHeight() ) };
+  loc->rotation = Rand::randFloat( M_PI * 2 );
+  loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
+  loc->render_layer = 50;
+  auto color = Color( CM_HSV, Rand::randFloat( 0.4f, 1.0f ), 0.8f, 0.8f );
+  auto mesh = entity.assign<RenderMesh>( 4 );
+  mesh->setColor( color );
+  entity.assign( anim );
+  entity.assign( loc );
+  entity.assign<RenderData>( mesh, loc );
+  // randomized expire time, weighted toward end
+//  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
+  entity.assign<tags::TagsComponent>( "treasure" );
+  return entity;
 }
 
 void PupTentApp::update()
@@ -247,10 +156,8 @@ void PupTentApp::update()
   mTimer.start();
   Timer up;
   up.start();
-//  mSystemManager->system<PhysicsSystem>()->stepPhysics(); // could parallelize this with sprite animation and some other things...
-//  mSystemManager->update<PhysicsSystem>( dt );
   mSystemManager->update<ExpiresSystem>( dt );
-  mSystemManager->update<MovementSystem>( dt );
+  mSystemManager->update<ScriptSystem>( dt );
   mSystemManager->update<SpriteAnimationSystem>( dt );
   mSystemManager->update<ParticleSystem>( dt );
   mSystemManager->update<RenderSystem>( dt );

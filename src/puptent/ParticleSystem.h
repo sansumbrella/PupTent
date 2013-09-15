@@ -32,7 +32,6 @@ namespace puptent
 {
   struct ParticleEmitter : Component<ParticleEmitter>
   {
-    int         tag;
     ci::Vec3f   direction;  // direction in which to fire particles
     float       rate;
     float       hold;

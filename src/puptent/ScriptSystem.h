@@ -27,6 +27,8 @@
 
 #pragma once
 #include "puptent/PupTent.h"
+#include "cinder/app/TouchEvent.h"
+#include "cinder/app/KeyEvent.h"
 
 namespace puptent
 {
@@ -34,14 +36,18 @@ namespace puptent
   typedef std::function<void (Entity, EntityManagerRef, EventManagerRef, double)> ScriptFn;
   struct ScriptComponent : Component<ScriptComponent>
   {
+    ScriptComponent( ScriptFn fn ):
+    script( fn )
+    {}
     ScriptFn script;
   };
 
   /**
    ScriptSystem:
    Executes arbitrary code on a component.
+   Passes in entity information.
    Currently runs c++ functions.
-   Planning to eventually expand to run Lua scripts
+   Planning to eventually expand to run Lua scripts.
    */
   struct ScriptSystem : public System<ScriptSystem>, Receiver<ScriptSystem>
   {

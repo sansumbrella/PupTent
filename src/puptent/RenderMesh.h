@@ -32,9 +32,9 @@ namespace puptent
 {
   struct Vertex
   {
-    ci::Vec2f     position;
-    ci::ColorA8u  color;
-    ci::Vec2f     tex_coord;
+    ci::Vec2f     position = ci::Vec2f::zero();
+    ci::ColorA8u  color = ci::ColorA8u::white();
+    ci::Vec2f     tex_coord = ci::Vec2f::zero();
   };
   /**
    RenderMesh:
@@ -58,8 +58,10 @@ namespace puptent
     //! Set the mesh bounds to a box shape
     void setAsBox( const ci::Rectf &bounds );
     //! Set the texture coords to those specified by the sprite data
+    //! Does not affect shape of mesh
     void setBoxTextureCoords( const SpriteData &sprite_data );
     //! Set the mesh as a box of sprite's size with correct texture coordinates
     void matchTexture( const SpriteData &sprite_data );
+    void setColor( const ci::ColorA8u &color );
   };
 } // puptent::

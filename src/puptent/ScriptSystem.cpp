@@ -32,7 +32,6 @@ using namespace std;
 
 void ScriptSystem::configure(shared_ptr<entityx::EventManager> event_manager)
 {
-
 }
 
 void ScriptSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)

@@ -89,3 +89,11 @@ void RenderMesh::matchTexture(const SpriteData &sprite_data)
   vertices[2].tex_coord = sprite_data.texture_bounds.getLowerRight();
   vertices[3].tex_coord = sprite_data.texture_bounds.getLowerLeft();
 }
+
+void RenderMesh::setColor( const ColorA8u &color )
+{
+  for( auto &vert : vertices )
+  {
+    vert.color = color;
+  }
+}
