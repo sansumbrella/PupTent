@@ -114,6 +114,7 @@ void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events,
   for( auto entity : es->entities_with_components<SpriteAnimation, RenderMesh>() )
   {
     auto sprite = entity.component<SpriteAnimation>();
+    auto mesh = entity.component<RenderMesh>();
 
     const auto &anim = mAnimations.at( sprite->animation );
     const auto &current_drawing = anim.drawings.at( sprite->current_index );
@@ -145,9 +146,8 @@ void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events,
     if( next_index != sprite->current_index )
     { // the frame index has changed, update display
       sprite->current_index = next_index;
-      const auto new_drawing = anim.drawings.at( sprite->current_index ).drawing;
-      auto mesh = entity.component<RenderMesh>();
-      if( mesh ){ mesh->matchTexture( new_drawing ); }
+      const auto &next_drawing = anim.drawings.at( sprite->current_index ).drawing;
+      if( mesh ){ mesh->matchTexture( next_drawing ); }
     }
   }
 }
