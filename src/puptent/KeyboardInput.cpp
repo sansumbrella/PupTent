@@ -3,26 +3,27 @@
 //  All rights reserved.
 //
 
-#include "Input.h"
+#include "puptent/KeyboardInput.h"
 #include "cinder/app/Window.h"
 #include "pockets/CollectionUtilities.hpp"
 
 using namespace cinder;
 using namespace cinder::app;
 using namespace std;
+using namespace puptent;
 
-Input::Input()
+KeyboardInput::KeyboardInput()
 {}
 
-Input::~Input()
+KeyboardInput::~KeyboardInput()
 {}
 
-InputRef Input::create()
+KeyboardInputRef KeyboardInput::create()
 {
-  return InputRef{ new Input };
+  return KeyboardInputRef{ new KeyboardInput };
 }
 
-void Input::connect( ci::app::WindowRef window )
+void KeyboardInput::connect( ci::app::WindowRef window )
 {
   mConnections.store( window->getSignalKeyDown().connect(
   [this]( const KeyEvent &event ) {
@@ -40,7 +41,7 @@ void Input::connect( ci::app::WindowRef window )
   signals::at_front ) );
 }
 
-void Input::update()
+void KeyboardInput::update()
 {
   mPressedKeys.clear();
   mReleasedKeys.clear();
@@ -78,30 +79,29 @@ void Input::update()
   }
 }
 
-void Input::keyDown( const KeyEvent &event )
+void KeyboardInput::keyDown( const KeyEvent &event )
 {
   mPressedKeys.insert( event.getCode() );
   mHeldKeys.push_back( event.getCode() );
 }
 
-void Input::keyUp( const ci::app::KeyEvent &event )
+void KeyboardInput::keyUp( const ci::app::KeyEvent &event )
 {
   mReleasedKeys.insert( event.getCode() );
   pk::vector_remove( &mHeldKeys, event.getCode() );
 }
 
-bool Input::getKeyDown(int key) const
+bool KeyboardInput::getKeyDown(int key) const
 {
   return pk::vector_contains( mHeldKeys, key );
 }
 
-bool Input::getKeyPressed(int key) const
+bool KeyboardInput::getKeyPressed(int key) const
 {
   return mPressedKeys.find( key ) != mPressedKeys.end();
 }
 
-bool Input::getKeyReleased( int key ) const
+bool KeyboardInput::getKeyReleased( int key ) const
 {
   return mReleasedKeys.find( key ) != mReleasedKeys.end();
 }
-

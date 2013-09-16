@@ -74,7 +74,7 @@
 		1556C85C17D65FB900811B85 /* Scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82617D65FB900811B85 /* Scale.cpp */; };
 		1556C85D17D65FB900811B85 /* SimpleControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82817D65FB900811B85 /* SimpleControl.cpp */; };
 		159385D917E5FF670025D5DD /* ConnectionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159385D717E5FF670025D5DD /* ConnectionManager.cpp */; };
-		159385DC17E60B810025D5DD /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159385DA17E60B810025D5DD /* Input.cpp */; };
+		159385DC17E60B810025D5DD /* KeyboardInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159385DA17E60B810025D5DD /* KeyboardInput.cpp */; };
 		15A3BBF617D8D0A500450158 /* ExpiresSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
@@ -217,8 +217,8 @@
 		1556C82A17D65FB900811B85 /* suBox2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = suBox2D.h; sourceTree = "<group>"; };
 		159385D717E5FF670025D5DD /* ConnectionManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionManager.cpp; path = ../../../../Pockets/src/pockets/ConnectionManager.cpp; sourceTree = "<group>"; };
 		159385D817E5FF670025D5DD /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionManager.h; path = ../../../../Pockets/src/pockets/ConnectionManager.h; sourceTree = "<group>"; };
-		159385DA17E60B810025D5DD /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Input.cpp; path = ../src/Input.cpp; sourceTree = "<group>"; };
-		159385DB17E60B810025D5DD /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Input.h; path = ../src/Input.h; sourceTree = "<group>"; };
+		159385DA17E60B810025D5DD /* KeyboardInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardInput.cpp; sourceTree = "<group>"; };
+		159385DB17E60B810025D5DD /* KeyboardInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardInput.h; sourceTree = "<group>"; };
 		15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpiresSystem.cpp; sourceTree = "<group>"; };
 		15A3BBF517D8D0A500450158 /* ExpiresSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpiresSystem.h; sourceTree = "<group>"; };
 		15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
@@ -288,8 +288,6 @@
 			isa = PBXGroup;
 			children = (
 				5360D1B7B6C443D2B5370B74 /* PupTentApp.cpp */,
-				159385DA17E60B810025D5DD /* Input.cpp */,
-				159385DB17E60B810025D5DD /* Input.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -556,6 +554,8 @@
 		15D4415317D298C600A926F0 /* puptent */ = {
 			isa = PBXGroup;
 			children = (
+				159385DA17E60B810025D5DD /* KeyboardInput.cpp */,
+				159385DB17E60B810025D5DD /* KeyboardInput.h */,
 				15D4417917D409B400A926F0 /* RenderSystem.cpp */,
 				15D4417A17D409B400A926F0 /* RenderSystem.h */,
 				15D4417D17D40A3C00A926F0 /* PupTent.h */,
@@ -750,7 +750,7 @@
 				1556C84217D65FB900811B85 /* b2WorldCallbacks.cpp in Sources */,
 				1556C84A17D65FB900811B85 /* b2PolygonAndCircleContact.cpp in Sources */,
 				15053BEC17D4EE9500C2FE2D /* SpriteSystem.cpp in Sources */,
-				159385DC17E60B810025D5DD /* Input.cpp in Sources */,
+				159385DC17E60B810025D5DD /* KeyboardInput.cpp in Sources */,
 				1556C83D17D65FB900811B85 /* b2Body.cpp in Sources */,
 				153566AE17DD391E0060CA1C /* ParticleSystem.cpp in Sources */,
 				1556C83C17D65FB900811B85 /* b2Timer.cpp in Sources */,

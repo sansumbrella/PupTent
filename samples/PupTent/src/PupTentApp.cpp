@@ -18,7 +18,7 @@
 #include "puptent/ExpiresSystem.h"
 #include "puptent/ScriptSystem.h"
 #include "puptent/ParticleBehaviorSystems.h"
-#include "Input.h"
+#include "KeyboardInput.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -112,7 +112,7 @@ Entity PupTentApp::createPlayer()
   auto verlet = player.assign<Particle>( loc );
   verlet->friction = 0.9f;
   verlet->rotation_friction = 0.5f;
-  auto input = Input::create();
+  auto input = KeyboardInput::create();
   input->connect( getWindow() );
   player.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
    auto locus = self.component<Locus>();
