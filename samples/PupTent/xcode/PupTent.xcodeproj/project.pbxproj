@@ -18,7 +18,6 @@
 		15053BEF17D4EF2900C2FE2D /* Locus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BED17D4EF2900C2FE2D /* Locus.cpp */; };
 		15053BF217D4F42D00C2FE2D /* RenderMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF017D4F42D00C2FE2D /* RenderMesh.cpp */; };
 		15053BF517D5418C00C2FE2D /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */; };
-		150FDD2317E560D10092CC39 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 150FDD2117E560D10092CC39 /* PlayerController.cpp */; };
 		151F137517D76461002EC4BE /* ParticleBehaviorSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */; };
 		153566AE17DD391E0060CA1C /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */; };
 		1556C7B517D63E7600811B85 /* PhysicsSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */; };
@@ -74,6 +73,8 @@
 		1556C85B17D65FB900811B85 /* Sandbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82417D65FB900811B85 /* Sandbox.cpp */; };
 		1556C85C17D65FB900811B85 /* Scale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82617D65FB900811B85 /* Scale.cpp */; };
 		1556C85D17D65FB900811B85 /* SimpleControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1556C82817D65FB900811B85 /* SimpleControl.cpp */; };
+		159385D917E5FF670025D5DD /* ConnectionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159385D717E5FF670025D5DD /* ConnectionManager.cpp */; };
+		159385DC17E60B810025D5DD /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159385DA17E60B810025D5DD /* Input.cpp */; };
 		15A3BBF617D8D0A500450158 /* ExpiresSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */; };
 		15D4415617D298C600A926F0 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 15D4413317D298C600A926F0 /* COPYING */; };
 		15D4415717D298C600A926F0 /* Entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15D4413417D298C600A926F0 /* Entity.cc */; };
@@ -105,8 +106,6 @@
 		15053BF117D4F42D00C2FE2D /* RenderMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderMesh.h; sourceTree = "<group>"; };
 		15053BF317D5418C00C2FE2D /* TextureAtlas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAtlas.cpp; sourceTree = "<group>"; };
 		15053BF417D5418C00C2FE2D /* TextureAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureAtlas.h; sourceTree = "<group>"; };
-		150FDD2117E560D10092CC39 /* PlayerController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayerController.cpp; path = ../src/PlayerController.cpp; sourceTree = "<group>"; };
-		150FDD2217E560D10092CC39 /* PlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerController.h; path = ../src/PlayerController.h; sourceTree = "<group>"; };
 		151F137317D76461002EC4BE /* ParticleBehaviorSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleBehaviorSystems.cpp; sourceTree = "<group>"; };
 		151F137417D76461002EC4BE /* ParticleBehaviorSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleBehaviorSystems.h; sourceTree = "<group>"; };
 		1556C7B317D63E7600811B85 /* PhysicsSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsSystem.cpp; sourceTree = "<group>"; };
@@ -216,6 +215,10 @@
 		1556C82817D65FB900811B85 /* SimpleControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleControl.cpp; sourceTree = "<group>"; };
 		1556C82917D65FB900811B85 /* SimpleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleControl.h; sourceTree = "<group>"; };
 		1556C82A17D65FB900811B85 /* suBox2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = suBox2D.h; sourceTree = "<group>"; };
+		159385D717E5FF670025D5DD /* ConnectionManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionManager.cpp; path = ../../../../Pockets/src/pockets/ConnectionManager.cpp; sourceTree = "<group>"; };
+		159385D817E5FF670025D5DD /* ConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionManager.h; path = ../../../../Pockets/src/pockets/ConnectionManager.h; sourceTree = "<group>"; };
+		159385DA17E60B810025D5DD /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Input.cpp; path = ../src/Input.cpp; sourceTree = "<group>"; };
+		159385DB17E60B810025D5DD /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Input.h; path = ../src/Input.h; sourceTree = "<group>"; };
 		15A3BBF417D8D0A500450158 /* ExpiresSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpiresSystem.cpp; sourceTree = "<group>"; };
 		15A3BBF517D8D0A500450158 /* ExpiresSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpiresSystem.h; sourceTree = "<group>"; };
 		15A8A94017D6A10700474DA6 /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
@@ -285,8 +288,8 @@
 			isa = PBXGroup;
 			children = (
 				5360D1B7B6C443D2B5370B74 /* PupTentApp.cpp */,
-				150FDD2117E560D10092CC39 /* PlayerController.cpp */,
-				150FDD2217E560D10092CC39 /* PlayerController.h */,
+				159385DA17E60B810025D5DD /* Input.cpp */,
+				159385DB17E60B810025D5DD /* Input.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -652,6 +655,8 @@
 				E24707F2D09149F4B2FC7E6C /* FileUtils.h */,
 				6550E6F2C9764F56A30D8C0F /* ImagePacker.h */,
 				B27BC93C281B42239CC063F4 /* Pockets.h */,
+				159385D717E5FF670025D5DD /* ConnectionManager.cpp */,
+				159385D817E5FF670025D5DD /* ConnectionManager.h */,
 			);
 			name = pockets;
 			sourceTree = "<group>";
@@ -740,18 +745,19 @@
 				15D4416A17D298C600A926F0 /* TagsComponent.cc in Sources */,
 				1556C84717D65FB900811B85 /* b2ContactSolver.cpp in Sources */,
 				1556C84F17D65FB900811B85 /* b2Joint.cpp in Sources */,
-				150FDD2317E560D10092CC39 /* PlayerController.cpp in Sources */,
 				1556C85B17D65FB900811B85 /* Sandbox.cpp in Sources */,
 				1556C82C17D65FB900811B85 /* b2CollideCircle.cpp in Sources */,
 				1556C84217D65FB900811B85 /* b2WorldCallbacks.cpp in Sources */,
 				1556C84A17D65FB900811B85 /* b2PolygonAndCircleContact.cpp in Sources */,
 				15053BEC17D4EE9500C2FE2D /* SpriteSystem.cpp in Sources */,
+				159385DC17E60B810025D5DD /* Input.cpp in Sources */,
 				1556C83D17D65FB900811B85 /* b2Body.cpp in Sources */,
 				153566AE17DD391E0060CA1C /* ParticleSystem.cpp in Sources */,
 				1556C83C17D65FB900811B85 /* b2Timer.cpp in Sources */,
 				1556C84017D65FB900811B85 /* b2Island.cpp in Sources */,
 				1556C83117D65FB900811B85 /* b2DynamicTree.cpp in Sources */,
 				1556C83B17D65FB900811B85 /* b2StackAllocator.cpp in Sources */,
+				159385D917E5FF670025D5DD /* ConnectionManager.cpp in Sources */,
 				15D4416817D298C600A926F0 /* System.cc in Sources */,
 				1556C85517D65FB900811B85 /* b2WeldJoint.cpp in Sources */,
 				1556C83517D65FB900811B85 /* b2EdgeShape.cpp in Sources */,

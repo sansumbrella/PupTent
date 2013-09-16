@@ -17,8 +17,8 @@
 #include "puptent/ParticleSystem.h"
 #include "puptent/ExpiresSystem.h"
 #include "puptent/ScriptSystem.h"
-
-#include "PlayerController.h"
+#include "puptent/ParticleBehaviorSystems.h"
+#include "Input.h"
 
 /**
  Sample app used to develop features of PupTent.
@@ -50,7 +50,6 @@ private:
   double                    mAverageRenderTime = 1.0;
   Timer                     mTimer;
   TextureAtlas              mTextureAtlas;
-  PlayerController          mPlayerController;
 };
 
 void PupTentApp::prepareSettings( Settings *settings )
@@ -85,8 +84,7 @@ void PupTentApp::setup()
   renderer->setTexture( atlas->getTexture() );
   mSystemManager->configure();
 
-  mPlayerController.setPlayer( createPlayer() );
-  mPlayerController.connect( getWindow() );
+  createPlayer();
   for( int i = 0; i < 1000; ++i )
   {
     createTreasure();
@@ -114,18 +112,21 @@ Entity PupTentApp::createPlayer()
   auto verlet = player.assign<Particle>( loc );
   verlet->friction = 0.9f;
   verlet->rotation_friction = 0.5f;
-  player.assign<ScriptComponent>( [](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
-    auto locus = self.component<Locus>();
-    auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
-    for( auto entity : view )
-    {
-      auto other_loc = entity.component<Locus>();
-      if( other_loc->position.distance( locus->position ) < 50.0f )
-      {
-        cout << "Eating treasure" << endl;
-        entity.destroy();
-      }
-    }
+  auto input = Input::create();
+  input->connect( getWindow() );
+  player.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
+   auto locus = self.component<Locus>();
+   locus->position += input->getForce() * dt * 10.0f;
+   auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
+   for( auto entity : view )
+   {
+     auto other_loc = entity.component<Locus>();
+     if( other_loc->position.distance( locus->position ) < 50.0f )
+     {
+       cout << "Eating treasure" << endl;
+       entity.destroy();
+     }
+   }
   } );
   return player;
 }
@@ -150,6 +151,7 @@ Entity PupTentApp::createTreasure()
   // randomized expire time, weighted toward end
 //  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
   entity.assign<tags::TagsComponent>( "treasure" );
+//  entity.assign<SeekComponent>( predator_loc, Vec2f{-1.0f, -0.5f} );
   return entity;
 }
 
