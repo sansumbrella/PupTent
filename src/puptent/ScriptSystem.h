@@ -32,6 +32,15 @@
 
 namespace puptent
 {
+  /**
+   ScriptComponent:
+   Runs an arbitrary script on every update cycle.
+   Use for behavior unique to an entity, like user-controlled entities,
+   special items, synching timeline animations, or temporary behaviors.
+
+   Will probably add ability for other scripts to fire when events happen.
+   Those scripts are likely to be called from their respective systems.
+   */
   // ScriptFn receives self entity, entity manager for world queries, event manager, and timestep
   typedef std::function<void (Entity, EntityManagerRef, EventManagerRef, double)> ScriptFn;
   struct ScriptComponent : Component<ScriptComponent>
