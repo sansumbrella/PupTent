@@ -118,7 +118,7 @@ void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events,
 
     const auto &anim = mAnimations.at( sprite->animation );
     const auto &current_drawing = anim.drawings.at( sprite->current_index );
-    sprite->hold += dt; // this becomes a problem if many share the same sprite
+    sprite->hold += dt * sprite->rate;
     int next_index = sprite->current_index;
     // check timing
     if( sprite->hold > anim.frame_duration * current_drawing.hold )
@@ -126,21 +126,21 @@ void SpriteAnimationSystem::update( EntityManagerRef es, EventManagerRef events,
       next_index += 1;
       sprite->hold = 0.0f;
     }
-    else if ( sprite->hold < 0.0f )
+    else if ( sprite->hold < -anim.frame_duration * current_drawing.hold )
     { // step back a frame
       next_index -= 1;
-      sprite->hold = anim.frame_duration * current_drawing.hold;
+      sprite->hold = 0.0f;
     }
     // handle wrapping around beginning and end
     if( next_index >= static_cast<int>( anim.drawings.size() ) )
     { // handle wraparound at end
       next_index = sprite->looping ? 0 : anim.drawings.size() - 1;
-      if( sprite->finish_fn ){ sprite->finish_fn(); }
+      if( sprite->finish_fn ){ sprite->finish_fn( sprite ); }
     }
     else if( next_index < 0 )
     { // handle wraparound at beginning
       next_index = sprite->looping ? anim.drawings.size() - 1 : 0;
-      if( sprite->finish_fn ){ sprite->finish_fn(); }
+      if( sprite->finish_fn ){ sprite->finish_fn( sprite ); }
     }
     // actually change the drawing
     if( next_index != sprite->current_index )

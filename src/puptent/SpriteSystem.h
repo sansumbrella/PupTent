@@ -43,6 +43,7 @@ namespace puptent
   */
   typedef size_t AnimationId;
   typedef std::shared_ptr<class SpriteAnimation>  SpriteAnimationRef;
+  typedef std::function<void (SpriteAnimationRef)> SpriteAnimationCallback;
   struct SpriteAnimation : Component<SpriteAnimation>
   {
     SpriteAnimation() = default;
@@ -52,9 +53,10 @@ namespace puptent
     AnimationId               animation = 0;
     bool                      looping = true;
     float                     hold = 0.0f;      // time spent on this frame
+    float                     rate = 1.0f;      // multiplayer for playback rate
     int                       current_index = 0;
     // called when animation is completed (at the end of every loop if looping)
-    std::function<void ()>    finish_fn = nullptr;
+    SpriteAnimationCallback   finish_fn = nullptr;
   };
 
   /**

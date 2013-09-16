@@ -87,7 +87,7 @@ void PupTentApp::setup()
   createPlayer();
   for( int i = 0; i < 1000; ++i )
   {
-    createTreasure();
+//    createTreasure();
   }
   renderer->checkOrdering();
   mTimer.start();
@@ -100,7 +100,11 @@ Entity PupTentApp::createPlayer()
   auto loc = shared_ptr<Locus>{ new Locus };
   // get an animation out of the sprite system
   auto anim = mSpriteSystem->createSpriteAnimation( "jellyfish" );
-  anim->current_index = r.nextInt( 0, 10 );
+  // ping-pong animation
+  anim->looping = false;
+  anim->finish_fn = []( SpriteAnimationRef animation ){
+    animation->rate *= -1.0f;
+  };
   loc->position = getWindowCenter();
   loc->rotation = r.nextFloat( M_PI * 2 );
   loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
