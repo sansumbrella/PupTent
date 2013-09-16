@@ -32,9 +32,16 @@ namespace puptent
 {
   struct Vertex
   {
-    ci::Vec2f     position = ci::Vec2f::zero();
-    ci::ColorA8u  color = ci::ColorA8u::white();
-    ci::Vec2f     tex_coord = ci::Vec2f::zero();
+    Vertex( const ci::Vec2f &position = ci::Vec2f::zero(),
+            const ci::ColorA8u &color = ci::ColorA8u::white(),
+            const ci::Vec2f &uv = ci::Vec2f::zero() ):
+    position( position ),
+    color( color ),
+    tex_coord( uv )
+    {}
+    ci::Vec2f     position;
+    ci::ColorA8u  color;
+    ci::Vec2f     tex_coord;
   };
   /**
    RenderMesh:

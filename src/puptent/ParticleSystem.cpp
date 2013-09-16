@@ -32,6 +32,13 @@
 using namespace puptent;
 using namespace cinder;
 
+Particle::Particle( LocusRef locus ):
+p_position( locus->position ),
+p_rotation( locus->rotation ),
+p_scale( locus->scale )
+{}
+
+
 void ParticleSystem::configure( EventManagerRef events )
 {
   events->subscribe<ComponentAddedEvent<Particle>>( *this );

@@ -50,13 +50,8 @@ namespace puptent
   typedef std::shared_ptr<class Particle> ParticleRef;
   struct Particle : Component<Particle>
   {
-    Particle( LocusRef locus ):
-    p_position( locus->position ),
-    p_rotation( locus->rotation ),
-    p_scale( locus->scale )
-    {}
-    Particle()
-    {}
+    Particle( LocusRef locus );
+    Particle() {}
     float     friction = 1.0f;
     float     rotation_friction = 1.0f;
     float     scale_friction = 1.0f;
