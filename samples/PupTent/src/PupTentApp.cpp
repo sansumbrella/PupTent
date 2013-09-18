@@ -118,6 +118,7 @@ Entity PupTentApp::createPlayer()
   verlet->rotation_friction = 0.5f;
   auto input = KeyboardInput::create();
   input->connect( getWindow() );
+  // give custom behavior to the player
   player.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
    auto locus = self.component<Locus>();
    locus->position += input->getForce() * dt * 10.0f;

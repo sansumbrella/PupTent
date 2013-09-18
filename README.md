@@ -10,6 +10,24 @@ it's easy to replace one system with another.
 Systems only know about components, and components only know about themselves.
 Locus and RenderMesh are the only components used by multiple systems.
 
+The basic idea of an entity-system game is to create all of your in-game entities
+as collections of components. PupTent provides some useful base components and
+systems for handling things like animation, entity lifetime, and rendering. For
+custom in-game behavior, you can attach a ScriptComponent to any entity, which
+calls a function and provides information about the entity and scene. If you want
+to use other information in your script (like keyboard input), just capture it in
+the lambda you pass to the ScriptComponent.
+
+If you want to have some code that doesn't belong to any one entity, there is no
+need to shoehorn it into the entity system. If you were making a game of Go, for
+example, the player's control and computer AI code would likely live outside of
+the entity system. The entities would be things like the pieces on the board and
+the board itself. The control code would edit the appropriate entities' positions
+based on what the user selected. To define what could be selected, however, you
+might create a Selectable component and apply it to anything that the player will
+then be allowed to grab and move around. Making the controls a System in entityx
+just gives you easy access to the event and update mechanisms within the framework.
+
 ## Features (Existing and Planned):
 ### Simple 2d spatial transformations
 - Attach a Locus component for access to
