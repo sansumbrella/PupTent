@@ -90,6 +90,29 @@ void RenderMesh::matchTexture(const SpriteData &sprite_data)
   vertices[3].tex_coord = sprite_data.texture_bounds.getLowerLeft();
 }
 
+void RenderMesh::setAsLine( const Vec2f &begin, const Vec2f &end, float width )
+{
+  Vec2f ray = end - begin;
+  Vec2f cap = ray.normalized() * width;
+  Vec2f N( -cap.y, cap.x );
+  Vec2f S = -N;
+  Vec2f NW = N - cap;
+  Vec2f NE = N + cap;
+  Vec2f SE = -NW;
+  Vec2f SW = -NE;
+
+  if( vertices.size() != 8 )
+  { vertices.assign( 8, Vertex{} ); }
+  vertices.at(0).position = begin + SW;
+  vertices.at(1).position = begin + NW;
+  vertices.at(2).position = begin + S;
+  vertices.at(3).position = begin + N;
+  vertices.at(4).position = end + S;
+  vertices.at(5).position = end + N;
+  vertices.at(6).position = end + SE;
+  vertices.at(7).position = end + NE;
+}
+
 void RenderMesh::setColor( const ColorA8u &color )
 {
   for( auto &vert : vertices )

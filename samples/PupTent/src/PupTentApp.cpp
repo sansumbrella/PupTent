@@ -42,6 +42,7 @@ public:
   Entity createPlayer();
   Entity createTreasure();
   Entity createRibbon();
+  Entity createLine();
 private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
@@ -57,7 +58,7 @@ void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
   settings->setWindowSize( 1024, 768 );
-//  settings->setFullScreen();
+  settings->setFullScreen();
 }
 
 void PupTentApp::setup()
@@ -93,6 +94,7 @@ void PupTentApp::setup()
   renderer->checkOrdering();
 
   createRibbon();
+  createLine();
   mTimer.start();
 }
 
@@ -112,6 +114,18 @@ Entity PupTentApp::createRibbon()
   } catch ( exception &exc ) {
     cout << "Error: " << exc.what() << endl;
   }
+  return e;
+}
+
+Entity PupTentApp::createLine()
+{
+  Entity e = mEntities->create();
+  auto loc = e.assign<Locus>();
+  auto mesh = e.assign<RenderMesh>();
+  e.assign<RenderData>( mesh, loc, 20 );
+  e.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
+    mesh->setAsLine( getWindowCenter(), getMousePos(), 8.0f );
+  } );
   return e;
 }
 

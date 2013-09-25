@@ -69,7 +69,7 @@ namespace puptent
     void setBoxTextureCoords( const SpriteData &sprite_data );
     //! Set the mesh as a box of sprite's size with correct texture coordinates
     void matchTexture( const SpriteData &sprite_data );
-    //! Make an expanded ribbon from a collection of positions
+    //! Make an expanded ribbon from a ci::Vec2f skeleton (templated so you can pass vector, deque, whatevs)
     template<typename T>
     void setAsRibbon( const T &positions, float width, bool closed=false );
     //! Make a fat line between two points
