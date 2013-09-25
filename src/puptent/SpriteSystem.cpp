@@ -65,7 +65,6 @@ mAtlas( atlas )
 
 void SpriteAnimationSystem::configure( EventManagerRef events )
 {
-  std::cout << __PRETTY_FUNCTION__ << std::endl;
   events->subscribe<ComponentAddedEvent<SpriteAnimation>>( *this );
 }
 

@@ -46,7 +46,7 @@ void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event
   const RenderPass pass = data->pass;
   if( pass == eNormalPass )
   { // put element in correct sorted position
-    int target_layer = data->locus->render_layer;
+    int target_layer = data->render_layer;
     if( mGeometry[pass].empty() )
     {
       mGeometry[pass].push_back( event.component );
@@ -54,7 +54,7 @@ void RenderSystem::receive(const ComponentAddedEvent<puptent::RenderData> &event
     else
     {
       auto iter = mGeometry[pass].begin();
-      while( iter != mGeometry[pass].end() && (**iter).locus->render_layer < target_layer )
+      while( iter != mGeometry[pass].end() && (**iter).render_layer < target_layer )
       { // place the component in the first position on its layer
         ++iter;
       }
@@ -74,8 +74,8 @@ void RenderSystem::checkOrdering() const
   {
     for( int i = 0; i < mGeometry[eNormalPass].size() - 2; ++i )
     {
-      int lhs = mGeometry[eNormalPass].at( i )->locus->render_layer;
-      int rhs = mGeometry[eNormalPass].at( i + 1 )->locus->render_layer;
+      int lhs = mGeometry[eNormalPass].at( i )->render_layer;
+      int rhs = mGeometry[eNormalPass].at( i + 1 )->render_layer;
       if( rhs < lhs )
       {
         std::cout << "ERROR: Render order incorrect: " << rhs << " after " << lhs << std::endl;

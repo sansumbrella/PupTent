@@ -41,6 +41,7 @@ public:
 	void draw() override;
   Entity createPlayer();
   Entity createTreasure();
+  Entity createRibbon();
 private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
@@ -87,10 +88,31 @@ void PupTentApp::setup()
   createPlayer();
   for( int i = 0; i < 1000; ++i )
   {
-//    createTreasure();
+    createTreasure();
   }
   renderer->checkOrdering();
+
+  createRibbon();
   mTimer.start();
+}
+
+Entity PupTentApp::createRibbon()
+{
+  Entity e = mEntities->create();
+  auto loc = e.assign<Locus>();
+  auto mesh = e.assign<RenderMesh>( 100 );
+  e.assign<RenderData>( mesh, loc );
+  vector<Vec2f> positions;
+  for( int i = 0; i < 50; ++i )
+  {
+    positions.push_back( Vec2f{ 50.0f + i * 10.0f, 100.0f + sin( i * 0.2f ) * 50.0f } );
+  }
+  try {
+    mesh->setAsRibbon( positions, 20.0f, false );
+  } catch ( exception &exc ) {
+    cout << "Error: " << exc.what() << endl;
+  }
+  return e;
 }
 
 Entity PupTentApp::createPlayer()
@@ -101,18 +123,17 @@ Entity PupTentApp::createPlayer()
   // get an animation out of the sprite system
   auto anim = mSpriteSystem->createSpriteAnimation( "jellyfish" );
   // ping-pong animation
-  anim->looping = false;
-  anim->finish_fn = []( SpriteAnimationRef animation ){
-    animation->rate *= -1.0f;
-  };
+//  anim->looping = false;
+//  anim->finish_fn = []( SpriteAnimationRef animation ){
+//    animation->rate *= -1.0f;
+//  };
   loc->position = getWindowCenter();
   loc->rotation = r.nextFloat( M_PI * 2 );
   loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
-  loc->render_layer = 10;
   auto mesh = player.assign<RenderMesh>( 4 );
   player.assign( anim );
   player.assign( loc );
-  player.assign<RenderData>( mesh, loc );
+  player.assign<RenderData>( mesh, loc, 10 );
   auto verlet = player.assign<Particle>( loc );
   verlet->friction = 0.9f;
   verlet->rotation_friction = 0.5f;
@@ -121,7 +142,7 @@ Entity PupTentApp::createPlayer()
   // give custom behavior to the player
   player.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
    auto locus = self.component<Locus>();
-   locus->position += input->getForce() * dt * 10.0f;
+   locus->position += input->getForce() * dt * 100.0f;
    auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
    for( auto entity : view )
    {
@@ -146,13 +167,12 @@ Entity PupTentApp::createTreasure()
   loc->position = { Rand::randFloat( getWindowWidth() ), Rand::randFloat( getWindowHeight() ) };
   loc->rotation = Rand::randFloat( M_PI * 2 );
   loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
-  loc->render_layer = 50;
   auto color = Color( CM_HSV, Rand::randFloat( 0.4f, 1.0f ), 0.8f, 0.8f );
   auto mesh = entity.assign<RenderMesh>( 4 );
   mesh->setColor( color );
   entity.assign( anim );
   entity.assign( loc );
-  entity.assign<RenderData>( mesh, loc );
+  entity.assign<RenderData>( mesh, loc, 50, eNormalPass );
   // randomized expire time, weighted toward end
 //  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
   entity.assign<tags::TagsComponent>( "treasure" );

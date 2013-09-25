@@ -55,13 +55,15 @@ namespace puptent
   typedef std::shared_ptr<class RenderData> RenderDataRef;
   struct RenderData : Component<RenderData>
   {
-    RenderData( RenderMeshRef mesh, LocusRef locus, RenderPass pass=eNormalPass ):
+    RenderData( RenderMeshRef mesh, LocusRef locus, int render_layer=0, RenderPass pass=eNormalPass ):
     mesh( mesh ),
     locus( locus ),
+    render_layer( render_layer ),
     pass( pass )
     {}
     RenderMeshRef     mesh;
     LocusRef          locus;
+    int               render_layer;
     const RenderPass  pass;
   };
 
@@ -111,7 +113,7 @@ namespace puptent
     std::array<std::vector<Vertex>, 3>         mVertices;
     ci::gl::TextureRef                         mTexture;
     static bool                 layerSort( const RenderDataRef &lhs, const RenderDataRef &rhs )
-    { return lhs->locus->render_layer < rhs->locus->render_layer; }
+    { return lhs->render_layer < rhs->render_layer; }
     // maybe add a CameraRef for positioning the scene
     // use a POV and Locus component as camera, allowing dynamic switching
   };

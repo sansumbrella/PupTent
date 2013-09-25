@@ -60,8 +60,6 @@ namespace puptent
    */
   struct ScriptSystem : public System<ScriptSystem>, Receiver<ScriptSystem>
   {
-    //! listen for events
-    void configure( EventManagerRef event_manager ) override;
     //! gather scripts and execute them
     void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
   };

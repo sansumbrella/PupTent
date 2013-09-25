@@ -69,6 +69,49 @@ namespace puptent
     void setBoxTextureCoords( const SpriteData &sprite_data );
     //! Set the mesh as a box of sprite's size with correct texture coordinates
     void matchTexture( const SpriteData &sprite_data );
+    //! Make an expanded ribbon from a collection of positions
+    template<typename T>
+    void setAsRibbon( const T &positions, float width, bool closed=false );
+    //! Make a fat line between two points
+    void setAsLine( const ci::Vec2f &point_a, const ci::Vec2f &point_b, float width=10.0f );
+    //! Set the color of all vertices in one go
     void setColor( const ci::ColorA8u &color );
   };
+
+  template<typename T>
+  void RenderMesh::setAsRibbon( const T &skeleton, float width, bool closed )
+  {
+    using ci::Vec2f;
+    if( vertices.size() != skeleton.size() * 2 )
+    { vertices.assign( skeleton.size() * 2, Vertex{} ); }
+    Vec2f a, b, c;
+    // first vertex
+    a = skeleton.at( 0 );
+    b = skeleton.at( 1 );
+    Vec2f edge = (b - a);
+    Vec2f tangent = Vec2f( -edge.y, edge.x );
+    Vec2f north = tangent.normalized() * width;
+    vertices.at( 0 ).position = a + north;
+    vertices.at( 0 + 1 ).position = a - north;
+    // remaining vertices
+    for( int i = 1; i < skeleton.size() - 1; ++i )
+    {
+      a = skeleton.at(i - 1);
+      b = skeleton.at(i);
+      c = skeleton.at(i + 1);
+      edge = ((b - a).normalized() + (c - b).normalized()) * 0.5;
+      tangent = Vec2f( -edge.y, edge.x );
+      north = tangent.normalized() * width;
+      vertices.at( i * 2 ).position = b + north;
+      vertices.at( i * 2 + 1 ).position = b - north;
+    }
+    // final vertex
+    c = skeleton.back();
+    edge = closed ? (skeleton.at( 1 ) - c) : (c - b);
+    tangent = Vec2f( -edge.y, edge.x );
+    north = tangent.normalized() * width;
+    size_t end = skeleton.size() - 1;
+    vertices.at( end * 2 ).position = c + north;
+    vertices.at( end * 2 + 1 ).position = c - north;
+  }
 } // puptent::
