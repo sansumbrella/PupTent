@@ -47,7 +47,14 @@ namespace puptent
    RenderMesh:
    Collection of vertices suitable for rendering as a triangle strip.
    Drawn by the RenderSystem
-   Updated by various systems that want content to be visible
+   Updated by SpriteAnimationSystem or user Scripts
+   Member functions let you conveniently set it to various shapes:
+   - Box
+   - Circle
+   - Ribbon
+   - Line
+   - Texture billboard (special case of Box)
+   Additional methods ease the texturing of those shapes.
   */
   typedef std::shared_ptr<class RenderMesh> RenderMeshRef;
   class SpriteData;
@@ -69,14 +76,16 @@ namespace puptent
     void setBoxTextureCoords( const SpriteData &sprite_data );
     //! Set the mesh as a box of sprite's size with correct texture coordinates
     void matchTexture( const SpriteData &sprite_data );
-    //! Make an expanded ribbon from a ci::Vec2f skeleton (templated so you can pass vector, deque, whatevs)
+    //! Make an expanded ribbon from a ci::Vec2f skeleton
+    //! the skeleton is a collection of points describing the path of the ribbon
     template<typename T>
-    void setAsRibbon( const T &positions, float width, bool closed=false );
+    void setAsRibbon( const T &skeleton, float width, bool closed=false );
     //! Make a fat line between two points
     void setAsLine( const ci::Vec2f &point_a, const ci::Vec2f &point_b, float width=10.0f );
     //! Set the color of all vertices in one go
     void setColor( const ci::ColorA8u &color );
   };
+
 
   template<typename T>
   void RenderMesh::setAsRibbon( const T &skeleton, float width, bool closed )
