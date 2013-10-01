@@ -40,3 +40,15 @@ MatrixAffine2f Locus::toMatrix() const
   if( parent ){ mat = parent->toMatrix() * mat; }
   return mat;
 }
+
+void Locus::detachFromParent()
+{
+  if( parent )
+  {
+    scale *= parent->scale;
+    rotation += parent->rotation;
+    position = parent->toMatrix().transformPoint( position );
+
+    parent.reset();
+  }
+}

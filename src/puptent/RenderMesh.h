@@ -82,6 +82,7 @@ namespace puptent
     void setAsRibbon( const T &skeleton, float width, bool closed=false );
     //! Make a fat line between two points
     void setAsLine( const ci::Vec2f &point_a, const ci::Vec2f &point_b, float width=10.0f );
+    void setAsTriangle( const ci::Vec2f &a, const ci::Vec2f &b, const ci::Vec2f &c );
     //! Set the color of all vertices in one go
     void setColor( const ci::ColorA8u &color );
   };

@@ -52,9 +52,16 @@ namespace puptent
     ci::Vec2f         registration_point = ci::Vec2f::zero();
     float             rotation = 0.0f;
     float             scale = 1.0f;
+    //! returns total rotation including any accumulated from parents
+    float             getRotation();
+    //! returns total scale including any accumulated from parents
+    float             getScale();
     //! transform parent; toMatrix() is multiplied by parent->toMatrix() if present
     std::shared_ptr<Locus> parent = nullptr;
     //! returns a matrix that will transform points based on Locus properties
     ci::MatrixAffine2f  toMatrix() const;
+    //! remove parent after composing its transform into our own
+    //! not fully tested; rotation and scale unlikely to work properly
+    void              detachFromParent();
   };
 }

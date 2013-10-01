@@ -43,6 +43,7 @@ public:
   Entity createTreasure();
   Entity createRibbon();
   Entity createLine();
+  Entity createShip();
 private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
@@ -58,7 +59,7 @@ void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
   settings->setWindowSize( 1024, 768 );
-  settings->setFullScreen();
+//  settings->setFullScreen();
 }
 
 void PupTentApp::setup()
@@ -95,7 +96,40 @@ void PupTentApp::setup()
 
   createRibbon();
   createLine();
+  createShip();
   mTimer.start();
+}
+
+Entity PupTentApp::createShip()
+{
+  Entity ship = mEntities->create();
+  auto loc = ship.assign<Locus>();
+  loc->rotation = M_PI * 0.33f;
+  loc->scale = 8.0f;
+  loc->position = getWindowCenter() - Vec2f{ 0.0f, 100.0f };
+
+  { // left wing
+    Entity wing = mEntities->create();
+    auto locus = wing.assign<Locus>();
+    auto mesh = wing.assign<RenderMesh>( 3 );
+    mesh->setAsTriangle( Vec2f{ 0.0f, 0.0f }, Vec2f{ -20.0f, 40.0f }, Vec2f{ 0.0f, 40.0f } );
+    mesh->setColor( Color( CM_HSV, 0.55f, 1.0f, 1.0f ) );
+    locus->parent = loc;
+    wing.assign<RenderData>( mesh, locus, 5 );
+  }
+
+  { // right wing
+    Entity wing = mEntities->create();
+    auto locus = wing.assign<Locus>();
+    auto mesh = wing.assign<RenderMesh>( 3 );
+    mesh->setAsTriangle( Vec2f{ 0.0f, 0.0f }, Vec2f{ 20.0f, 40.0f }, Vec2f{ 0.0f, 40.0f } );
+    mesh->setColor( Color( CM_HSV, 0.65f, 1.0f, 1.0f ) );
+    locus->parent = loc;
+    locus->detachFromParent();
+    wing.assign<RenderData>( mesh, locus, 5 );
+  }
+
+  return ship;
 }
 
 Entity PupTentApp::createRibbon()
@@ -147,7 +181,7 @@ Entity PupTentApp::createPlayer()
   auto mesh = player.assign<RenderMesh>( 4 );
   player.assign( anim );
   player.assign( loc );
-  player.assign<RenderData>( mesh, loc, 10 );
+  player.assign<RenderData>( mesh, loc, 1 );
   auto verlet = player.assign<Particle>( loc );
   verlet->friction = 0.9f;
   verlet->rotation_friction = 0.5f;

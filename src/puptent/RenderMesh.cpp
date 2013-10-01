@@ -90,6 +90,14 @@ void RenderMesh::matchTexture(const SpriteData &sprite_data)
   vertices[3].tex_coord = sprite_data.texture_bounds.getLowerLeft();
 }
 
+void RenderMesh::setAsTriangle(const ci::Vec2f &a, const ci::Vec2f &b, const ci::Vec2f &c)
+{
+  if( vertices.size() != 3 ){ vertices.assign( 3, Vertex{} ); }
+  vertices[0].position = a;
+  vertices[1].position = b;
+  vertices[2].position = c;
+}
+
 void RenderMesh::setAsLine( const Vec2f &begin, const Vec2f &end, float width )
 {
   Vec2f ray = end - begin;

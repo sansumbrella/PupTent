@@ -129,6 +129,17 @@ void RenderSystem::update( EntityManagerRef es, EventManagerRef events, double d
 
 void RenderSystem::draw() const
 {
+//  float x = 400; // left
+//  float y = 100; // bottom
+//  float w = 125;
+//  float h = 500;
+//  gl::setViewport( Area( x, y, x + w, y + h ) );
+//  gl::setMatricesWindow( w, h );
+//  gl::translate( -x, -y );
+//  glMatrixMode( GL_PROJECTION );
+//  glFrustum( left, right, bottom, top, near, far );
+//  glMatrixMode( GL_MODELVIEW );
+
   if( mTexture )
   {
     gl::enable( GL_TEXTURE_2D );
