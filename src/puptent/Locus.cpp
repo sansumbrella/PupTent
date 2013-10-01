@@ -41,14 +41,19 @@ MatrixAffine2f Locus::toMatrix() const
   return mat;
 }
 
-float Locus::getScale()
+float Locus::getScale() const
 {
   return parent ? parent->getScale() * scale : scale;
 }
 
-float Locus::getRotation()
+float Locus::getRotation() const
 {
-  return parent ? parent->getRotation() * rotation : rotation;
+  return parent ? parent->getRotation() + rotation : rotation;
+}
+
+Vec2f Locus::getPosition() const
+{
+  return parent ? parent->toMatrix().transformPoint( position ) : position;
 }
 
 void Locus::detachFromParent()

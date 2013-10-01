@@ -105,30 +105,65 @@ Entity PupTentApp::createShip()
   Entity ship = mEntities->create();
   auto loc = ship.assign<Locus>();
   loc->rotation = M_PI * 0.33f;
-  loc->scale = 8.0f;
+  loc->scale = 1.0f;
   loc->position = getWindowCenter() - Vec2f{ 0.0f, 100.0f };
+  auto verlet = ship.assign<Particle>( loc );
+  verlet->friction = 0.9f;
+  verlet->rotation_friction = 0.5f;
 
+  Entity left_wing = mEntities->create();
   { // left wing
-    Entity wing = mEntities->create();
-    auto locus = wing.assign<Locus>();
-    auto mesh = wing.assign<RenderMesh>( 3 );
+    auto locus = left_wing.assign<Locus>();
+    auto mesh = left_wing.assign<RenderMesh>( 3 );
     mesh->setAsTriangle( Vec2f{ 0.0f, 0.0f }, Vec2f{ -20.0f, 40.0f }, Vec2f{ 0.0f, 40.0f } );
     mesh->setColor( Color( CM_HSV, 0.55f, 1.0f, 1.0f ) );
     locus->parent = loc;
-    wing.assign<RenderData>( mesh, locus, 5 );
+    locus->rotation = M_PI * 0.05f;
+    locus->position = Vec2f{ -5.0f, 0.0f };
+    left_wing.assign<RenderData>( mesh, locus, 5 );
   }
 
+  Entity right_wing = mEntities->create();
   { // right wing
-    Entity wing = mEntities->create();
-    auto locus = wing.assign<Locus>();
-    auto mesh = wing.assign<RenderMesh>( 3 );
+    auto locus = right_wing.assign<Locus>();
+    auto mesh = right_wing.assign<RenderMesh>( 3 );
     mesh->setAsTriangle( Vec2f{ 0.0f, 0.0f }, Vec2f{ 20.0f, 40.0f }, Vec2f{ 0.0f, 40.0f } );
     mesh->setColor( Color( CM_HSV, 0.65f, 1.0f, 1.0f ) );
     locus->parent = loc;
-    locus->detachFromParent();
-    wing.assign<RenderData>( mesh, locus, 5 );
+    locus->rotation = -M_PI * 0.05f;
+    locus->position = Vec2f{ 5.0f, 0.0f };
+    right_wing.assign<RenderData>( mesh, locus, 5 );
   }
 
+  auto input = KeyboardInput::create();
+  input->connect( getWindow() );
+  ship.assign<ScriptComponent>( [=]( Entity self, EntityManagerRef es, EventManagerRef events, double dt ) mutable
+  {
+    auto locus = self.component<Locus>();
+    locus->position += input->getForce() * dt * 100.0f;
+
+    if( input->getKeyPressed( KeyEvent::KEY_d ) )
+    {
+      // break off children
+      auto l_loc = left_wing.component<Locus>();
+      auto r_loc = right_wing.component<Locus>();
+      auto p = left_wing.assign<Particle>( l_loc );
+      p->rotation_friction = 0.99f;
+      p->friction = 0.99f;
+      p = right_wing.assign<Particle>( r_loc );
+      p->rotation_friction = 0.99f;
+      p->friction = 0.99f;
+
+      l_loc->detachFromParent();
+      r_loc->detachFromParent();
+      l_loc->position += input->getForce() * dt * 100.0f;
+      r_loc->position += input->getForce() * dt * 100.0f;
+      l_loc->position += Rand::randVec2f() * 10.0f;
+      r_loc->position += Rand::randVec2f() * 10.0f;
+      l_loc->rotation += Rand::randFloat( M_PI * 0.1f );
+      r_loc->rotation += Rand::randFloat( M_PI * 0.1f );
+    }
+  } );
   return ship;
 }
 

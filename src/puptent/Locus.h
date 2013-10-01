@@ -36,7 +36,7 @@ namespace puptent
    Scales and rotates around the Registration Point when using toMatrix()
 
    Used by RenderSystem to transform RenderMesh component vertices
-   Updated by various movement systems (Physics, Custom Motion)
+   Updated by movement systems (Physics, Custom Motion)
    No assumption is made about the units used
   */
   struct Locus : Component<Locus>
@@ -53,15 +53,16 @@ namespace puptent
     float             rotation = 0.0f;
     float             scale = 1.0f;
     //! returns total rotation including any accumulated from parents
-    float             getRotation();
+    float             getRotation() const;
     //! returns total scale including any accumulated from parents
-    float             getScale();
+    float             getScale() const;
+    //! returns total position including any accumulated from parents
+    ci::Vec2f         getPosition() const;
     //! transform parent; toMatrix() is multiplied by parent->toMatrix() if present
     std::shared_ptr<Locus> parent = nullptr;
     //! returns a matrix that will transform points based on Locus properties
     ci::MatrixAffine2f  toMatrix() const;
     //! remove parent after composing its transform into our own
-    //! not fully tested; rotation and scale unlikely to work properly
     void              detachFromParent();
   };
 }

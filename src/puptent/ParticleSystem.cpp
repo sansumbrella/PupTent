@@ -33,9 +33,9 @@ using namespace puptent;
 using namespace cinder;
 
 Particle::Particle( LocusRef locus ):
-p_position( locus->position ),
-p_rotation( locus->rotation ),
-p_scale( locus->scale )
+p_position( locus->getPosition() ),
+p_rotation( locus->getRotation() ),
+p_scale( locus->getScale() )
 {}
 
 
