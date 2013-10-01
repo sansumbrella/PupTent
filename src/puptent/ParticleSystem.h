@@ -52,9 +52,9 @@ namespace puptent
   {
     Particle( LocusRef locus );
     Particle() {}
-    float     friction = 1.0f;
-    float     rotation_friction = 1.0f;
-    float     scale_friction = 1.0f;
+    float     friction = 0.5f;
+    float     rotation_friction = 0.5f;
+    float     scale_friction = 0.5f;
     ci::Vec2f p_position = ci::Vec2f::zero();
     float     p_rotation = 0.0f;
     float     p_scale = 1.0f;
@@ -66,8 +66,6 @@ namespace puptent
    Each "particle" is an entity with Particle and Locus components
    This lets us integrate the particles with the BatchRenderSystem so that they
    can be layered interwoven with other entities.
-   Particles must be created through the ParticleSystem interface or through
-   the use of ParticleEmitter components.
    */
   struct ParticleSystem : public System<ParticleSystem>, Receiver<ParticleSystem>
   {

@@ -10,6 +10,8 @@
 #include "entityx/System.h"
 #include "entityx/tags/TagsComponent.h"
 
+#include "pockets/AnimationUtils.h"
+
 #include "puptent/RenderSystem.h"
 #include "puptent/PhysicsSystem.h"
 #include "puptent/TextureAtlas.h"
@@ -109,7 +111,7 @@ Entity PupTentApp::createShip()
   loc->position = getWindowCenter() - Vec2f{ 0.0f, 100.0f };
   auto verlet = ship.assign<Particle>( loc );
   verlet->friction = 0.9f;
-  verlet->rotation_friction = 0.5f;
+  verlet->rotation_friction = 0.0f;
 
   Entity left_wing = mEntities->create();
   { // left wing
@@ -119,7 +121,7 @@ Entity PupTentApp::createShip()
     mesh->setColor( Color( CM_HSV, 0.55f, 1.0f, 1.0f ) );
     locus->parent = loc;
     locus->rotation = M_PI * 0.05f;
-    locus->position = Vec2f{ -5.0f, 0.0f };
+    locus->position = Vec2f{ -1.0f, 0.0f };
     left_wing.assign<RenderData>( mesh, locus, 5 );
   }
 
@@ -131,7 +133,7 @@ Entity PupTentApp::createShip()
     mesh->setColor( Color( CM_HSV, 0.65f, 1.0f, 1.0f ) );
     locus->parent = loc;
     locus->rotation = -M_PI * 0.05f;
-    locus->position = Vec2f{ 5.0f, 0.0f };
+    locus->position = Vec2f{ 1.0f, 0.0f };
     right_wing.assign<RenderData>( mesh, locus, 5 );
   }
 
@@ -140,7 +142,13 @@ Entity PupTentApp::createShip()
   ship.assign<ScriptComponent>( [=]( Entity self, EntityManagerRef es, EventManagerRef events, double dt ) mutable
   {
     auto locus = self.component<Locus>();
+    auto verlet = self.component<Particle>();
+    Vec2f delta = locus->position - verlet->p_position;
     locus->position += input->getForce() * dt * 100.0f;
+    if( delta.lengthSquared() > EPSILON_VALUE )
+    {
+      locus->rotation = wrapLerp( locus->rotation, (float)M_PI * 0.5f + math<float>::atan2( delta.y, delta.x ), (float)M_PI * 2, 0.2f );
+    }
 
     if( input->getKeyPressed( KeyEvent::KEY_d ) )
     {
