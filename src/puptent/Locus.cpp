@@ -41,12 +41,22 @@ MatrixAffine2f Locus::toMatrix() const
   return mat;
 }
 
+float Locus::getScale()
+{
+  return parent ? parent->getScale() * scale : scale;
+}
+
+float Locus::getRotation()
+{
+  return parent ? parent->getRotation() * rotation : rotation;
+}
+
 void Locus::detachFromParent()
 {
   if( parent )
   {
-    scale *= parent->scale;
-    rotation += parent->rotation;
+    scale *= parent->getScale();
+    rotation += parent->getRotation();
     position = parent->toMatrix().transformPoint( position );
 
     parent.reset();
