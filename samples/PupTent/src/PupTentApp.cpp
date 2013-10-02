@@ -322,7 +322,7 @@ Entity PupTentApp::createTreasure()
   entity.assign( loc );
   entity.assign<RenderData>( mesh, loc, Rand::randInt( 50 ), eNormalPass );
   // randomized expire time, weighted toward end
-  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
+  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 5.0f + 1.0f );
   entity.assign<tags::TagsComponent>( "treasure" );
   //  entity.assign<SeekComponent>( predator_loc, Vec2f{-1.0f, -0.5f} );
   return entity;
