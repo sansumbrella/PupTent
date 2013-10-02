@@ -27,7 +27,7 @@
  Learning about component systems and building my own components.
  While everything is dependent on the underlying component machinery,
  it is wonderfully decoupled from other systems and components.
-*/
+ */
 
 using namespace ci;
 using namespace ci::app;
@@ -61,7 +61,7 @@ void PupTentApp::prepareSettings( Settings *settings )
 {
   settings->disableFrameRate();
   settings->setWindowSize( 1024, 768 );
-//  settings->setFullScreen();
+  //  settings->setFullScreen();
 }
 
 void PupTentApp::setup()
@@ -137,41 +137,59 @@ Entity PupTentApp::createShip()
     right_wing.assign<RenderData>( mesh, locus, 5 );
   }
 
+  Entity trailing_ribbon = mEntities->create();
+  { // smoke trail or something (use ship locus directly to plot path)
+    auto locus = trailing_ribbon.assign<Locus>();
+    std::deque<Vec2f> ribbon_vertices;
+    ribbon_vertices.assign( 11, loc->toMatrix().transformPoint( { 0.0f, 40.0f } ) );
+    auto mesh = trailing_ribbon.assign<RenderMesh>( 20 );
+    trailing_ribbon.assign<RenderData>( mesh, locus, 4 );
+    trailing_ribbon.assign<ScriptComponent>([=]( Entity self, EntityManagerRef es, EventManagerRef events, double dt ) mutable
+                                            { // use the ship locus to update out vertices
+                                              auto locus = self.component<Locus>();
+                                              auto front = loc->toMatrix().transformPoint( { 0.0f, 40.0f } );
+                                              ribbon_vertices.emplace_front( front );
+                                              ribbon_vertices.pop_back();
+                                              auto mesh = self.component<RenderMesh>();
+                                              mesh->setAsRibbon( ribbon_vertices, 4.0f );
+                                            } );
+  }
+
   auto input = KeyboardInput::create();
   input->connect( getWindow() );
   ship.assign<ScriptComponent>( [=]( Entity self, EntityManagerRef es, EventManagerRef events, double dt ) mutable
-  {
-    auto locus = self.component<Locus>();
-    auto verlet = self.component<Particle>();
-    Vec2f delta = locus->position - verlet->p_position;
-    locus->position += input->getForce() * dt * 100.0f;
-    if( delta.lengthSquared() > EPSILON_VALUE )
-    {
-      locus->rotation = wrapLerp( locus->rotation, (float)M_PI * 0.5f + math<float>::atan2( delta.y, delta.x ), (float)M_PI * 2, 0.2f );
-    }
+                               {
+                                 auto locus = self.component<Locus>();
+                                 auto verlet = self.component<Particle>();
+                                 Vec2f delta = locus->position - verlet->p_position;
+                                 locus->position += input->getForce() * dt * 100.0f;
+                                 if( delta.lengthSquared() > EPSILON_VALUE )
+                                 {
+                                   locus->rotation = wrapLerp( locus->rotation, (float)M_PI * 0.5f + math<float>::atan2( delta.y, delta.x ), (float)M_PI * 2, 0.2f );
+                                 }
 
-    if( input->getKeyPressed( KeyEvent::KEY_d ) )
-    {
-      // break off children
-      auto l_loc = left_wing.component<Locus>();
-      auto r_loc = right_wing.component<Locus>();
-      auto p = left_wing.assign<Particle>( l_loc );
-      p->rotation_friction = 0.99f;
-      p->friction = 0.99f;
-      p = right_wing.assign<Particle>( r_loc );
-      p->rotation_friction = 0.99f;
-      p->friction = 0.99f;
+                                 if( input->getKeyPressed( KeyEvent::KEY_d ) )
+                                 {
+                                   // break off children
+                                   auto l_loc = left_wing.component<Locus>();
+                                   auto r_loc = right_wing.component<Locus>();
+                                   auto p = left_wing.assign<Particle>( l_loc );
+                                   p->rotation_friction = 0.99f;
+                                   p->friction = 0.99f;
+                                   p = right_wing.assign<Particle>( r_loc );
+                                   p->rotation_friction = 0.99f;
+                                   p->friction = 0.99f;
 
-      l_loc->detachFromParent();
-      r_loc->detachFromParent();
-      l_loc->position += input->getForce() * dt * 100.0f;
-      r_loc->position += input->getForce() * dt * 100.0f;
-      l_loc->position += Rand::randVec2f() * 10.0f;
-      r_loc->position += Rand::randVec2f() * 10.0f;
-      l_loc->rotation += Rand::randFloat( M_PI * 0.1f );
-      r_loc->rotation += Rand::randFloat( M_PI * 0.1f );
-    }
-  } );
+                                   l_loc->detachFromParent();
+                                   r_loc->detachFromParent();
+                                   l_loc->position += input->getForce() * dt * 100.0f;
+                                   r_loc->position += input->getForce() * dt * 100.0f;
+                                   l_loc->position += Rand::randVec2f() * 10.0f;
+                                   r_loc->position += Rand::randVec2f() * 10.0f;
+                                   l_loc->rotation += Rand::randFloat( M_PI * 0.1f );
+                                   r_loc->rotation += Rand::randFloat( M_PI * 0.1f );
+                                 }
+                               } );
   return ship;
 }
 
@@ -214,10 +232,10 @@ Entity PupTentApp::createPlayer()
   // get an animation out of the sprite system
   auto anim = mSpriteSystem->createSpriteAnimation( "jellyfish" );
   // ping-pong animation
-//  anim->looping = false;
-//  anim->finish_fn = []( SpriteAnimationRef animation ){
-//    animation->rate *= -1.0f;
-//  };
+  //  anim->looping = false;
+  //  anim->finish_fn = []( SpriteAnimationRef animation ){
+  //    animation->rate *= -1.0f;
+  //  };
   loc->position = getWindowCenter();
   loc->rotation = r.nextFloat( M_PI * 2 );
   loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
@@ -232,18 +250,18 @@ Entity PupTentApp::createPlayer()
   input->connect( getWindow() );
   // give custom behavior to the player
   player.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
-   auto locus = self.component<Locus>();
-   locus->position += input->getForce() * dt * 100.0f;
-   auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
-   for( auto entity : view )
-   {
-     auto other_loc = entity.component<Locus>();
-     if( other_loc->position.distance( locus->position ) < 50.0f )
-     {
-       cout << "Eating treasure" << endl;
-       entity.destroy();
-     }
-   }
+    auto locus = self.component<Locus>();
+//    locus->position += input->getForce() * dt * 100.0f;
+    auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
+    for( auto entity : view )
+    {
+      auto other_loc = entity.component<Locus>();
+      if( other_loc->position.distance( locus->position ) < 50.0f )
+      {
+        cout << "Eating treasure" << endl;
+        entity.destroy();
+      }
+    }
   } );
   return player;
 }
@@ -258,16 +276,16 @@ Entity PupTentApp::createTreasure()
   loc->position = { Rand::randFloat( getWindowWidth() ), Rand::randFloat( getWindowHeight() ) };
   loc->rotation = Rand::randFloat( M_PI * 2 );
   loc->registration_point = { 20.0f, 10.0f }; // center of the mesh created below
-  auto color = Color( CM_HSV, Rand::randFloat( 0.4f, 1.0f ), 0.8f, 0.8f );
+  auto color = Color::gray( Rand::randFloat( 0.4f, 1.0f ) );
   auto mesh = entity.assign<RenderMesh>( 4 );
   mesh->setColor( color );
   entity.assign( anim );
   entity.assign( loc );
-  entity.assign<RenderData>( mesh, loc, 50, eNormalPass );
+  entity.assign<RenderData>( mesh, loc, Rand::randInt( 50 ), eNormalPass );
   // randomized expire time, weighted toward end
-//  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
+  //  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
   entity.assign<tags::TagsComponent>( "treasure" );
-//  entity.assign<SeekComponent>( predator_loc, Vec2f{-1.0f, -0.5f} );
+  //  entity.assign<SeekComponent>( predator_loc, Vec2f{-1.0f, -0.5f} );
   return entity;
 }
 
@@ -296,7 +314,7 @@ void PupTentApp::draw()
   gl::color( Color::white() );
   Timer dr;
   dr.start();
-//  mSystemManager->system<PhysicsSystem>()->debugDraw();
+  //  mSystemManager->system<PhysicsSystem>()->debugDraw();
   mSystemManager->system<RenderSystem>()->draw();
   double ms = dr.getSeconds() * 1000;
   mAverageRenderTime = (mAverageRenderTime * 59.0 + ms) / 60.0;
