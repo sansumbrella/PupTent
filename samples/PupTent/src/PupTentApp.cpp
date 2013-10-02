@@ -46,6 +46,7 @@ public:
   Entity createRibbon();
   Entity createLine();
   Entity createShip();
+  Entity createPlanet();
 private:
   shared_ptr<EventManager>  mEvents;
   shared_ptr<EntityManager> mEntities;
@@ -99,7 +100,45 @@ void PupTentApp::setup()
   createRibbon();
   createLine();
   createShip();
+  createPlanet();
   mTimer.start();
+}
+
+Entity PupTentApp::createPlanet()
+{
+  Entity planet = mEntities->create();
+
+  // TODO: create a planet rendering system
+  // For now: draw stuff with the existing system
+  float planet_size = 200.0f;
+  auto loc = planet.assign<Locus>();
+  auto mesh = planet.assign<RenderMesh>();
+  mesh->setAsCircle( Vec2f{ planet_size, planet_size } );
+  mesh->setColor( Color::gray( 0.8f ) );
+  planet.assign<RenderData>( mesh, loc, 0 );
+  loc->position = Vec2f{ 200.0f, 400.0f };
+
+  for( int i = 0; i < 10; ++i )
+  {
+    // compound shape setup to avoid entity explosion?
+    // entities are cheap, though, so it's not a real problem
+    Entity e = mEntities->create();
+    auto mesh = e.assign<RenderMesh>( 3 );
+    mesh->vertices[0].position = Vec2f{ 0.0f, 0.0f };
+    mesh->vertices[1].position = Vec2f{ 30.0f, 45.0f };
+    mesh->vertices[2].position = Vec2f{ -30.0f, 45.0f };
+    mesh->setColor( Color( CM_HSV, 0.25f, 1.0f, 1.0f ) );
+
+    auto locus = e.assign<Locus>();
+    locus->parent = loc;
+    locus->position = Vec2f{ Rand::randFloat( -1.0f, 1.0f ), Rand::randFloat( -1.0f, 1.0f ) } * planet_size * 0.5f;
+    locus->registration_point = Vec2f{ 0.0f, 20.0f };
+    locus->rotation = Rand::randFloat( M_PI );
+    locus->scale = Rand::randFloat( 0.5f, 4.0f );
+    e.assign<RenderData>( mesh, locus, 1, RenderPass::eMultiplyPass );
+  }
+
+  return planet;
 }
 
 Entity PupTentApp::createShip()
@@ -219,7 +258,7 @@ Entity PupTentApp::createLine()
   auto mesh = e.assign<RenderMesh>();
   e.assign<RenderData>( mesh, loc, 20 );
   e.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
-    mesh->setAsLine( getWindowCenter(), getMousePos(), 8.0f );
+    mesh->setAsLine( { 0, 0 }, getMousePos(), 8.0f );
   } );
   return e;
 }
@@ -283,7 +322,7 @@ Entity PupTentApp::createTreasure()
   entity.assign( loc );
   entity.assign<RenderData>( mesh, loc, Rand::randInt( 50 ), eNormalPass );
   // randomized expire time, weighted toward end
-  //  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
+  entity.assign<Expires>( easeOutQuad( Rand::randFloat() ) * 9.0f + 1.0f );
   entity.assign<tags::TagsComponent>( "treasure" );
   //  entity.assign<SeekComponent>( predator_loc, Vec2f{-1.0f, -0.5f} );
   return entity;
