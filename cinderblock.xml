@@ -4,7 +4,6 @@
 	name="Pup Tent"
 	id="com.sansumbrella.puptent"
 	author="David Wicks"
-	git=""
 	summary="2d component system game engine built on Cinder and entityx"
 	license="Modified BSD"
 	version="0.1"
@@ -15,14 +14,14 @@
 	<headerPattern>src/puptent/*.h</headerPattern>
 	<header>src/puptent/PupTent.h</header>
 	<!-- entityx files -->
-	<sourcePattern>src/entityx/*.cpp</sourcePattern>
-	<sourcePattern>src/entityx/tags/*.cpp</sourcePattern>
+	<sourcePattern>src/entityx/*.cc</sourcePattern>
+	<sourcePattern>src/entityx/tags/*.cc</sourcePattern>
 	<headerPattern>src/entityx/*.h</headerPattern>
 	<!-- header search path -->
 	<includePath system="false">src</includePath>
 	<!-- dependencies on other blocks (pockets, suBox2d) -->
 	<supports compiler="xcode"/>
 	<requires>com.sansumbrella.pockets</requires>
-	<requires>com.sansumbrella.subox2d</requires>
+	<requires>com.sansumbrella.box2d</requires>
 </block>
 </cinder>

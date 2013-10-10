@@ -42,6 +42,7 @@ namespace puptent
   // forward declarations for common components
   typedef std::shared_ptr<class Locus>            LocusRef;
   typedef std::shared_ptr<class RenderMesh>       RenderMeshRef;
+  typedef std::shared_ptr<class SystemManager>    SystemManagerRef;
   // forward declarations for common utilities
   typedef std::shared_ptr<class TextureAtlas>     TextureAtlasRef;
 }
