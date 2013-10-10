@@ -45,7 +45,10 @@ PhysicsSystem::~PhysicsSystem()
   auto entities = mEntities;
   for( auto entity : entities )
   {
-    entity.remove<PhysicsComponent>();
+    if( entity.valid() )
+    {
+      entity.remove<PhysicsComponent>();
+    }
   }
 }
 
