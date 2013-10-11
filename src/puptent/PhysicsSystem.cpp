@@ -34,6 +34,15 @@ using namespace cinder;
 using namespace box2d;
 using namespace std;
 
+bool QueryCallback::ReportFixture(b2Fixture *fixture)
+{
+  mFixture = fixture;
+  mBody = fixture->GetBody();
+  // Return true to continue the query.
+  // Return false to end the query
+  return false;
+}
+
 PhysicsSystem::PhysicsSystem()
 {}
 
@@ -61,7 +70,11 @@ void PhysicsSystem::configure( EventManagerRef events )
 
 void PhysicsSystem::receive(const ComponentAddedEvent<puptent::PhysicsComponent> &event)
 {
-  mEntities.push_back( event.entity );
+  auto physics = event.component;
+  auto entity = event.entity;
+  physics->body->SetUserData( physics.get() );
+  physics->entity = entity;
+  mEntities.push_back( entity );
 }
 
 void PhysicsSystem::receive(const ComponentRemovedEvent<puptent::PhysicsComponent> &event)
@@ -106,4 +119,17 @@ PhysicsComponentRef PhysicsSystem::createBox( const ci::Vec2f &pos, const ci::Ve
 PhysicsComponentRef PhysicsSystem::createCircle( const ci::Vec2f &pos, float radius )
 {
   return PhysicsComponentRef{ new PhysicsComponent{ mSandbox.createCircle( mScale.toPhysics( pos ), mScale.toPhysics( radius ) ) } };
+}
+
+
+QueryCallback PhysicsSystem::getIntersectedObjects(const ci::Vec2f &pos, float epsilon )
+{
+  QueryCallback callback;
+  Vec2f b2pos = mScale.toPhysics( pos );
+  b2AABB aabb;
+  aabb.lowerBound.Set( b2pos.x - epsilon, b2pos.y - epsilon );
+  aabb.upperBound.Set( b2pos.y + epsilon, b2pos.y + epsilon );
+  mSandbox.getWorld().QueryAABB( &callback, aabb );
+  cout << "Checking for intersections at: " << b2pos << endl;
+  return callback;
 }

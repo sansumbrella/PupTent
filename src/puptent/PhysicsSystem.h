@@ -38,6 +38,20 @@ namespace puptent
     body( std::move( body ) )
     {}
     b2::unique_body_ptr body;
+    Entity              entity;
+  };
+
+  /**
+   Stuff caught in a point test
+   */
+  class QueryCallback : public b2QueryCallback {
+  public:
+    bool ReportFixture(b2Fixture* fixture) override;
+    b2Body *getBody() const { return mBody; }
+    b2Fixture *getFixture() const { return mFixture; }
+  private:
+    b2Body    *mBody = nullptr;
+    b2Fixture *mFixture = nullptr;
   };
   /**
    PhysicsSystem:
@@ -59,7 +73,12 @@ namespace puptent
     void stepPhysics();
     //! synchronizes locus components with physics coords
     void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
+    //! draw physics debug information to screen (using box2d's debugDraw facility)
     void debugDraw();
+    //! return an entity from the box2d body or joint's userdata
+    Entity getBodyEntity( void *b2UserData );
+    //! return collection of objects that contain pos
+    QueryCallback getIntersectedObjects( const ci::Vec2f &pos, const float epsilon = 0.5f );
 
     void createBoundaryRect( ci::Rectf screen_bounds ) { mSandbox.createBoundaryRect( mScale.toPhysics( screen_bounds ) ); }
     //! Destroy the boundary rectangle
@@ -69,6 +88,7 @@ namespace puptent
     //! Create a circle using screen coordinates
     PhysicsComponentRef createCircle( const ci::Vec2f &pos, float radius );
     box2d::Sandbox& getSandbox() { return mSandbox; }
+    box2d::Scale&   getScale() { return mScale; }
   private:
     box2d::Sandbox       mSandbox;
     std::vector<Entity>  mEntities;
