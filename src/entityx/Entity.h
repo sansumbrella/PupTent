@@ -45,6 +45,7 @@ class Entity {
 public:
   struct Id {
     Id() : id_(0) {}
+    explicit Id(uint64_t id) : id_(id) {}
     Id(uint32_t index, uint32_t version) : id_(uint64_t(index) | uint64_t(version) << 32UL) {}
 
     uint64_t id() const { return id_; }
@@ -76,7 +77,7 @@ public:
   /**
    * Check if Entity handle is invalid.
    */
-  operator bool () const {
+  operator bool() const {
     return valid();
   }
 
@@ -431,7 +432,7 @@ class EntityManager : boost::noncopyable, public enable_shared_from_this<EntityM
   }
 
   Entity get(Entity::Id id) {
-    assert(entity_version_[id.index()] != id.version() && "Attempt to get() with stale Entity::Id");
+    assert(entity_version_[id.index()] == id.version() && "Attempt to get() with stale Entity::Id");
     return Entity(shared_from_this(), id);
   }
 
