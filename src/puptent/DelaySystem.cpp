@@ -25,21 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/ExpiresSystem.h"
+#include "DelaySystem.h"
 
 using namespace puptent;
-using namespace std;
 
-void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
+void DelaySystem::update( EntityManagerRef es, EventManagerRef events, double dt )
 {
-  for( auto entity : es->entities_with_components<Expires>() )
+  for( auto entity : es->entities_with_components<DelayActionComponent>() )
   {
-    auto expires = entity.component<Expires>();
-    expires->time -= dt;
-    if( expires->time <= 0.0 )
+    auto action = entity.component<DelayActionComponent>();
+    action->time -= dt;
+    if( action->time <= 0.0 )
     {
-      if( expires->callback ){ expires->callback(); }
-      entity.destroy();
+      action->action();
     }
   }
 }

@@ -34,7 +34,10 @@ namespace puptent
    Expires:
    Stores time in seconds after which the entity holding the expires will be
    destroyed.
-   If present, callback is executed when the entity is destroyed
+   If present, callback is executed immediately before the entity is destroyed
+
+   future consideridations:
+   have callback return a bool; if false, expiration is delayed.
    */
   struct Expires : Component<Expires>
   {

@@ -25,21 +25,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "puptent/ExpiresSystem.h"
+#pragma once
 
-using namespace puptent;
-using namespace std;
+#include "puptent/PupTent.h"
 
-void ExpiresSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<entityx::EventManager> events, double dt)
+namespace puptent
 {
-  for( auto entity : es->entities_with_components<Expires>() )
+  /**
+   DelayActionComponent:
+   
+   Base type for any kind of delayed action you might want to take.
+   To use your own delayed action, extend and override ::action();
+   Alternatively, use the DelayFunctionComponent which extends this to call
+   an arbitrary function after a delay (so you don't need to write a new class).
+   */
+  struct DelayActionComponent : Component<DelayActionComponent>
   {
-    auto expires = entity.component<Expires>();
-    expires->time -= dt;
-    if( expires->time <= 0.0 )
-    {
-      if( expires->callback ){ expires->callback(); }
-      entity.destroy();
-    }
-  }
+    DelayActionComponent( double delay=1.0f ):
+    time( delay )
+    {}
+    double       time;
+    virtual void action() {}
+  };
+
+  /**
+   DelayFunctionComponent:
+   */
+  struct DelayFunctionComponent : DelayActionComponent
+  {
+    DelayFunctionComponent( double delay, std::function<void ()> fn ):
+    DelayActionComponent( delay ),
+    callback( fn )
+    {}
+    void action() override { callback(); }
+    std::function<void ()> callback;
+  };
+
+  /**
+   ExpiresSystem:
+   Destroys an entity once the time in Expires runs out.
+   */
+  struct DelaySystem : public System<DelaySystem>
+  {
+    void update( EntityManagerRef es, EventManagerRef events, double dt ) override;
+  private:
+  };
 }
