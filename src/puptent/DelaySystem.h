@@ -33,7 +33,7 @@ namespace puptent
 {
   /**
    DelayActionComponent:
-   
+
    Base type for any kind of delayed action you might want to take.
    To use your own delayed action, extend and override ::action();
    Alternatively, use the DelayFunctionComponent which extends this to call
@@ -50,8 +50,11 @@ namespace puptent
 
   /**
    DelayFunctionComponent:
+
+   Calls the provided function after some time has elapsed.
+   Delay is time in seconds.
    */
-  struct DelayFunctionComponent : DelayActionComponent
+  struct DelayFunctionComponent : public DelayActionComponent
   {
     DelayFunctionComponent( double delay, std::function<void ()> fn ):
     DelayActionComponent( delay ),

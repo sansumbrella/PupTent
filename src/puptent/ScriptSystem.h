@@ -38,17 +38,37 @@ namespace puptent
    Use for behavior unique to an entity, like user-controlled entities,
    special items, synching timeline animations, or temporary behaviors.
 
-   Will probably add ability for other scripts to fire when events happen.
-   Those scripts are likely to be called from their respective systems.
+   Either extend ScriptComponent and override update, or provide a bound function
+   or lambda to FunctionComponent.
+   Eventually, LuaComponent will execute arbitrary lua code.
    */
   // ScriptFn receives self entity, entity manager for world queries, event manager, and timestep
-  typedef std::function<void (Entity, EntityManagerRef, EventManagerRef, double)> ScriptFn;
   struct ScriptComponent : Component<ScriptComponent>
   {
-    ScriptComponent( ScriptFn fn ):
+    ScriptComponent() = default;
+    //! update with the Entity the script is attached to and frame delta time
+    virtual void update( Entity, double dt ) {} // noop
+  };
+
+  /**
+   FunctionComponent
+   Run a bound function on update
+   */
+  struct FunctionComponent : public ScriptComponent
+  {
+    typedef std::function<void (Entity, double dt)> ScriptFn;
+    FunctionComponent( ScriptFn fn ):
     script( fn )
     {}
+    void update( Entity e, double dt ){ script( e, dt ); }
     ScriptFn script;
+  };
+
+  struct LuaComponent : public ScriptComponent
+  {
+    // TODO
+    // main task here is exposing entities and other components to lua
+    // should probably live in its own file separate from the base scriptsystem
   };
 
   /**
