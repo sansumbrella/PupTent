@@ -54,20 +54,20 @@ namespace puptent
    FunctionComponent
    Run a bound function on update
    */
-  struct FunctionComponent : public ScriptComponent
+  struct CppScriptComponent : public ScriptComponent
   {
     typedef std::function<void (Entity, double dt)> ScriptFn;
-    FunctionComponent( ScriptFn fn ):
+    CppScriptComponent( ScriptFn fn ):
     script( fn )
     {}
     void update( Entity e, double dt ){ script( e, dt ); }
     ScriptFn script;
   };
 
-  struct LuaComponent : public ScriptComponent
+  struct LuaScriptComponent : public ScriptComponent
   {
     // TODO
-    // main task here is exposing entities and other components to lua
+    // main work for this to be useful is exposing entities and other components to lua
     // should probably live in its own file separate from the base scriptsystem
   };
 

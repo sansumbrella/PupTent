@@ -35,6 +35,6 @@ void ScriptSystem::update(shared_ptr<entityx::EntityManager> es, shared_ptr<enti
   for( auto entity : es->entities_with_components<ScriptComponent>() )
   {
     auto script = entity.component<ScriptComponent>();
-    script->script( entity, es, events, dt );
+    script->update( entity, dt );
   }
 }

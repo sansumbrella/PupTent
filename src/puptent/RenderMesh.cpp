@@ -101,6 +101,21 @@ void RenderMesh::setAsTriangle(const ci::Vec2f &a, const ci::Vec2f &b, const ci:
 void RenderMesh::setAsLine( const Vec2f &begin, const Vec2f &end, float width )
 {
   Vec2f ray = end - begin;
+  Vec2f side = ray.normalized() * width;
+  Vec2f N( -side.y, side.x );
+  Vec2f S = -N;
+
+  if( vertices.size() != 4 )
+  { vertices.assign( 4, Vertex{} ); }
+  vertices.at(0).position = begin + S;
+  vertices.at(1).position = begin + N;
+  vertices.at(2).position = end + S;
+  vertices.at(3).position = end + N;
+}
+
+void RenderMesh::setAsCappedLine( const ci::Vec2f &begin, const ci::Vec2f &end, float width )
+{
+  Vec2f ray = end - begin;
   Vec2f cap = ray.normalized() * width;
   Vec2f N( -cap.y, cap.x );
   Vec2f S = -N;
