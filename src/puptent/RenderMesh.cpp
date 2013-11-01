@@ -31,6 +31,14 @@
 using namespace puptent;
 using namespace cinder;
 
+void RenderMesh::transform(const ci::MatrixAffine2f &mat)
+{
+  for( Vertex &v : vertices )
+  {
+    v.position = mat.transformVec( v.position );
+  }
+}
+
 void RenderMesh::setAsCircle(const ci::Vec2f &radius, float start_radians, float end_radians, size_t segments )
 {
   if( segments < 2 ) { // based off of cinder, though we're less generous with the vertices
