@@ -13,7 +13,6 @@
 #include "pockets/AnimationUtils.h"
 
 #include "puptent/RenderSystem.h"
-#include "puptent/PhysicsSystem.h"
 #include "puptent/TextureAtlas.h"
 #include "puptent/SpriteSystem.h"
 #include "puptent/ParticleSystem.h"
@@ -84,8 +83,6 @@ void PupTentApp::setup()
   mSystemManager->add<ParticleSystem>();
   mSystemManager->add<ScriptSystem>();
   mSpriteSystem = mSystemManager->add<SpriteAnimationSystem>( atlas, animations );
-  auto physics = mSystemManager->add<PhysicsSystem>();
-  physics->createBoundaryRect( getWindowBounds() );
   auto renderer = mSystemManager->add<RenderSystem>();
   renderer->setTexture( atlas->getTexture() );
   mSystemManager->configure();
@@ -183,7 +180,7 @@ Entity PupTentApp::createShip()
     ribbon_vertices.assign( 11, loc->toMatrix().transformPoint( { 0.0f, 40.0f } ) );
     auto mesh = trailing_ribbon.assign<RenderMesh>( 20 );
     trailing_ribbon.assign<RenderData>( mesh, locus, 4 );
-    trailing_ribbon.assign<ScriptComponent>([=]( Entity self, EntityManagerRef es, EventManagerRef events, double dt ) mutable
+    trailing_ribbon.assign<CppScriptComponent>([=]( Entity self, double dt ) mutable
                                             { // use the ship locus to update out vertices
                                               auto locus = self.component<Locus>();
                                               auto front = loc->toMatrix().transformPoint( { 0.0f, 40.0f } );
@@ -196,7 +193,7 @@ Entity PupTentApp::createShip()
 
   auto input = KeyboardInput::create();
   input->connect( getWindow() );
-  ship.assign<ScriptComponent>( [=]( Entity self, EntityManagerRef es, EventManagerRef events, double dt ) mutable
+  ship.assign<CppScriptComponent>( [=]( Entity self, double dt ) mutable
                                {
                                  auto locus = self.component<Locus>();
                                  auto verlet = self.component<Particle>();
@@ -257,7 +254,7 @@ Entity PupTentApp::createLine()
   auto loc = e.assign<Locus>();
   auto mesh = e.assign<RenderMesh>();
   e.assign<RenderData>( mesh, loc, 20 );
-  e.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
+  e.assign<CppScriptComponent>( [=](Entity self, double dt){
     mesh->setAsLine( { 0, 0 }, getMousePos(), 8.0f );
   } );
   return e;
@@ -288,10 +285,10 @@ Entity PupTentApp::createPlayer()
   auto input = KeyboardInput::create();
   input->connect( getWindow() );
   // give custom behavior to the player
-  player.assign<ScriptComponent>( [=](Entity self, EntityManagerRef es, EventManagerRef events, double dt){
+  auto view = tags::TagsComponent::view( mEntities->entities_with_components<Locus>(), "treasure" );
+  player.assign<CppScriptComponent>( [=](Entity self, double dt){
     auto locus = self.component<Locus>();
 //    locus->position += input->getForce() * dt * 100.0f;
-    auto view = tags::TagsComponent::view( es->entities_with_components<Locus>(), "treasure" );
     for( auto entity : view )
     {
       auto other_loc = entity.component<Locus>();
